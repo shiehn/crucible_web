@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.header-text {
+    @apply text-3xl font-bold;
+}
+
+.token-text {
+    @apply text-xxs font-medium;
+}
+
+.label-text {
+    @apply text-fuchsia-400;
+}
