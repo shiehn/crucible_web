@@ -17,6 +17,8 @@ export const DEFAULT_SERVER_IP = 'http://34.135.228.111:8081/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'available_remotes'
 
+export const EMBEDDED = 'web'; //vst, web
+
 
 // Initial state management
 export const store = createStore((set) => ({
@@ -36,6 +38,7 @@ export const store = createStore((set) => ({
   navigation: DEFAULT_NAVIGATION, //connect_remotes
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
+  embedded: EMBEDDED,
 }));
 export const useStore = createHooks(store);
 
@@ -103,7 +106,7 @@ globalThis.__receiveError__ = (err) => {
 function App(props) {
   const state = useStore();
   const {error} = useErrorStore();
-  const {uuid, connection_token, connected, contract, messageId, currentOutputView, server_ip} = state;
+  const {uuid, connection_token, connected, contract, embedded, messageId, currentOutputView, server_ip} = state;
 
   useEffect(() => {
     // console.log(`MasterToken in main: ${uuid}`);
@@ -259,7 +262,9 @@ function App(props) {
 
               //IF THERE ARE LOGS, SHOW THEM
               if (responseData?.response?.logs) {
+
                 const logs = responseData.response.logs;
+                console.log('LOGS:', logs);
                 if (typeof globalThis.__postNativeMessage__ === 'function') {
                   globalThis.__postNativeMessage__(JSON.stringify({action: 'SET_OUTPUT_LOGS', payload: logs}));
                 }
@@ -315,27 +320,55 @@ function App(props) {
     };
   }, [connection_token, connected]);
 
+  let outerWrapper = ''
+  let outerColWidth = ''
+  let centerCol = ''
+
+  if (embedded === 'web') {
+    outerWrapper = "w-full h-full flex flex-row";
+    outerColWidth = "w-full";
+    centerCol = "w-full h-full";
+  } else if (embedded === 'vst') {
+    outerWrapper = "w-[460px] h-[465px] flex flex-row";
+    outerColWidth = "w-[0px]";
+    centerCol = "w-[460px] h-[465px]";
+  }
+
   return (
-    <div className="w-[460px] h-[465px]">
-      <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-      <Interface
-        {...state}
-        setUUID={(newUUID) => store.setState({uuid: newUUID})}
-        error={error}
-        requestParamValueUpdate={requestParamValueUpdate}
-        resetErrorState={() => errorStore.setState({error: null})}
-      />
+    <div className={outerWrapper}>
+      <div className={outerColWidth}>
+        <div className="w-full h-[80px] bg-gray-200"></div>
+        <div className="w-full h-[350px] bg-gray-100"></div>
+        <div className="w-full h-[35px] bg-gray-100"></div>
+        <div className="w-full h-full bg-gray-100"></div>
+      </div>
+      <div className={centerCol}>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <Interface
+          {...state}
+          setUUID={(newUUID) => store.setState({uuid: newUUID})}
+          error={error}
+          requestParamValueUpdate={requestParamValueUpdate}
+          resetErrorState={() => errorStore.setState({error: null})}
+        />
+      </div>
+      <div className={outerColWidth}>
+        <div className="w-full h-[80px] bg-gray-200"></div>
+        <div className="w-full h-[350px] bg-gray-100"></div>
+        <div className="w-full h-[35px] bg-gray-100"></div>
+        <div className="w-full h-full bg-gray-100"></div>
+      </div>
     </div>
   );
 }

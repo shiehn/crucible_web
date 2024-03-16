@@ -10,6 +10,7 @@ export default {
         logo: ['Righteous', 'sans-serif'],
         teko: ['Teko','sans-serif'],
         bahianita: ['Bahianita', 'sans-serif'],
+        rye: ['Rye', 'cursive'],
       },
       fontSize: {
         'xxs': '.625rem', // This is an example size, you can set it as needed

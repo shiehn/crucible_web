@@ -1,16 +1,51 @@
-function ResultsDisplay({ results }) {
-  if (!results) {
-    // If there is no contract, don't render anything
-    return null;
+import {useStore} from "./main.jsx";
+import {useEffect} from "react";
+import LogsDisplay from "./LogsDisplay.jsx";
+
+function MediaTypeDisplay({ url }) {
+  const fileExtension = url.split('.').pop().toLowerCase();
+
+  switch (fileExtension) {
+    case 'mp3':
+    case 'wav':
+      return <audio controls src={url} />;
+    case 'mp4':
+    case 'avi':
+      return <video controls src={url} width="320" />;
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+      return <img src={url} alt="Media content" style={{ maxWidth: '320px' }} />;
+    case 'txt':
+      // Assuming you have a way to fetch and display the text content
+      return <iframe src={url} title="Text content" style={{ width: '320px', height: '240px' }} />;
+    default:
+      return <span>Unsupported file type</span>;
+  }
+}
+function ResultsDisplay() {
+
+
+  // if (!results) {
+  //   // If there is no contract, don't render anything
+  //   return null;
+  // }
+
+  const {results} = useStore();
+
+  if (!results || !results.response || !results.response.files) {
+    return <div>No media found.</div>;
   }
 
-  const resultsValue = JSON.stringify(results, null, 2);
-
-  // If there is a contract, render a white box with the contract value in black text
   return (
-    <div className="w-full bg-white mt-4 p-4 rounded shadow-lg">
-      <h4>RESULTS</h4>
-      <span className="text-black">{resultsValue}</span>
+    <div className="media-container">
+      {results.response.files.map((file, index) => (
+        <div key={index} className="media-item" style={{ margin: '10px 0' }}>
+          <MediaTypeDisplay url={file.url} />
+          <div>File name: {file.name}</div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -24,6 +24,7 @@ import RemoteLinks from "./RemoteLinks.jsx";
 import RemoteConnections from "./RemoteConnections.jsx";
 import {IoMdSettings} from "react-icons/io";
 import Settings from "./Settings.jsx";
+import LogsDisplay from "./LogsDisplay.jsx";
 
 
 function ErrorAlert({message, reset}) {
@@ -60,7 +61,7 @@ function ErrorAlert({message, reset}) {
 // component to propagate new parameter values to the host.
 export default function Interface(props) {
 
-  const {isLoading, isConnecting} = useStore();
+  const {isLoading, isConnecting, currentOutputView} = useStore();
 
   const colorProps = {
     meterColor: '#EC4899',
@@ -217,11 +218,6 @@ export default function Interface(props) {
         >
           Launch Colabs
         </button>
-
-        {/*<div className={`flex w-1/3 justify-start px-4 items-center`}>*/}
-        {/*  <IoMdSettings className="h-6 w-6 text-gray-300"/>*/}
-        {/*</div>*/}
-
       </div>
       {/*END SUB NAV HERE*/}
 
@@ -241,23 +237,6 @@ export default function Interface(props) {
             />
           </div>
         )}
-
-        {/*{isConnecting && (*/}
-        {/*  <div className="absolute top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">*/}
-        {/*    /!* Loading animation *!/*/}
-        {/*    <Bars*/}
-        {/*      height="80"*/}
-        {/*      width="80"*/}
-        {/*      color="#4fa94d"*/}
-        {/*      ariaLabel="bars-loading"*/}
-        {/*      wrapperStyle={{}}*/}
-        {/*      wrapperClass=""*/}
-        {/*      visible={true}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*)}*/}
-
-        {/* Main Content */}
 
         <div className="w-[460px] h-[350px] overflow-y-auto overflow-x-hidden">
           {props.connected && (
@@ -281,6 +260,13 @@ export default function Interface(props) {
       {/* End of Section between Nav Bar and Action Bar */}
 
       <ActionBar/>
+      {/* Conditional rendering based on `currentOutputView` */}
+      {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (
+        <ResultsDisplay />
+      )}
+      {(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (
+        <LogsDisplay />
+      )}
     </div>
   );
 }
