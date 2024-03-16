@@ -159,6 +159,11 @@ export default function Interface(props) {
   //   setIsVisible(props.connected);
   // }, [props.connected]);
 
+  const handleClick = () => {
+    // Redirect the user to the desired URL
+    window.location.href = 'https://signalsandsorcery.com';
+  };
+
   return (
     <div className="w-full h-full justify-between overflow-hidden bg-gray-50 relative">
 
@@ -170,9 +175,11 @@ export default function Interface(props) {
             onClick={() => updateNavigation('settings')}
           />
 
-          <div className="flex flex-col items-center justify-center ml-1">
-
-            <div className="flex items-center w-full justify-start text-white font-logo text-3xl">
+          <div
+            className="flex flex-col items-center justify-center ml-1 cursor-pointer"
+            onClick={handleClick}
+          >
+            <div className="flex items-center w-full justify-start text-white font-logo text-2xl">
               Crucible
             </div>
           </div>
@@ -181,11 +188,11 @@ export default function Interface(props) {
 
         <div className="flex items-center">
           <div className="flex w-[273px] h-[32px] overflow-hidden text-white">
-          <UUIDButton setUUID={props.setUUID}/>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleChange}
+            <UUIDButton setUUID={props.setUUID}/>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
