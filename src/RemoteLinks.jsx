@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useStore } from "./main.jsx";
+import React, {useState, useEffect} from 'react';
+import {useStore} from "./main.jsx";
 import {API_URLS} from "./apiUrls.js";
 
-function RemoteLinks({ isVisible }) {
-  const { uuid, connected, server_ip } = useStore();
+function RemoteLinks({isVisible}) {
+  const {embedded, uuid, connected, server_ip} = useStore();
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,7 +22,7 @@ function RemoteLinks({ isVisible }) {
           const transformedData = data.map(item => ({
             name: item.remote_name,
             description: item.remote_description,
-            hyperlink: item.source_url
+            hyperlink: item.colab_url
           }));
           setLinks(transformedData);
           setLoading(false);
@@ -35,8 +35,13 @@ function RemoteLinks({ isVisible }) {
   }, [isVisible]);
 
   const handleHyperLink = async (url) => {
-    if (typeof globalThis.__postNativeMessage__ === 'function') {
-      globalThis.__postNativeMessage__(JSON.stringify({ action: 'HYPERLINK', payload: url + '?DAWNET_TOKEN=' + uuid }));
+    const formattedUrl = url + '?DAWNET_TOKEN=' + uuid;
+    if (embedded === 'vst') {
+      if (typeof globalThis.__postNativeMessage__ === 'function') {
+        globalThis.__postNativeMessage__(JSON.stringify({action: 'HYPERLINK', payload: formattedUrl}));
+      }
+    } else if (embedded === 'web') {
+      window.open(formattedUrl, '_blank');
     }
   };
 
@@ -47,7 +52,8 @@ function RemoteLinks({ isVisible }) {
     <div className="w-full h-full pt-2">
       {links.map((link, index) => (
         <div key={index} className="p-2">
-          <div className="w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300 hover:cursor-pointer" onClick={() => handleHyperLink(link.hyperlink)}>
+          <div className="w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300 hover:cursor-pointer"
+               onClick={() => handleHyperLink(link.hyperlink)}>
             <div className="w-full text-md font-bold">{link.name}</div>
             <div className="text-sm">{link.description}</div>
           </div>

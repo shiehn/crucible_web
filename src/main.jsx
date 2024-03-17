@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
 
 
-export const DEFAULT_SERVER_IP = 'http://34.135.228.111:8081/';
+export const DEFAULT_SERVER_IP = 'https://34.135.228.111/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'available_remotes'
 
@@ -327,7 +327,7 @@ function App(props) {
   if (embedded === 'web') {
     outerWrapper = "w-full h-full flex flex-row";
     outerColWidth = "w-full";
-    centerCol = "w-full h-full";
+    centerCol = "w-[460px] h-full";
   } else if (embedded === 'vst') {
     outerWrapper = "w-[460px] h-[465px] flex flex-row";
     outerColWidth = "w-[0px]";
