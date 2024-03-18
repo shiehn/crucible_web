@@ -45,7 +45,7 @@ function ActionBar({}) {
       </div>
       <div className="w-1/2 flex justify-end">
         <button
-          className="h-[28px] w-[60px] mr-2 bg-green-700 rounded-lg text-white text-sm hover:bg-green-500 active:bg-green-300"
+          className="h-[28px] w-[60px] mr-2 bg-green-700 rounded-lg text-white text-sm hover:sas-green active:bg-green-300"
           onClick={submitForm}><FaPlay className="h-full w-full p-1"/></button>
         <button
           className="h-[28px] w-[60px] mr-2 bg-red-700 rounded-lg text-white text-sm hover:bg-red-500 active:bg-red-300"
