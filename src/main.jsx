@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
 
 
-export const DEFAULT_SERVER_IP = 'https://34.135.228.111/';
+export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'available_remotes'
 
