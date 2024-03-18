@@ -6,6 +6,13 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        'sas-background-dark': '#22272e', // Custom color name and its hex value
+        'sas-background-light': '#37404c',
+        'sas-green': '#3AA675',
+        'sas-text-grey': '#8B9EB0',
+        'sas-white': '#999999',
+      },
       fontFamily: {
         logo: ['Righteous', 'sans-serif'],
         teko: ['Teko','sans-serif'],

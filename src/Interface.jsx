@@ -165,13 +165,13 @@ export default function Interface(props) {
   };
 
   return (
-    <div className="w-full h-full justify-between overflow-hidden bg-gray-50 relative">
+    <div className="w-full h-full justify-between overflow-hidden bg-sas-background-light relative">
 
       {/*START NAV BAR HERE*/}
-      <div className="flex items-center justify-between w-full h-[56px] overflow-hidden bg-black px-2">
+      <div className="flex items-center justify-between w-full h-[56px] overflow-hidden bg-sas-background-dark px-2">
         <div className="flex items-center w-full">
           <IoMdSettings
-            className={`h-8 w-8 text-gray-200 hover:text-green-600 ${props.navigation === 'settings' ? 'text-green-600' : ''}`}
+            className={`h-6 w-6 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-green-600' : ''}`}
             onClick={() => updateNavigation('settings')}
           />
 
@@ -179,8 +179,11 @@ export default function Interface(props) {
             className="flex flex-col items-center justify-center ml-1 cursor-pointer"
             onClick={handleClick}
           >
-            <div className="flex items-center w-full justify-start text-white font-logo text-2xl">
-              Crucible
+            <div className="flex items-center w-full justify-start text-sas-green  font-logo text-l">
+              Crucible Audio
+            </div>
+            <div className="flex items-center w-full justify-start text-white font-rye text-xs">
+              Signals & Sorcery
             </div>
           </div>
 
@@ -196,10 +199,10 @@ export default function Interface(props) {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="text-gray-100 font-teko text-sm text-center w-[193px] h-[32px] bg-gray-500"
+            className="text-gray-100 font-teko text-sm text-center w-[193px] h-[32px] bg-sas-background-light"
           />
           <button
-            className="text-black text-xs bg-gray-300 rounded-r w-[44px] h-[32px] hover:bg-green-600"
+            className="text-black text-xs bg-gray-300 rounded-r w-[44px] h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
             onClick={handleCopy}
           >
             COPY
@@ -212,12 +215,12 @@ export default function Interface(props) {
       {/*END NAV BAR HERE*/}
 
       {/*START SUB NAV HERE*/}
-      <div className="flex w-full h-6 bg-black drop-shadow-md overflow-hidden">
+      <div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">
         <button
           className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'connected_remotes' ? 'bg-gray-50 ' : 'bg-gray-300'}`}
           onClick={() => updateNavigation('connected_remotes')}
         >
-          Connected Remotes
+          Connected Elixirs
         </button>
         <button
           className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-gray-50' : 'bg-gray-300'}`}

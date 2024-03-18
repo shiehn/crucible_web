@@ -337,10 +337,10 @@ function App(props) {
   return (
     <div className={outerWrapper}>
       <div className={outerColWidth}>
-        <div className="w-full h-[80px] bg-black"></div>
-        <div className="w-full h-[350px] bg-black"></div>
-        <div className="w-full h-[35px] bg-black"></div>
-        <div className="w-full h-full bg-black"></div>
+        <div className="w-full h-[80px] bg-sas-background-dark"></div>
+        <div className="w-full h-[350px] bg-sas-background-dark"></div>
+        <div className="w-full h-[35px] bg-sas-background-dark"></div>
+        <div className="w-full h-full bg-sas-background-dark"></div>
       </div>
       <div className={centerCol}>
         <ToastContainer
@@ -364,10 +364,10 @@ function App(props) {
         />
       </div>
       <div className={outerColWidth}>
-        <div className="w-full h-[80px] bg-black"></div>
-        <div className="w-full h-[350px] bg-black"></div>
-        <div className="w-full h-[35px] bg-black"></div>
-        <div className="w-full h-full bg-black"></div>
+        <div className="w-full h-[80px] bg-sas-background-dark"></div>
+        <div className="w-full h-[350px] bg-sas-background-dark"></div>
+        <div className="w-full h-[35px] bg-sas-background-dark"></div>
+        <div className="w-full h-full bg-sas-background-dark"></div>
       </div>
     </div>
   );

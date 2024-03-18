@@ -100,7 +100,7 @@ function RemoteConnections({isVisible}) {
   }
 
   return (
-    <div className="w-full h-full pt-2">
+    <div className="w-full h-full pt-2 bg-sas-background-grey">
       <div className="flex w-full justify-end hover:cursor-pointer">
         <div className={`flex items-center pr-2`} onClick={() => refreshConnections()}>
           <IoMdRefreshCircle
@@ -140,7 +140,7 @@ function RemoteConnections({isVisible}) {
         ))
       ) : (
         <div className="flex items-center justify-center h-full text-xs">
-          <div className="text-center text-gray-600 px-12">
+          <div className="text-center text-sas-text-grey px-12">
             No connection mappings found. To learn how to create or connect to DAWNet remotes visit the &nbsp;
             <a
               href="https://dawnet.tools/"

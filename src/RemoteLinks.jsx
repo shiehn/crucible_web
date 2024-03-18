@@ -52,10 +52,10 @@ function RemoteLinks({isVisible}) {
     <div className="w-full h-full pt-2">
       {links.map((link, index) => (
         <div key={index} className="p-2">
-          <div className="w-full p-2 rounded-md bg-gray-200 hover:bg-gray-300 hover:cursor-pointer"
+          <div className="w-full p-2 rounded-md border-2 border-sas-text-grey text-sas-background-dark bg-sas-background-dark hover:bg-sas-background-dark hover:cursor-pointer"
                onClick={() => handleHyperLink(link.hyperlink)}>
-            <div className="w-full text-md font-bold">{link.name}</div>
-            <div className="text-sm">{link.description}</div>
+            <div className="w-full text-md font-bold text-sas-green">{link.name}</div>
+            <div className="text-sm text-sas-text-grey">{link.description}</div>
           </div>
         </div>
       ))}
