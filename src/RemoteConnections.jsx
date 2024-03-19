@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
 import {getConnectionMappings, isTokenConnectedToRemote, removeConnectionMapping} from "./api.js";
 import {FaPlugCircleCheck, FaPlugCircleMinus} from "react-icons/fa6";
+import { MdCancel } from "react-icons/md";
 import { IoMdRefreshCircle } from "react-icons/io";
 import {toast} from "react-toastify";
 
@@ -104,7 +105,7 @@ function RemoteConnections({isVisible}) {
       <div className="flex w-full justify-end hover:cursor-pointer">
         <div className={`flex items-center pr-2`} onClick={() => refreshConnections()}>
           <IoMdRefreshCircle
-            className={`h-8 w-8 ${isHighlight ? 'text-sas-green-500' : 'text-green-800'} hover:text-green-500 pr-2`}
+            className={`h-8 w-8 ${isHighlight ? 'text-sas-green' : 'text-green-800'} hover:text-green-500 pr-2`}
             onMouseEnter={() => setIsHighlight(true)}
             onMouseLeave={() => setIsHighlight(false)}
             onClick={() => refreshConnections()}
@@ -115,26 +116,28 @@ function RemoteConnections({isVisible}) {
         connectionMappings.map((mapping, index) => (
           <div className="p-2" key={index}>
             <div
-              className="flex w-full justify-between p-2 rounded-md bg-gray-200 hover:bg-gray-300 hover:cursor-pointer"
+              className="w-full p-2 rounded-md border-2 border-sas-background-dark hover:border-sas-text-grey text-sas-background-dark bg-sas-background-dark hover:bg-sas-background-dark hover:cursor-pointer"
               onClick={() => handlerClick(mapping)}
             >
-              <div className="w-7/8">
-                <div className="w-full text-md font-bold">{mapping.connection_name}</div>
-                <div className="text-sm">{mapping.description}</div>
+              <div className="flex w-full justify-between">
+                <div className="w-7/8">
+                  <div className="w-full text-md font-bold text-sas-green">{mapping.connection_name}</div>
+                  <div className="text-sm text-sas-text-grey">{mapping.description}</div>
+                </div>
+                <div className="w-1/8 flex items-center justify-center">
+                  {isConnectedArray[index] ? (
+                      <FaPlugCircleCheck className="h-6 w-6 text-sas-green"/>
+                  ) : (
+                      <FaPlugCircleCheck className="h-6 w-6 text-red-400"/>
+                  )}
+                </div>
               </div>
-              <div className="w-1/8 flex items-center justify-center">
-                {isConnectedArray[index] ? (
-                  <FaPlugCircleCheck className="h-8 w-8 text-green-600"/>
-                ) : (
-                  <FaPlugCircleMinus className="h-8 w-8 text-red-600"/>
-                )}
+              <div className="flex justify-end w-full">
+                  <span className="text-xxs text-red-800 hover:cursor-pointer hover:text-red-400"
+                        onClick={() => handleRemove(mapping)}>
+                    remove
+                  </span>
               </div>
-            </div>
-            <div className="flex justify-end w-full">
-              <span className="text-xxs text-red-800 pr-2 hover:cursor-pointer hover:text-red-400"
-                    onClick={() => handleRemove(mapping)}>
-                remove
-              </span>
             </div>
           </div>
         ))
