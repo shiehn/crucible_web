@@ -36,7 +36,7 @@ function Settings({isVisible}) {
       <div className="flex justify-end w-full border-b-2 border-gray-200 mb-4">
         <h1 className="w-full font-bold">SETTINGS</h1>
         <span
-          className="text-xs text-green-800 hover:text-red-700 hover:cursor-pointer"
+          className="text-xs text-sas-green-800 hover:text-red-700 hover:cursor-pointer"
           onClick={handleReset}>
         reset
     </span>

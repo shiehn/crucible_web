@@ -104,7 +104,7 @@ function RemoteConnections({isVisible}) {
       <div className="flex w-full justify-end hover:cursor-pointer">
         <div className={`flex items-center pr-2`} onClick={() => refreshConnections()}>
           <IoMdRefreshCircle
-            className={`h-8 w-8 ${isHighlight ? 'text-green-500' : 'text-green-800'} hover:text-green-500 pr-2`}
+            className={`h-8 w-8 ${isHighlight ? 'text-sas-green-500' : 'text-green-800'} hover:text-green-500 pr-2`}
             onMouseEnter={() => setIsHighlight(true)}
             onMouseLeave={() => setIsHighlight(false)}
             onClick={() => refreshConnections()}

@@ -35,11 +35,11 @@ function ResultsDisplay() {
   const {results} = useStore();
 
   if (!results || !results.response || !results.response.files) {
-    return <div>No media found.</div>;
+    return <div className="">No media found.</div>;
   }
 
   return (
-    <div className="media-container">
+    <div className="p-2 media-container bg-sas-background-light min-h-[350px]">
       {results.response.files.map((file, index) => (
         <div key={index} className="media-item" style={{ margin: '10px 0' }}>
           <MediaTypeDisplay url={file.url} />

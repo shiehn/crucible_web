@@ -171,7 +171,7 @@ export default function Interface(props) {
       <div className="flex items-center justify-between w-full h-[56px] overflow-hidden bg-sas-background-dark px-2">
         <div className="flex items-center w-full">
           <IoMdSettings
-            className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-green-600' : ''}`}
+            className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
             onClick={() => updateNavigation('settings')}
           />
 
@@ -248,7 +248,11 @@ export default function Interface(props) {
           </div>
         )}
 
-        <div className="w-[460px] h-[350px] overflow-y-auto overflow-x-hidden">
+        {/*'sas-background-dark': '#22272e', // Custom color name and its hex value*/}
+        {/*'sas-background-light': '#37404c',*/}
+
+
+        <div className="w-[460px] h-[350px]  overflow-y-auto overflow-x-hidden custom-scrollbar">
           {props.connected && (
             <ContractDisplay contract={props.contract} isVisible={true}/>
           )}
@@ -270,13 +274,17 @@ export default function Interface(props) {
       {/* End of Section between Nav Bar and Action Bar */}
 
       <ActionBar/>
-      {/* Conditional rendering based on `currentOutputView` */}
-      {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (
-        <ResultsDisplay />
-      )}
-      {(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (
-        <LogsDisplay />
-      )}
+      <div className="p-2 w-[460px] min-h-full bg-sas-background-light">
+        <div className="p-2 w-full min-h-[200px] bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
+          {/* Conditional rendering based on `currentOutputView` */}
+          {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (
+            <ResultsDisplay />
+          )}
+          {(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (
+            <LogsDisplay />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

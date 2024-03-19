@@ -325,12 +325,12 @@ function App(props) {
   let centerCol = ''
 
   if (embedded === 'web') {
-    outerWrapper = "w-full h-full flex flex-row";
-    outerColWidth = "w-full";
-    centerCol = "w-[460px] h-full";
+    outerWrapper = "w-full h-full flex flex-row min-h-screen overflow-hidden ";
+    outerColWidth = "w-full min-h-screen";
+    centerCol = "w-[460px] min-h-screen";
   } else if (embedded === 'vst') {
-    outerWrapper = "w-[460px] h-[465px] flex flex-row";
-    outerColWidth = "w-[0px]";
+    outerWrapper = "w-[460px] h-[465px] flex flex-row overflow-hidden";
+    outerColWidth = "w-[0px] h-[465px]";
     centerCol = "w-[460px] h-[465px]";
   }
 
