@@ -45,10 +45,10 @@ function ActionBar({}) {
       </div>
       <div className="w-1/2 flex justify-end">
         <button
-          className="h-[28px] w-[60px] mr-2 bg-green-700 rounded-lg text-white text-sm hover:sas-green active:bg-green-300"
+          className="h-[28px] w-[60px] mr-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
           onClick={submitForm}><FaPlay className="h-full w-full p-1"/></button>
         <button
-          className="h-[28px] w-[60px] mr-2 bg-red-700 rounded-lg text-white text-sm hover:bg-red-500 active:bg-red-300"
+            className="h-[28px] w-[60px] mr-2 bg-red-400 rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
           onClick={handleAbort}><FaStop className="h-full w-full p-1"/></button>
       </div>
     </div>

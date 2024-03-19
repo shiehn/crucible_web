@@ -171,7 +171,7 @@ export default function Interface(props) {
       <div className="flex items-center justify-between w-full h-[56px] overflow-hidden bg-sas-background-dark px-2">
         <div className="flex items-center w-full">
           <IoMdSettings
-            className={`h-6 w-6 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-green-600' : ''}`}
+            className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-green-600' : ''}`}
             onClick={() => updateNavigation('settings')}
           />
 
@@ -217,13 +217,13 @@ export default function Interface(props) {
       {/*START SUB NAV HERE*/}
       <div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">
         <button
-          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'connected_remotes' ? 'bg-gray-50 ' : 'bg-gray-300'}`}
+          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
           onClick={() => updateNavigation('connected_remotes')}
         >
           Connected Elixirs
         </button>
         <button
-          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-gray-50' : 'bg-gray-300'}`}
+          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
           onClick={() => updateNavigation('available_remotes')}
         >
           Launch Colabs
