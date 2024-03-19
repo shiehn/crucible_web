@@ -96,6 +96,378 @@
     }
   });
 
+  // node_modules/events/events.js
+  var require_events = __commonJS({
+    "node_modules/events/events.js"(exports, module) {
+      "use strict";
+      var R2 = typeof Reflect === "object" ? Reflect : null;
+      var ReflectApply = R2 && typeof R2.apply === "function" ? R2.apply : function ReflectApply2(target, receiver, args) {
+        return Function.prototype.apply.call(target, receiver, args);
+      };
+      var ReflectOwnKeys;
+      if (R2 && typeof R2.ownKeys === "function") {
+        ReflectOwnKeys = R2.ownKeys;
+      } else if (Object.getOwnPropertySymbols) {
+        ReflectOwnKeys = function ReflectOwnKeys2(target) {
+          return Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target));
+        };
+      } else {
+        ReflectOwnKeys = function ReflectOwnKeys2(target) {
+          return Object.getOwnPropertyNames(target);
+        };
+      }
+      function ProcessEmitWarning(warning) {
+        if (console && console.warn)
+          console.warn(warning);
+      }
+      var NumberIsNaN = Number.isNaN || function NumberIsNaN2(value) {
+        return value !== value;
+      };
+      function EventEmitter2() {
+        EventEmitter2.init.call(this);
+      }
+      module.exports = EventEmitter2;
+      module.exports.once = once2;
+      EventEmitter2.EventEmitter = EventEmitter2;
+      EventEmitter2.prototype._events = void 0;
+      EventEmitter2.prototype._eventsCount = 0;
+      EventEmitter2.prototype._maxListeners = void 0;
+      var defaultMaxListeners = 10;
+      function checkListener(listener) {
+        if (typeof listener !== "function") {
+          throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+        }
+      }
+      Object.defineProperty(EventEmitter2, "defaultMaxListeners", {
+        enumerable: true,
+        get: function() {
+          return defaultMaxListeners;
+        },
+        set: function(arg) {
+          if (typeof arg !== "number" || arg < 0 || NumberIsNaN(arg)) {
+            throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + ".");
+          }
+          defaultMaxListeners = arg;
+        }
+      });
+      EventEmitter2.init = function() {
+        if (this._events === void 0 || this._events === Object.getPrototypeOf(this)._events) {
+          this._events = /* @__PURE__ */ Object.create(null);
+          this._eventsCount = 0;
+        }
+        this._maxListeners = this._maxListeners || void 0;
+      };
+      EventEmitter2.prototype.setMaxListeners = function setMaxListeners(n2) {
+        if (typeof n2 !== "number" || n2 < 0 || NumberIsNaN(n2)) {
+          throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n2 + ".");
+        }
+        this._maxListeners = n2;
+        return this;
+      };
+      function _getMaxListeners(that) {
+        if (that._maxListeners === void 0)
+          return EventEmitter2.defaultMaxListeners;
+        return that._maxListeners;
+      }
+      EventEmitter2.prototype.getMaxListeners = function getMaxListeners() {
+        return _getMaxListeners(this);
+      };
+      EventEmitter2.prototype.emit = function emit(type) {
+        var args = [];
+        for (var i2 = 1; i2 < arguments.length; i2++)
+          args.push(arguments[i2]);
+        var doError = type === "error";
+        var events2 = this._events;
+        if (events2 !== void 0)
+          doError = doError && events2.error === void 0;
+        else if (!doError)
+          return false;
+        if (doError) {
+          var er;
+          if (args.length > 0)
+            er = args[0];
+          if (er instanceof Error) {
+            throw er;
+          }
+          var err = new Error("Unhandled error." + (er ? " (" + er.message + ")" : ""));
+          err.context = er;
+          throw err;
+        }
+        var handler = events2[type];
+        if (handler === void 0)
+          return false;
+        if (typeof handler === "function") {
+          ReflectApply(handler, this, args);
+        } else {
+          var len = handler.length;
+          var listeners = arrayClone(handler, len);
+          for (var i2 = 0; i2 < len; ++i2)
+            ReflectApply(listeners[i2], this, args);
+        }
+        return true;
+      };
+      function _addListener(target, type, listener, prepend) {
+        var m2;
+        var events2;
+        var existing;
+        checkListener(listener);
+        events2 = target._events;
+        if (events2 === void 0) {
+          events2 = target._events = /* @__PURE__ */ Object.create(null);
+          target._eventsCount = 0;
+        } else {
+          if (events2.newListener !== void 0) {
+            target.emit(
+              "newListener",
+              type,
+              listener.listener ? listener.listener : listener
+            );
+            events2 = target._events;
+          }
+          existing = events2[type];
+        }
+        if (existing === void 0) {
+          existing = events2[type] = listener;
+          ++target._eventsCount;
+        } else {
+          if (typeof existing === "function") {
+            existing = events2[type] = prepend ? [listener, existing] : [existing, listener];
+          } else if (prepend) {
+            existing.unshift(listener);
+          } else {
+            existing.push(listener);
+          }
+          m2 = _getMaxListeners(target);
+          if (m2 > 0 && existing.length > m2 && !existing.warned) {
+            existing.warned = true;
+            var w2 = new Error("Possible EventEmitter memory leak detected. " + existing.length + " " + String(type) + " listeners added. Use emitter.setMaxListeners() to increase limit");
+            w2.name = "MaxListenersExceededWarning";
+            w2.emitter = target;
+            w2.type = type;
+            w2.count = existing.length;
+            ProcessEmitWarning(w2);
+          }
+        }
+        return target;
+      }
+      EventEmitter2.prototype.addListener = function addListener(type, listener) {
+        return _addListener(this, type, listener, false);
+      };
+      EventEmitter2.prototype.on = EventEmitter2.prototype.addListener;
+      EventEmitter2.prototype.prependListener = function prependListener(type, listener) {
+        return _addListener(this, type, listener, true);
+      };
+      function onceWrapper() {
+        if (!this.fired) {
+          this.target.removeListener(this.type, this.wrapFn);
+          this.fired = true;
+          if (arguments.length === 0)
+            return this.listener.call(this.target);
+          return this.listener.apply(this.target, arguments);
+        }
+      }
+      function _onceWrap(target, type, listener) {
+        var state = { fired: false, wrapFn: void 0, target, type, listener };
+        var wrapped = onceWrapper.bind(state);
+        wrapped.listener = listener;
+        state.wrapFn = wrapped;
+        return wrapped;
+      }
+      EventEmitter2.prototype.once = function once3(type, listener) {
+        checkListener(listener);
+        this.on(type, _onceWrap(this, type, listener));
+        return this;
+      };
+      EventEmitter2.prototype.prependOnceListener = function prependOnceListener(type, listener) {
+        checkListener(listener);
+        this.prependListener(type, _onceWrap(this, type, listener));
+        return this;
+      };
+      EventEmitter2.prototype.removeListener = function removeListener(type, listener) {
+        var list, events2, position, i2, originalListener;
+        checkListener(listener);
+        events2 = this._events;
+        if (events2 === void 0)
+          return this;
+        list = events2[type];
+        if (list === void 0)
+          return this;
+        if (list === listener || list.listener === listener) {
+          if (--this._eventsCount === 0)
+            this._events = /* @__PURE__ */ Object.create(null);
+          else {
+            delete events2[type];
+            if (events2.removeListener)
+              this.emit("removeListener", type, list.listener || listener);
+          }
+        } else if (typeof list !== "function") {
+          position = -1;
+          for (i2 = list.length - 1; i2 >= 0; i2--) {
+            if (list[i2] === listener || list[i2].listener === listener) {
+              originalListener = list[i2].listener;
+              position = i2;
+              break;
+            }
+          }
+          if (position < 0)
+            return this;
+          if (position === 0)
+            list.shift();
+          else {
+            spliceOne(list, position);
+          }
+          if (list.length === 1)
+            events2[type] = list[0];
+          if (events2.removeListener !== void 0)
+            this.emit("removeListener", type, originalListener || listener);
+        }
+        return this;
+      };
+      EventEmitter2.prototype.off = EventEmitter2.prototype.removeListener;
+      EventEmitter2.prototype.removeAllListeners = function removeAllListeners(type) {
+        var listeners, events2, i2;
+        events2 = this._events;
+        if (events2 === void 0)
+          return this;
+        if (events2.removeListener === void 0) {
+          if (arguments.length === 0) {
+            this._events = /* @__PURE__ */ Object.create(null);
+            this._eventsCount = 0;
+          } else if (events2[type] !== void 0) {
+            if (--this._eventsCount === 0)
+              this._events = /* @__PURE__ */ Object.create(null);
+            else
+              delete events2[type];
+          }
+          return this;
+        }
+        if (arguments.length === 0) {
+          var keys = Object.keys(events2);
+          var key;
+          for (i2 = 0; i2 < keys.length; ++i2) {
+            key = keys[i2];
+            if (key === "removeListener")
+              continue;
+            this.removeAllListeners(key);
+          }
+          this.removeAllListeners("removeListener");
+          this._events = /* @__PURE__ */ Object.create(null);
+          this._eventsCount = 0;
+          return this;
+        }
+        listeners = events2[type];
+        if (typeof listeners === "function") {
+          this.removeListener(type, listeners);
+        } else if (listeners !== void 0) {
+          for (i2 = listeners.length - 1; i2 >= 0; i2--) {
+            this.removeListener(type, listeners[i2]);
+          }
+        }
+        return this;
+      };
+      function _listeners(target, type, unwrap) {
+        var events2 = target._events;
+        if (events2 === void 0)
+          return [];
+        var evlistener = events2[type];
+        if (evlistener === void 0)
+          return [];
+        if (typeof evlistener === "function")
+          return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+        return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+      }
+      EventEmitter2.prototype.listeners = function listeners(type) {
+        return _listeners(this, type, true);
+      };
+      EventEmitter2.prototype.rawListeners = function rawListeners(type) {
+        return _listeners(this, type, false);
+      };
+      EventEmitter2.listenerCount = function(emitter, type) {
+        if (typeof emitter.listenerCount === "function") {
+          return emitter.listenerCount(type);
+        } else {
+          return listenerCount.call(emitter, type);
+        }
+      };
+      EventEmitter2.prototype.listenerCount = listenerCount;
+      function listenerCount(type) {
+        var events2 = this._events;
+        if (events2 !== void 0) {
+          var evlistener = events2[type];
+          if (typeof evlistener === "function") {
+            return 1;
+          } else if (evlistener !== void 0) {
+            return evlistener.length;
+          }
+        }
+        return 0;
+      }
+      EventEmitter2.prototype.eventNames = function eventNames() {
+        return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+      };
+      function arrayClone(arr, n2) {
+        var copy = new Array(n2);
+        for (var i2 = 0; i2 < n2; ++i2)
+          copy[i2] = arr[i2];
+        return copy;
+      }
+      function spliceOne(list, index) {
+        for (; index + 1 < list.length; index++)
+          list[index] = list[index + 1];
+        list.pop();
+      }
+      function unwrapListeners(arr) {
+        var ret = new Array(arr.length);
+        for (var i2 = 0; i2 < ret.length; ++i2) {
+          ret[i2] = arr[i2].listener || arr[i2];
+        }
+        return ret;
+      }
+      function once2(emitter, name) {
+        return new Promise(function(resolve2, reject) {
+          function errorListener(err) {
+            emitter.removeListener(name, resolver);
+            reject(err);
+          }
+          function resolver() {
+            if (typeof emitter.removeListener === "function") {
+              emitter.removeListener("error", errorListener);
+            }
+            resolve2([].slice.call(arguments));
+          }
+          ;
+          eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+          if (name !== "error") {
+            addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+          }
+        });
+      }
+      function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+        if (typeof emitter.on === "function") {
+          eventTargetAgnosticAddListener(emitter, "error", handler, flags);
+        }
+      }
+      function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+        if (typeof emitter.on === "function") {
+          if (flags.once) {
+            emitter.once(name, listener);
+          } else {
+            emitter.on(name, listener);
+          }
+        } else if (typeof emitter.addEventListener === "function") {
+          emitter.addEventListener(name, function wrapListener(arg) {
+            if (flags.once) {
+              emitter.removeEventListener(name, wrapListener);
+            }
+            listener(arg);
+          });
+        } else {
+          throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+        }
+      }
+    }
+  });
+
   // node_modules/react/cjs/react.development.js
   var require_react_development = __commonJS({
     "node_modules/react/cjs/react.development.js"(exports, module) {
@@ -1984,6 +2356,7 @@
   // node_modules/@elemaudio/core/dist/index.js
   var import_shallowequal = __toESM(require_shallowequal(), 1);
   var import_invariant = __toESM(require_browser(), 1);
+  var import_events = __toESM(require_events(), 1);
   var __defProp2 = Object.defineProperty;
   var __defProps = Object.defineProperties;
   var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
@@ -3066,16 +3439,19 @@
     return NodeRepr_isNode(n2);
   }
   function createNode(kind, props, children) {
-    (0, import_invariant.default)(children.length <= 8, `Nodes can only have at most 8 children.`);
     if (typeof kind === "string") {
       return NodeRepr_createPrimitive(kind, props, children.map(resolve));
     }
+    console.warn("WARNING: Support for composite nodes are deprecated as of v2.1.0, and will be removed in v3");
     return NodeRepr_createComposite(kind, props, children.map(resolve));
   }
+  var EventEmitter = class extends import_events.default.EventEmitter {
+  };
   var core_exports = {};
   __export(core_exports, {
     accum: () => accum,
     biquad: () => biquad,
+    capture: () => capture,
     constant: () => constant,
     convolve: () => convolve,
     counter: () => counter,
@@ -3288,6 +3664,12 @@
     }
     return createNode("fft", a2, [resolve(b2)]);
   }
+  function capture(a2, b2, c) {
+    if (typeof a2 === "number" || isNode2(a2)) {
+      return createNode("capture", {}, [resolve(a2), resolve(b2)]);
+    }
+    return createNode("capture", a2, [resolve(b2), resolve(c)]);
+  }
   var dynamics_exports = {};
   __export(dynamics_exports, {
     compress: () => compress
@@ -3485,19 +3867,14 @@
     return el.mul(0.5, el.sub(1, el.cos(el.mul(2 * Math.PI, t2))));
   }
   var el2 = __spreadValues(__spreadValues(__spreadValues({}, core_exports), math_exports), signals_exports);
-  function CompressComposite({ children }) {
+  function compress(a_, b_, c_, d_, e_, f_, g_) {
+    let children = typeof a_ === "number" || isNode2(a_) ? [a_, b_, c_, d_, e_, f_] : [b_, c_, d_, e_, f_, g_];
     const [atkMs, relMs, threshold, ratio, sidechain, xn] = children;
     const env2 = el2.env(el2.tau2pole(el2.mul(1e-3, atkMs)), el2.tau2pole(el2.mul(1e-3, relMs)), sidechain);
     const envDecibels = el2.gain2db(env2);
     const strength = el2.select(el2.leq(ratio, 1), 0, el2.select(el2.geq(ratio, 50), 1, el2.div(1, ratio)));
     const gain = el2.select(el2.ge(envDecibels, threshold), el2.db2gain(el2.mul(el2.sub(threshold, envDecibels), strength)), 1);
-    return resolve(el2.mul(xn, gain));
-  }
-  function compress(a2, b2, c, d2, e2, f2, g2) {
-    if (typeof a2 === "number" || isNode2(a2)) {
-      return createNode(CompressComposite, {}, [a2, b2, c, d2, e2, f2]);
-    }
-    return createNode(CompressComposite, a2, [b2, c, d2, e2, f2, g2]);
+    return el2.mul(xn, gain);
   }
   var envelopes_exports = {};
   __export(envelopes_exports, {
@@ -3599,7 +3976,8 @@
     return clip(-1, 1, el3.mul(el3.db2gain(-30), el3.add(el3.pole(0.99765, el3.mul(x2, 0.099046)), el3.pole(0.963, el3.mul(x2, 0.2965164)), el3.pole(0.57, el3.mul(x2, 1.0526913)), el3.mul(0.1848, x2))));
   }
   var el4 = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, core_exports), math_exports), filters_exports), signals_exports);
-  function AdsrComposite({ children }) {
+  function adsr(a_, b_, c_, d_, e_, f_) {
+    let children = typeof a_ === "number" || isNode2(a_) ? [a_, b_, c_, d_, e_] : [b_, c_, d_, e_, f_];
     let [a2, d2, s2, r3, g2] = children;
     let atkSamps = el4.mul(a2, el4.sr());
     let atkGate = el4.le(el4.counter(g2), atkSamps);
@@ -3607,12 +3985,6 @@
     let t60 = el4.select(g2, el4.select(atkGate, a2, d2), r3);
     let p2 = el4.tau2pole(el4.div(t60, 6.91));
     return el4.smooth(p2, target);
-  }
-  function adsr(a2, b2, c, d2, e2, f2) {
-    if (typeof a2 === "number" || isNode2(a2)) {
-      return createNode(AdsrComposite, {}, [a2, b2, c, d2, e2]);
-    }
-    return createNode(AdsrComposite, a2, [b2, c, d2, e2, f2]);
   }
   var oscillators_exports = {};
   __export(oscillators_exports, {
@@ -3679,7 +4051,7 @@
     let props = hasProps ? a2 : {};
     let rate = hasProps ? b2 : a2;
     let gain = el5.div(el5.mul(4, rate), el5.sr());
-    return el5.mul(gain, el5.pole(0.999, blepsquare(props, rate)));
+    return el5.mul(gain, el5.pole(0.995, blepsquare(props, rate)));
   }
   function noise(a2) {
     if (typeof a2 === "undefined") {
@@ -3712,6 +4084,7 @@
       this.edgesAdded = 0;
       this.propsWritten = 0;
       this.nodeMap = /* @__PURE__ */ new Map();
+      this.currentActiveRoots = /* @__PURE__ */ new Set();
       this.renderContext = {
         sampleRate,
         blockSize: 512,
@@ -3747,7 +4120,11 @@
       this.batch.push([InstructionTypes.SET_PROPERTY, hash, key, value]);
     }
     activateRoots(roots) {
-      this.batch.push([InstructionTypes.ACTIVATE_ROOTS, roots]);
+      let alreadyActive = roots.length === this.currentActiveRoots.size && roots.every((root) => this.currentActiveRoots.has(root));
+      if (!alreadyActive) {
+        this.batch.push([InstructionTypes.ACTIVATE_ROOTS, roots]);
+        this.currentActiveRoots = new Set(roots);
+      }
     }
     commitUpdates() {
       this.batch.push([InstructionTypes.COMMIT_UPDATES]);
@@ -3773,7 +4150,7 @@
       this._delegate.nodesRemoved = 0;
       this._delegate.edgesAdded = 0;
       this._delegate.propsWritten = 0;
-      renderWithDelegate2(this._delegate, args);
+      renderWithDelegate2(this._delegate, args.map(resolve));
       const t1 = now();
       return {
         nodesAdded: this._delegate.nodesAdded,
