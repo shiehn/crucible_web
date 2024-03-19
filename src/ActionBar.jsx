@@ -36,10 +36,10 @@ function ActionBar({}) {
   return (
     <div className="w-[460px] h-[35px] pt-2 bg-sas-background-light flex justify-between items-center overflow-hidden">
       <div class="w-1/2 ml-2 text-white">
-        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-800 px-4 ${currentOutputView === 'show_output_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ${currentOutputView === 'show_output_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
                 onClick={() => handleNavigation('show_output_component')}>OUTPUT
         </button>
-        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-800 px-4 ml-2 ${currentOutputView === 'show_output_logs_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_output_logs_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
                 onClick={() => handleNavigation('show_output_logs_component')}>LOGS
         </button>
       </div>

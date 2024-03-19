@@ -32,7 +32,7 @@ function Settings({isVisible}) {
 
 
   return (
-    <div className="w-full h-full p-4 text-gray-600">
+    <div className="w-full h-full p-4 text-sas-text-grey">
       <div className="flex justify-end w-full border-b-2 border-gray-200 mb-4">
         <h1 className="w-full font-bold">SETTINGS</h1>
         <span
@@ -45,7 +45,7 @@ function Settings({isVisible}) {
       <div className="w-full text-sm flex mb-4 items-center">
       <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>
         <input type="text" id="build" name="server_id" value="0.7.5" readOnly
-               className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 text-gray-500"/>
+               className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"/>
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
@@ -55,7 +55,7 @@ function Settings({isVisible}) {
           id="build"
           name="server_id"
           value={server_ip} // Use server_ip from the global state
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 text-gray-500"
+          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => {
             handleServerIpChange(e.target.value)
           }}
@@ -69,7 +69,7 @@ function Settings({isVisible}) {
           id="build"
           name="storage_path"
           value={storage_path} // Use storage_path from the global state
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 text-gray-500"
+          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => {
             handleStoragePath(e.target.value)
           }}
