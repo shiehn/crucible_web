@@ -168,7 +168,7 @@ export default function Interface(props) {
     <div className="w-full h-full justify-between overflow-hidden bg-sas-background-light relative">
 
       {/*START TITLE BAR HERE*/}
-      <div className="flex flex-row items-center  justify-between min-w-[460px] h-[56px] overflow-hidden bg-sas-background-dark">
+      <div className="flex flex-row items-center justify-between min-w-[460px] h-[56px] overflow-hidden bg-sas-background-dark">
         <div className="flex items-center w-1/3">
           <IoMdSettings
             className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
@@ -190,7 +190,7 @@ export default function Interface(props) {
         </div>
 
         <div className="flex items-center w-2/3">
-          <div className="flex flex-row justify-end w-full h-[32px] overflow-hidden text-white">
+          <div className="flex flex-row w-full h-[32px] overflow-hidden text-white">
             <UUIDButton setUUID={props.setUUID}/>
             <input
               type="text"
@@ -199,10 +199,10 @@ export default function Interface(props) {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="text-gray-100 font-teko text-sm text-center w-[160px] h-[32px] bg-sas-background-light"
+            className="text-gray-100 font-teko text-sm text-center w-4/6 h-[32px] bg-sas-background-light overflow-hidden"
           />
           <button
-            className="text-black text-xxs bg-gray-300 rounded-r w-[36px] h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
+            className="text-black text-xxs bg-gray-300 rounded-r w-1/6 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
             onClick={handleCopy}
           >
             COPY
