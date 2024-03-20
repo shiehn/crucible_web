@@ -169,14 +169,14 @@ export default function Interface(props) {
 
       {/*START TITLE BAR HERE*/}
       <div className="flex flex-row items-center justify-between min-w-[460px] h-[56px] overflow-hidden bg-sas-background-dark">
-        <div className="flex items-center w-1/3">
+        <div className="flex items-center w-1/3 overflow-hidden">
           <IoMdSettings
             className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
             onClick={() => updateNavigation('settings')}
           />
 
           <div
-            className="flex flex-col items-center justify-center cursor-pointer"
+            className="flex flex-col items-center justify-center cursor-pointer pl-2"
             onClick={handleClick}
           >
             <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
@@ -189,7 +189,7 @@ export default function Interface(props) {
 
         </div>
 
-        <div className="flex items-center w-2/3">
+        <div className="flex items-center w-2/3 overflow-hidden">
           <div className="flex flex-row w-full h-[32px] overflow-hidden text-white">
             <UUIDButton setUUID={props.setUUID}/>
             <input
