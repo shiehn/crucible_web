@@ -42,11 +42,11 @@ function UUIDButton({ setUUID }) {
   };
 
   return (
-    <div className="uuid-container w-1/6 h-[32px] bg-gray-600 rounded-l overflow-hidden">
-      <button onClick={handleGenerateUUID} className="w-full h-full bg-gray-300 text-sas-background-dark">
-        <MdRefresh className="w-full h-full text-sas-background-light hover:bg-sas-green hover:text-sas-background-light"/>
-      </button>
-    </div>
+      <div className="uuid-container w-1/6 h-[32px] bg-sas-text-grey rounded-l overflow-hidden">
+        <button onClick={handleGenerateUUID} className="w-full h-full bg-sas-text-grey text-sas-background-dark flex justify-center items-center">
+          <MdRefresh className="w-7 h-7 text-sas-background-light hover:bg-sas-green hover:text-sas-background-light"/>
+        </button>
+      </div>
   );
 }
 
