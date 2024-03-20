@@ -200,7 +200,7 @@ export default function Interface(props) {
             className="text-sas-text-grey font-teko text-xs text-center w-4/6 h-[32px] bg-sas-background-light overflow-hidden"
             />
             <button
-              className="text-sas-background-light text-xxs font-bold bg-sas-text-grey rounded-r w-1/6 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
+              className="text-sas-background-light text-xxs font-bold bg-sas-text-grey rounded-r w-1/6 mr-2 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
               onClick={handleCopy}>
               COPY
             </button>
