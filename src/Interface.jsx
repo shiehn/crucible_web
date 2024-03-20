@@ -167,30 +167,30 @@ export default function Interface(props) {
   return (
     <div className="w-full h-full justify-between overflow-hidden bg-sas-background-light relative">
 
-      {/*START NAV BAR HERE*/}
-      <div className="flex items-center justify-between w-full h-[56px] overflow-hidden bg-sas-background-dark px-2">
-        <div className="flex items-center w-full">
+      {/*START TITLE BAR HERE*/}
+      <div className="flex flex-row items-center  justify-between min-w-[460px] h-[56px] overflow-hidden bg-sas-background-dark">
+        <div className="flex items-center w-1/3">
           <IoMdSettings
             className={`h-8 w-8 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
             onClick={() => updateNavigation('settings')}
           />
 
           <div
-            className="flex flex-col items-center justify-center ml-1 cursor-pointer"
+            className="flex flex-col items-center justify-center cursor-pointer"
             onClick={handleClick}
           >
-            <div className="flex items-center w-full justify-start text-sas-green  font-logo text-l">
+            <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
               Crucible Audio
             </div>
-            <div className="flex items-center w-full justify-start text-white font-rye text-xs">
+            <div className="flex items-center w-full justify-start text-white font-rye text-xxs">
               Signals & Sorcery
             </div>
           </div>
 
         </div>
 
-        <div className="flex items-center">
-          <div className="flex w-[273px] h-[32px] overflow-hidden text-white">
+        <div className="flex items-center w-2/3">
+          <div className="flex flex-row justify-end w-full h-[32px] overflow-hidden text-white">
             <UUIDButton setUUID={props.setUUID}/>
             <input
               type="text"
@@ -199,10 +199,10 @@ export default function Interface(props) {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="text-gray-100 font-teko text-sm text-center w-[193px] h-[32px] bg-sas-background-light"
+            className="text-gray-100 font-teko text-sm text-center w-[160px] h-[32px] bg-sas-background-light"
           />
           <button
-            className="text-black text-xs bg-gray-300 rounded-r w-[44px] h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
+            className="text-black text-xxs bg-gray-300 rounded-r w-[36px] h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
             onClick={handleCopy}
           >
             COPY
@@ -212,12 +212,12 @@ export default function Interface(props) {
 
         </div>
       </div>
-      {/*END NAV BAR HERE*/}
+      {/*END TITLE BAR HERE*/}
 
       {/*START SUB NAV HERE*/}
       <div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">
         <button
-          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
+          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
           onClick={() => updateNavigation('connected_remotes')}
         >
           Connected Elixirs
@@ -252,7 +252,7 @@ export default function Interface(props) {
         {/*'sas-background-light': '#37404c',*/}
 
 
-        <div className="w-[460px] h-[350px]  overflow-y-auto overflow-x-hidden custom-scrollbar">
+        <div className="w-full max-w-[460px] h-[350px]  overflow-y-auto overflow-x-hidden custom-scrollbar">
           {props.connected && (
             <ContractDisplay contract={props.contract} isVisible={true}/>
           )}
@@ -274,7 +274,7 @@ export default function Interface(props) {
       {/* End of Section between Nav Bar and Action Bar */}
 
       <ActionBar/>
-      <div className="p-2 w-[460px] min-h-full bg-sas-background-light">
+      <div className="p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
         <div className="p-2 w-full min-h-[200px] bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
           {/* Conditional rendering based on `currentOutputView` */}
           {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (

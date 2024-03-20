@@ -42,7 +42,7 @@ function UUIDButton({ setUUID }) {
   };
 
   return (
-    <div className="uuid-container w-[36px] h-[32px] bg-gray-600 rounded-l overflow-hidden">
+    <div className="uuid-container w-[32px] h-[32px] bg-gray-600 rounded-l overflow-hidden">
       <button onClick={handleGenerateUUID} className="w-full h-full bg-gray-300 text-sas-background-dark">
         <MdRefresh className="w-full h-full text-sas-background-light hover:bg-sas-green hover:text-sas-background-light"/>
       </button>
