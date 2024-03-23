@@ -61,7 +61,7 @@ function ErrorAlert({message, reset}) {
 // component to propagate new parameter values to the host.
 export default function Interface(props) {
 
-  const {isLoading, isConnecting, currentOutputView} = useStore();
+  const {isLoading, isConnecting, currentOutputView, embedded } = useStore();
 
   const colorProps = {
     meterColor: '#EC4899',
@@ -164,6 +164,8 @@ export default function Interface(props) {
     window.location.href = 'https://signalsandsorcery.com';
   };
 
+  const pluginTitle = embedded === 'web' ? 'Crucible Web' : 'Crucible Audio';
+
   return (
     <div className="w-screen max-w-[406px] h-full justify-between overflow-hidden bg-sas-background-light relative">
 
@@ -180,7 +182,7 @@ export default function Interface(props) {
             onClick={handleClick}
           >
             <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
-              Crucible Audio
+              {pluginTitle}
             </div>
             <div className="flex items-center w-full justify-start text-white font-rye text-xxs">
               Signals & Sorcery
