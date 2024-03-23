@@ -268,8 +268,8 @@ export default function Interface(props) {
       {/* End of Section between Nav Bar and Action Bar */}
 
       <ActionBar/>
-      <div className="p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
-        <div className="p-2 w-full min-h-[200px] bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
+      <div className="flex flex-col p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
+        <div className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
           {/* Conditional rendering based on `currentOutputView` */}
           {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (
             <ResultsDisplay />

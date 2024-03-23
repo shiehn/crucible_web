@@ -8,10 +8,10 @@ function MediaTypeDisplay({ url }) {
   switch (fileExtension) {
     case 'mp3':
     case 'wav':
-      return <audio controls src={url} />;
+      return <audio controls src={url} className="w-full h-10" />;
     case 'mp4':
     case 'avi':
-      return <video controls src={url} width="320" />;
+      return <video controls src={url} width="100%" />;
     case 'jpg':
     case 'jpeg':
     case 'png':
@@ -25,25 +25,18 @@ function MediaTypeDisplay({ url }) {
   }
 }
 function ResultsDisplay() {
-
-
-  // if (!results) {
-  //   // If there is no contract, don't render anything
-  //   return null;
-  // }
-
   const {results} = useStore();
 
   if (!results || !results.response || !results.response.files) {
-    return <div className="">No media found.</div>;
+    return <div className="w-full h-full p-2 media-container">No media found.</div>;
   }
 
   return (
-    <div className="p-2 media-container bg-sas-background-light min-h-[350px]">
+    <div className="w-full h-full p-2 media-container">
       {results.response.files.map((file, index) => (
-        <div key={index} className="media-item" style={{ margin: '10px 0' }}>
-          <MediaTypeDisplay url={file.url} />
-          <div>File name: {file.name}</div>
+        <div key={index} className="media-item w-full" style={{margin: '10px 0'}}>
+          <MediaTypeDisplay url={file.url}/>
+          <div className="w-full mt-2">File name: {file.name}</div>
         </div>
       ))}
     </div>

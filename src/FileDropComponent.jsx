@@ -74,7 +74,7 @@ function FileDropComponent({ onResponse, id }) {
 
   return (
       <div onDragOver={handleDragOver} onDrop={handleFileDrop}
-           className="appearance-none block w-full bg-white text-xs text-gray-400 border border-grey-lighter rounded p-5 mb-3">
+           className="appearance-none block w-full text-sas-text-grey text-xs border border-sas-text-grey rounded p-5 mt-1 mb-3">
         {displayText}
       </div>
   );

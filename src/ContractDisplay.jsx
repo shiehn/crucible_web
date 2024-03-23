@@ -356,24 +356,24 @@ function ContractDisplay({contract, isVisible}) {
   return (
     <form className="w-full h-full rounded shadow-lg" onSubmit={handleSubmit}>
 
-      <div className="w-full h-[56px] p-2 border-gray-200 border-b-2">
-        <div className="w-[460px] text-gray-500 text-xs font-bold mb-1">
+      <div className="w-full h-[56px] p-2 border-sas-text-grey border-b-2">
+        <div className="w-[460px] text-sas-green text-xs font-bold mb-1">
           {contract?.data?.name ? contract.data.name : 'NAME'}
         </div>
-        <div className="w-[460px] text-gray-400 text-xxs mb-2">
+        <div className="w-[460px] text-sas-text-grey text-xxs mb-2">
           {contract?.data?.description ? contract.data.description : 'DESCRIPTION'}
         </div>
       </div>
 
       <div className="flex flex-col w-full p-4">
         {contract.data.params.map(param => (
-          <div key={param.name} className="flex flex-col w-full px-3 mb-6">
+          <div key={param.name} className="flex flex-col w-full px-3 mb-6 bg-sas-background-light">
             {param.type === 'DAWNetFilePath' ? (
               // File input logic
-              <div className="w-full">
+              <div className="w-full text-sas-text-grey">
                 <span>
-                  <span className="text-gray-800 text-md">{param.name}</span>
-                  <span className="text-gray-400 text-xs"> : {getTypeDisplayText(param.type)}</span>
+                  <span className="text-md uppercase">{param.name}</span>
+                  <span className="text-xs"> : {getTypeDisplayText(param.type)}</span>
                 </span>
                 <FileDropComponent id={param.name} onResponse={handleFileDropResponse}/>
               </div>
