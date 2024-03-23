@@ -379,15 +379,15 @@ function ContractDisplay({contract, isVisible}) {
               </div>
             ) : param.ui_component === 'DAWNetMultiChoice' ? (
               // Select input logic for DAWNetMultiChoice
-              <div className="w-full">
+              <div className="w-full text-sas-text-grey">
                 <span>
-                  <span className="text-gray-800 text-md">{param.name}</span>
-                  <span className="text-gray-400 text-xs"> : {getTypeDisplayText(param.type)}</span>
+                  <span className="text-md uppercase">{param.name}</span>
+                  <span className="text-xs"> : {getTypeDisplayText(param.type)}</span>
                 </span>
                 <select
                   value={formData[param.name]?.value || param.default_value}
                   onChange={(e) => handleChange(param.name, param.type, e)}
-                  className="block w-full bg-white text-xs text-gray-400 border border-grey-lighter rounded py-2 px-3 mb-3"
+                  className="block w-full bg-sas-background-light text-xs text-gray-400 border border-sas-text-grey rounded py-2 px-3 mb-3"
                   id={param.name}
                 >
                   {param.options.map(option => (
@@ -399,9 +399,15 @@ function ContractDisplay({contract, isVisible}) {
               </div>
             ) : param.ui_component === 'DAWNetNumberSlider' ? (
               <div className="w-full">
-                <div>{`${param.name}: ${formData[param.name]?.value || param.default_value}`}</div>
+                <div className="w-full text-sas-text-grey uppercase">
+                  {`${param.name}: ${formData[param.name]?.value || param.default_value}`}
+                </div>
                 <Slider
-                  styles={{track: {width: '100%'}, thumb: {width: 30, height: 30}}}
+                  styles={{
+                    track: {width: '100%',  backgroundColor: 'rgb(139 158 176)'},
+                    active: {backgroundColor: '#52af77'},
+                    thumb: {width: 30, height: 30, backgroundColor: '#52af77'}
+                }}
                   axis="x"
                   xstep={param.step}
                   xmin={param.min}
@@ -411,20 +417,25 @@ function ContractDisplay({contract, isVisible}) {
                 />
               </div>
             ) : param.type === 'bool' ? (
-              <div className="w-full">
-                <div className="pb-2">{`${param.name}: ${formData[param.name]?.value || param.default_value}`}</div>
+              <div className="w-full text-sas-text-grey">
+                <div className="w-full text-sas-text-grey uppercase">
+                  {`${param.name}: ${formData[param.name]?.value || param.default_value}`}
+                </div>
                 <Switch
                   onChange={(checked) => handleSwitchChange(param.name, checked)}
                   checked={formData[param.name]?.value || false}
                   width={112}
+                  onColor="#3aa675"
+                  offColor="#8b9eb0" 
+
                 />
               </div>
             ) : (
               // Other input types logic
-              <div className="w-full">
+              <div className="w-full text-sas-text-grey">
                 <span>
-                  <span className="text-gray-800 text-md">{param.name}</span>
-                  <span className="text-gray-400 text-xs"> : {getTypeDisplayText(param.type)}</span>
+                  <span className="text-md uppercase">{param.name}</span>
+                  <span className="text-xs"> : {getTypeDisplayText(param.type)}</span>
                 </span>
                 <input
                   type={param.type === 'int' ? 'number' : 'text'}
@@ -435,7 +446,7 @@ function ContractDisplay({contract, isVisible}) {
                       handleChange(param.name, param.type, {target: {value: ''}});
                     }
                   }}
-                  className="appearance-none block w-full bg-white text-xs text-gray-400 border border-grey-lighter rounded py-3 px-4 mb-3"
+                  className="block w-full bg-sas-background-light text-xs text-gray-400 border border-sas-text-grey rounded py-2 px-3 mb-3"
                   id={param.name}
                 />
               </div>
