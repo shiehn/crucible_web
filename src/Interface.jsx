@@ -216,7 +216,7 @@ export default function Interface(props) {
           className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
           onClick={() => updateNavigation('connected_remotes')}
         >
-          Connected Elixirs
+          Connected Runes
         </button>
         <button
           className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}

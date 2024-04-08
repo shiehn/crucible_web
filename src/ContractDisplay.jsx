@@ -426,7 +426,7 @@ function ContractDisplay({contract, isVisible}) {
                   checked={formData[param.name]?.value || false}
                   width={112}
                   onColor="#3aa675"
-                  offColor="#8b9eb0" 
+                  offColor="#8b9eb0"
 
                 />
               </div>

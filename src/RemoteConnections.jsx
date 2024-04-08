@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
 import {getConnectionMappings, isTokenConnectedToRemote, removeConnectionMapping} from "./api.js";
 import {FaPlugCircleCheck, FaPlugCircleMinus} from "react-icons/fa6";
-import { MdCancel } from "react-icons/md";
-import { IoMdRefreshCircle } from "react-icons/io";
+import {MdCancel} from "react-icons/md";
+import {IoMdRefreshCircle} from "react-icons/io";
 import {toast} from "react-toastify";
 
 function RemoteConnections({isVisible}) {
-  const {uuid, connected, server_ip} = useStore();
+  const {embedded, uuid, connected, server_ip} = useStore();
   const [connectionMappings, setConnectionMappings] = useState([]);
   const [isConnectedArray, setIsConnectedArray] = useState([]);
   const [isPolling, setIsPolling] = useState(false);
@@ -48,7 +48,7 @@ function RemoteConnections({isVisible}) {
 
   const handlerClick = async (mapping) => {
     if (mapping.connection_token) {
-      store.setState({connection_token: mapping.connection_token, connected: false});
+      store.setState({connection_token: mapping.connection_token, connected: false, contract: null});
       const isConnected = await isTokenConnectedToRemote(server_ip, mapping.connection_token);
       if (!isConnected) {
         toast.warn('Remote is not connected')
@@ -57,9 +57,11 @@ function RemoteConnections({isVisible}) {
   };
 
   const handlerHyperLink = async (url, event) => {
-    event.preventDefault(); // Prevent the default behavior
-    if (typeof globalThis.__postNativeMessage__ === 'function') {
-      globalThis.__postNativeMessage__(JSON.stringify({action: 'HYPERLINK', payload: url + '?DAWNET_TOKEN=' + uuid}));
+    if (embedded === 'vst') {
+      event.preventDefault(); // Prevent the default behavior
+      if (typeof globalThis.__postNativeMessage__ === 'function') {
+        globalThis.__postNativeMessage__(JSON.stringify({action: 'HYPERLINK', payload: url + '?DAWNET_TOKEN=' + uuid}));
+      }
     }
   };
 
@@ -126,9 +128,9 @@ function RemoteConnections({isVisible}) {
                 </div>
                 <div className="w-1/8 flex items-center justify-center">
                   {isConnectedArray[index] ? (
-                      <FaPlugCircleCheck className="h-6 w-6 text-sas-green"/>
+                    <FaPlugCircleCheck className="h-6 w-6 text-sas-green"/>
                   ) : (
-                      <FaPlugCircleCheck className="h-6 w-6 text-red-400"/>
+                    <FaPlugCircleCheck className="h-6 w-6 text-red-400"/>
                   )}
                 </div>
               </div>
@@ -144,13 +146,13 @@ function RemoteConnections({isVisible}) {
       ) : (
         <div className="flex items-center justify-center h-full text-xs">
           <div className="text-center text-sas-text-grey px-12">
-            No connection mappings found. To learn how to create or connect to DAWNet remotes visit the &nbsp;
+            No connection mappings found. To learn how to create or connect Runes visit the &nbsp;
             <a
-              href="https://dawnet.tools/"
+              href="https://signalsandsorcery.com/"
               className="text-green-600 hover:text-green-800"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(event) => handlerHyperLink("https://dawnet.tools/", event)} // Handle the default href behavior here as well
+              onClick={(event) => handlerHyperLink("https://signalsandsorcery.com/", event)} // Handle the default href behavior here as well
             >
               documentation
             </a>

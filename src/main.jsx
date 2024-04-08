@@ -162,6 +162,7 @@ function App(props) {
 
         const statusData = await response.json();
         if (statusData.success) {
+          //console.log("Plugin connection status updated successfully")
           //clearInterval(pluginRegisterInterval);
         }
       } catch (error) {
@@ -212,6 +213,7 @@ function App(props) {
           if (response.ok) {
             const contractData = await response.json();
             store.setState({contract: contractData});
+            console.log('CONTRACT:', contractData);
             clearInterval(contractInterval);
           }
         } catch (error) {
@@ -246,6 +248,8 @@ function App(props) {
           if (JSON.stringify(responseData) !== JSON.stringify(results)) {
             store.setState({results: responseData});
             if (responseData && responseData.status === 'completed') {
+
+              //console.log('Polled response:', responseData)
               store.setState({isLoading: false});
 
               if(responseData?.response?.error){
