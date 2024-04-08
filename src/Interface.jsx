@@ -230,7 +230,7 @@ export default function Interface(props) {
       {/* Section between Nav Bar and Action Bar */}
       <div className="h-[350px]"> {/* Add a relative container for the section */}
         {isLoading && (
-          <div className="absolute top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
+          <div className="absolute h-[360px] w-full top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
             {/* Loading animation */}
             <Bars
               height="80"

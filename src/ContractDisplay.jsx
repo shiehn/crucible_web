@@ -149,7 +149,7 @@ function ContractDisplay({contract, isVisible}) {
   // Check if contract.data.params is available and is an array before reducing it
   const initialResponses = contract && contract.data && Array.isArray(contract.data.params)
     ? contract.data.params.reduce((responsesObj, param) => {
-      if (param.type === 'DAWNetFilePath') {
+      if (param.type === 'RunesFilePath') {
         responsesObj[param.name] = {
           id: param.name,
           fileName: '',
@@ -227,7 +227,7 @@ function ContractDisplay({contract, isVisible}) {
     }));
   };
 
-  // Handle slider change for DAWNetNumberSlider
+  // Handle slider change for RunesNumberSlider
   const handleSliderChange = (name, xValue) => {
     setFormData(prev => ({
       ...prev,
@@ -343,7 +343,7 @@ function ContractDisplay({contract, isVisible}) {
   }
 
   function getTypeDisplayText(type) {
-    if (type === "DAWNetFilePath") {
+    if (type === "RunesFilePath") {
       return "file";
     } else if (type === "int" || type === "float") {
       return "number";
@@ -368,7 +368,7 @@ function ContractDisplay({contract, isVisible}) {
       <div className="flex flex-col w-full p-4">
         {contract.data.params.map(param => (
           <div key={param.name} className="flex flex-col w-full px-3 mb-6 bg-sas-background-light">
-            {param.type === 'DAWNetFilePath' ? (
+            {param.type === 'RunesFilePath' ? (
               // File input logic
               <div className="w-full text-sas-text-grey">
                 <span>
@@ -377,8 +377,8 @@ function ContractDisplay({contract, isVisible}) {
                 </span>
                 <FileDropComponent id={param.name} onResponse={handleFileDropResponse}/>
               </div>
-            ) : param.ui_component === 'DAWNetMultiChoice' ? (
-              // Select input logic for DAWNetMultiChoice
+            ) : param.ui_component === 'RunesMultiChoice' ? (
+              // Select input logic for RunesMultiChoice
               <div className="w-full text-sas-text-grey">
                 <span>
                   <span className="text-md uppercase">{param.name}</span>
@@ -397,7 +397,7 @@ function ContractDisplay({contract, isVisible}) {
                   ))}
                 </select>
               </div>
-            ) : param.ui_component === 'DAWNetNumberSlider' ? (
+            ) : param.ui_component === 'RunesNumberSlider' ? (
               <div className="w-full">
                 <div className="w-full text-sas-text-grey uppercase">
                   {`${param.name}: ${formData[param.name]?.value || param.default_value}`}

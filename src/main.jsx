@@ -238,7 +238,7 @@ function App(props) {
           });
 
           if (!response.ok) {
-            throw new Error('Failed to poll message responses');
+            //throw new Error('Failed to poll message responses');
           }
 
           const responseData = await response.json();
@@ -295,6 +295,9 @@ function App(props) {
             } else if (responseData && responseData.status === 'error') {
               store.setState({isLoading: false});
               toast.error('ERROR', {autoClose: 5000})
+            } else if (responseData && responseData.status === 'aborted') {
+              store.setState({isLoading: false});
+              //toast.error('ERROR', {autoClose: 5000})
             } else {
               store.setState({isLoading: true});
             }
