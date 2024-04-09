@@ -167,7 +167,7 @@ export default function Interface(props) {
   const pluginTitle = embedded === 'web' ? 'Crucible Web' : 'Crucible Audio';
 
   return (
-    <div className="w-screen max-w-[406px] h-full justify-between overflow-hidden bg-sas-background-light relative">
+    <div className="w-screen max-w-[460px] h-full justify-between overflow-hidden bg-sas-background-light relative">
 
       {/*START TITLE BAR HERE*/}
       <div className="flex flex-row items-center justify-between h-[56px] overflow-hidden bg-sas-background-dark">
