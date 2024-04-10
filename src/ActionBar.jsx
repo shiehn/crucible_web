@@ -10,14 +10,19 @@ function ActionBar({}) {
   const {connection_token, connected, currentOutputView, server_ip} = useStore();
 
   const handleAbort = async () => {
-    if (connected) {
-      store.setState({isConnecting: false});
-      store.setState({isLoading: true});
-      await abortRequest(server_ip, connection_token);
-      store.setState({isLoading: false});
-    } else {
-      toast.error("Not connected!");
-    }
+    await abortRequest(server_ip, connection_token);
+    store.setState({isConnecting: false});
+    store.setState({isLoading: false});
+    
+    // if (connected) {
+    //   store.setState({isConnecting: false});
+    //   store.setState({isLoading: true});
+    //   await abortRequest(server_ip, connection_token);
+    //   store.setState({isLoading: false});
+    // } else {
+    //   store.setState({isLoading: false});
+    //   toast.error("Not connected!");
+    // }
   };
 
   const submitForm = async () => {
