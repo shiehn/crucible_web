@@ -158,16 +158,20 @@ async function isTokenConnectedToRemote(server_ip, connection_token) {
 
     if (!response.ok) {
       console.log('Network response was not ok');
-      return false;
+      return { compute: false, loaded: false };
     }
 
     const data = await response.json();
-    const isConnected = data.compute;
 
-    return isConnected; // Return the boolean value
+    // Return an object containing both boolean values
+    return {
+      compute: data.compute,
+      loaded: data.loaded
+    };
   } catch (error) {
     console.error('Error:', error);
-    return false; // Handle errors and return false or another suitable value
+    // Return false for both in case of error
+    return { compute: false, loaded: false };
   }
 }
 

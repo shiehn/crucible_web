@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
 import {getConnectionMappings, isTokenConnectedToRemote, removeConnectionMapping} from "./api.js";
-import {FaPlugCircleCheck, FaPlugCircleMinus} from "react-icons/fa6";
+import {FaPlugCircleCheck, FaPlugCircleMinus, FaRegHourglassHalf} from "react-icons/fa6";
 import {MdCancel} from "react-icons/md";
 import {IoMdRefreshCircle} from "react-icons/io";
 import {toast} from "react-toastify";
@@ -12,7 +12,6 @@ function RemoteConnections({isVisible}) {
   const [isConnectedArray, setIsConnectedArray] = useState([]);
   const [isPolling, setIsPolling] = useState(false);
   const [isHighlight, setIsHighlight] = useState(false);
-
 
   useEffect(() => {
     let intervalId;
@@ -48,10 +47,13 @@ function RemoteConnections({isVisible}) {
 
   const handlerClick = async (mapping) => {
     if (mapping.connection_token) {
-      store.setState({connection_token: mapping.connection_token, connected: false, contract: null});
-      const isConnected = await isTokenConnectedToRemote(server_ip, mapping.connection_token);
-      if (!isConnected) {
-        toast.warn('Remote is not connected')
+      const connectionStatus=  await isTokenConnectedToRemote(server_ip, mapping.connection_token);
+      if (!connectionStatus.compute) {
+        toast.warn('Rune is not connected')
+      } else if (connectionStatus.compute && !connectionStatus.loaded) {
+        toast.warn('Rune is loading')
+      } else {
+        store.setState({connection_token: mapping.connection_token, connected: false, contract: null});
       }
     }
   };
@@ -69,19 +71,25 @@ function RemoteConnections({isVisible}) {
     async function fetchIsConnected() {
       const isConnectedPromises = connectionMappings.map(async (mapping) => {
         if (mapping.connection_token) {
-          const isConnected = await isTokenConnectedToRemote(server_ip, mapping.connection_token);
-          return isConnected;
+          const connectionStatus = await isTokenConnectedToRemote(server_ip, mapping.connection_token);
+          if (connectionStatus.compute && connectionStatus.loaded) {
+            return 'connected';  // Connected state
+          } else if (connectionStatus.compute && !connectionStatus.loaded) {
+            return 'loading';  // Loading state
+          } else {
+            return 'notConnected';  // Not connected state
+          }
         }
-        return false;
+        return 'notConnected'; // Default to not connected if no token
       });
 
       const isConnectedResults = await Promise.all(isConnectedPromises);
-      console.log('isConnectedResults', isConnectedResults);
       setIsConnectedArray(isConnectedResults);
     }
 
     fetchIsConnected();
   }, [connectionMappings]);
+
 
   const handleRemove = async (mapping) => {
     if (mapping && mapping.master_token && mapping.connection_token) {
@@ -127,8 +135,10 @@ function RemoteConnections({isVisible}) {
                   <div className="text-sm text-sas-text-grey">{mapping.description}</div>
                 </div>
                 <div className="w-1/8 flex items-center justify-center">
-                  {isConnectedArray[index] ? (
+                  {isConnectedArray[index] === 'connected' ? (
                     <FaPlugCircleCheck className="h-6 w-6 text-sas-green"/>
+                  ) : isConnectedArray[index] === 'loading' ? (
+                    <FaRegHourglassHalf className="h-6 w-6 text-yellow-400 animate-pulse"/>
                   ) : (
                     <FaPlugCircleCheck className="h-6 w-6 text-red-400"/>
                   )}
