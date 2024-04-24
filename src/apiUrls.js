@@ -22,5 +22,8 @@ export const API_URLS = {
   STORAGE_GET_SIGNED_URL: (apiBaseUrl, filename, token) => `${formatBaseUrl(apiBaseUrl)}/api/hub/get_signed_url/?token=${token}&filename=${encodeURIComponent(filename)}`,
 
   //REMOTE SOURCES
-  REMOTE_SOURCES: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/hub/remote-sources/`
+  REMOTE_SOURCES: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/hub/remote-sources/`,
+
+  //GAME PORTAL
+  GAME_ENGINE_QUERY: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-engine/query/`
 };

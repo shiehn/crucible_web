@@ -31,7 +31,7 @@ export const store = createStore((set) => ({
   results: null,
   submitForm: false,
   dropTargetFileName: null,
-  currentOutputView: 'show_output_component',
+  currentOutputView: 'show_output_logs_component',
   isLoading: false,
   isConnecting: false,
   navigation: DEFAULT_NAVIGATION, //connect_remotes

@@ -1,4 +1,4 @@
-import { API_URLS } from './apiUrls.js';
+import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
 import {store} from "./main.jsx";
 
@@ -16,7 +16,7 @@ async function sendResponse(server_ip, id, connection_token, responseData) {
       body: JSON.stringify({
         id,
         token: connection_token,
-        response: { data: responseData },
+        response: {data: responseData},
         status,
       }),
     });
@@ -158,7 +158,7 @@ async function isTokenConnectedToRemote(server_ip, connection_token) {
 
     if (!response.ok) {
       console.log('Network response was not ok');
-      return { compute: false, loaded: false };
+      return {compute: false, loaded: false};
     }
 
     const data = await response.json();
@@ -171,7 +171,7 @@ async function isTokenConnectedToRemote(server_ip, connection_token) {
   } catch (error) {
     console.error('Error:', error);
     // Return false for both in case of error
-    return { compute: false, loaded: false };
+    return {compute: false, loaded: false};
   }
 }
 
@@ -197,7 +197,40 @@ async function isTokenConnectedToPlugin(server_ip, connection_token) {
   }
 }
 
+async function sendGameEngineQuery(text, server_ip) {
+  try {
+    const response = await fetch(API_URLS.GAME_ENGINE_QUERY(server_ip), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "token": "xyz-hardcoded-token",
+        "query": text
+      }), // Send the text as JSON
+    });
+
+    if (!response.ok) {
+      console.error("Error sending request"); // Handle error
+      return null;
+    }
+
+    return await response.json(); // Return the parsed JSON response
+  } catch (error) {
+    console.error("Error in sendGameEngineQuery:", error); // Handle error
+    return null;
+  }
+}
 
 
-
-export { sendResponse, abortRequest, addConnectionMapping, getConnectionMappings, removeConnectionMapping, isTokenConnected, isTokenConnectedToRemote, isTokenConnectedToPlugin };
+export {
+  sendResponse,
+  abortRequest,
+  addConnectionMapping,
+  getConnectionMappings,
+  removeConnectionMapping,
+  sendGameEngineQuery,
+  isTokenConnected,
+  isTokenConnectedToRemote,
+  isTokenConnectedToPlugin
+};

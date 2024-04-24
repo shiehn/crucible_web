@@ -25,6 +25,7 @@ import RemoteConnections from "./RemoteConnections.jsx";
 import {IoMdSettings} from "react-icons/io";
 import Settings from "./Settings.jsx";
 import LogsDisplay from "./LogsDisplay.jsx";
+import GamePortal from "./GamePortal.jsx";
 
 
 function ErrorAlert({message, reset}) {
@@ -213,6 +214,12 @@ export default function Interface(props) {
       {/*START SUB NAV HERE*/}
       <div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">
         <button
+          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'game_portal' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
+          onClick={() => updateNavigation('game_portal')}
+        >
+          Game Portal
+        </button>
+        <button
           className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
           onClick={() => updateNavigation('connected_remotes')}
         >
@@ -230,7 +237,8 @@ export default function Interface(props) {
       {/* Section between Nav Bar and Action Bar */}
       <div className="h-[350px]"> {/* Add a relative container for the section */}
         {isLoading && (
-          <div className="absolute h-[360px] w-full top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
+          <div
+            className="absolute h-[360px] w-full top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
             {/* Loading animation */}
             <Bars
               height="80"
@@ -257,9 +265,12 @@ export default function Interface(props) {
             <RemoteLinks isVisible={true}/>
           )}
 
-
           {!props.connected && props.navigation == 'connected_remotes' && (
             <RemoteConnections isVisible={true}/>
+          )}
+
+          {!props.connected && props.navigation == 'game_portal' && (
+            <GamePortal isVisible={true}/>
           )}
 
           {!props.connected && props.navigation == 'settings' && (
