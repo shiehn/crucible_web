@@ -2,6 +2,28 @@ import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
 import {store} from "./main.jsx";
 
+async function sendRequest(server_ip, formattedRequestBody) {
+  try {
+    const url = API_URLS.MESSAGE_SEND(server_ip);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formattedRequestBody)
+    });
+
+    if (!response.ok) {
+      //TODO - check if response messages
+      toast.error("MESSAGE already processing!");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in network request:", error);
+  }
+}
+
 
 async function sendResponse(server_ip, id, connection_token, responseData) {
   const status = 'completed';
@@ -197,7 +219,7 @@ async function isTokenConnectedToPlugin(server_ip, connection_token) {
   }
 }
 
-async function sendGameEngineQuery(text, server_ip) {
+async function sendGameEngineQuery(text, master_token, server_ip) {
   try {
     const response = await fetch(API_URLS.GAME_ENGINE_QUERY(server_ip), {
       method: "POST",
@@ -205,7 +227,7 @@ async function sendGameEngineQuery(text, server_ip) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "token": "xyz-hardcoded-token",
+        "token": master_token,
         "query": text
       }), // Send the text as JSON
     });
@@ -224,6 +246,7 @@ async function sendGameEngineQuery(text, server_ip) {
 
 
 export {
+  sendRequest,
   sendResponse,
   abortRequest,
   addConnectionMapping,

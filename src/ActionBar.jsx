@@ -40,21 +40,30 @@ function ActionBar({}) {
 
   return (
     <div className="w-full max-w-[460px] h-[35px] pt-2 bg-sas-background-light flex justify-between items-center overflow-hidden">
-      <div class="w-1/2 ml-2 text-white">
-        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ${currentOutputView === 'show_output_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-                onClick={() => handleNavigation('show_output_component')}>OUTPUT
+      <div class="w-2/3 ml-2 text-white">
+        {/*<button className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ${currentOutputView === 'show_output_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}*/}
+        {/*        onClick={() => handleNavigation('show_output_component')}>OUTPUT*/}
+        {/*</button>*/}
+        <button
+          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_output_logs_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+          onClick={() => handleNavigation('show_output_logs_component')}>Dialogue
         </button>
-        <button className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_output_logs_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-                onClick={() => handleNavigation('show_output_logs_component')}>LOGS
+        <button
+          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'xxx' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+          onClick={() => handleNavigation('show_output_logs_component')}>Backpack
+        </button>
+        <button
+          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'xxx' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+          onClick={() => handleNavigation('show_output_logs_component')}>Map
         </button>
       </div>
-      <div className="w-1/2 flex justify-end">
-        <button
-          className="h-[28px] w-[60px] mr-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
-          onClick={submitForm}><FaPlay className="h-full w-full p-1"/></button>
-        <button
-            className="h-[28px] w-[60px] mr-2 bg-red-400 rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
-          onClick={handleAbort}><FaStop className="h-full w-full p-1"/></button>
+      <div className="w-1/3 flex justify-end">
+        {/*<button*/}
+        {/*  className="h-[28px] w-[60px] mr-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"*/}
+        {/*  onClick={submitForm}><FaPlay className="h-full w-full p-1"/></button>*/}
+        {/*<button*/}
+        {/*    className="h-[28px] w-[60px] mr-2 bg-red-400 rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"*/}
+        {/*  onClick={handleAbort}><FaStop className="h-full w-full p-1"/></button>*/}
       </div>
     </div>
 

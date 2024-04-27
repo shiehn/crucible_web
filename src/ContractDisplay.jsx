@@ -7,6 +7,7 @@ import {v4 as uuidv4} from "uuid";
 import FileDropComponent from "./FileDropComponent.jsx";
 import Slider from 'react-input-slider';
 import Switch from 'react-switch';
+import {sendRequest} from "./api.js";
 
 function formatSendRequestBody(inputObject) {
   if (typeof inputObject !== 'object' || inputObject === null) {
@@ -304,39 +305,51 @@ function ContractDisplay({contract, isVisible}) {
         return
       }
 
-      console.log("CONTRACT", contract)
-      console.log("FORM_DATA", formData)
+      console.log("XXX_CONTRACT", contract)
+      console.log("XXX_FORM_DATA", formData)
       const formattedRequestBody = formatSendRequestBody({...contract, formData: formData});
 
-      await sendRequest(formattedRequestBody);
+      console.log("XXX_FORMATTED_REQUEST", formattedRequestBody)
+
+      let sendRequestResponse = await sendRequest(server_ip, formattedRequestBody);
+      console.log("XXX_SEND_REQUEST_RESPONSE", sendRequestResponse)
+      if (sendRequestResponse) {
+        store.setState({messageId: sendRequestResponse.id});
+      }
       store.setState({submitForm: false});
     } else {
       console.error('Contract data or form data is not available.');
     }
   };
 
-  const sendRequest = async (formattedRequestBody) => {
-    try {
-      const url = API_URLS.MESSAGE_SEND(server_ip);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedRequestBody)
-      });
+  //MOVE TO API UTILS
+  // const sendRequest = async (formattedRequestBody) => {
+  //   try {
+  //     const url = API_URLS.MESSAGE_SEND(server_ip);
+  //     const response = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(formattedRequestBody)
+  //     });
+  //
+  //     if (!response.ok) {
+  //       //TODO - check if response messages
+  //       toast.error("MESSAGE already processing!");
+  //     }
+  //
+  //     const responseData = await response.json();
+  //     store.setState({messageId: responseData.id});
+  //   } catch (error) {
+  //     console.error("Error in network request:", error);
+  //   }
+  // };
 
-      if (!response.ok) {
-        //TODO - check if response messages
-        toast.error("MESSAGE already processing!");
-      }
-
-      const responseData = await response.json();
-      store.setState({messageId: responseData.id});
-    } catch (error) {
-      console.error("Error in network request:", error);
-    }
-  };
+  // let responseData = await sendRequest(server_ip, formattedRequestBody);
+  // if (responseData) {
+  //   store.setState({messageId: responseData.id});
+  // }
 
   if (!contract?.data?.params) {
     return null
@@ -404,10 +417,10 @@ function ContractDisplay({contract, isVisible}) {
                 </div>
                 <Slider
                   styles={{
-                    track: {width: '100%',  backgroundColor: 'rgb(139 158 176)'},
+                    track: {width: '100%', backgroundColor: 'rgb(139 158 176)'},
                     active: {backgroundColor: '#52af77'},
                     thumb: {width: 30, height: 30, backgroundColor: '#52af77'}
-                }}
+                  }}
                   axis="x"
                   xstep={param.step}
                   xmin={param.min}

@@ -257,7 +257,7 @@ export default function Interface(props) {
 
 
         <div className="w-full max-w-[460px] h-[350px]  overflow-y-auto overflow-x-hidden custom-scrollbar">
-          {props.connected && (
+          {props.connected && props.navigation != 'game_portal' && (
             <ContractDisplay contract={props.contract} isVisible={true}/>
           )}
 
@@ -269,7 +269,7 @@ export default function Interface(props) {
             <RemoteConnections isVisible={true}/>
           )}
 
-          {!props.connected && props.navigation == 'game_portal' && (
+          {props.navigation == 'game_portal' && (
             <GamePortal isVisible={true}/>
           )}
 
@@ -284,12 +284,13 @@ export default function Interface(props) {
       <div className="flex flex-col p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
         <div className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
           {/* Conditional rendering based on `currentOutputView` */}
-          {(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (
-            <ResultsDisplay />
-          )}
-          {(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (
-            <LogsDisplay />
-          )}
+          {/*{(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (*/}
+          {/*  <ResultsDisplay />*/}
+          {/*)}*/}
+          {/*{(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (*/}
+          {/*  <LogsDisplay />*/}
+          {/*)}*/}
+          <LogsDisplay />
         </div>
       </div>
     </div>

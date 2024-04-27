@@ -14,7 +14,7 @@ import './custom-styles.css';
 
 export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
-export const DEFAULT_NAVIGATION = 'available_remotes'
+export const DEFAULT_NAVIGATION = 'game_portal'
 
 export const EMBEDDED = 'web'; //vst, web
 
@@ -28,13 +28,14 @@ export const store = createStore((set) => ({
   sampleRate: 0,
   connected: false,
   contract: null,
+  msgHistory: [],
   results: null,
   submitForm: false,
   dropTargetFileName: null,
   currentOutputView: 'show_output_logs_component',
   isLoading: false,
   isConnecting: false,
-  navigation: DEFAULT_NAVIGATION, //connect_remotes
+  navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
@@ -124,7 +125,7 @@ function App(props) {
       return;
     }
 
-    if(currentOutputView === 'show_remote_links'){
+    if (currentOutputView === 'show_remote_links') {
       //SHOW REMOTE LINKS IN THE WEB VIEW
       toast.warn("SHOW REMOTE LINKS")
     } else {
@@ -226,6 +227,7 @@ function App(props) {
       const currentState = store.getState();
       const {connection_token, messageId, connected, contract, results} = currentState;
 
+      //console.log('POLL STATUS', connection_token, connected, contract, messageId);
       if (connection_token && connected && contract && messageId) {
         //console.log('Polling responses...');
         try {
@@ -238,6 +240,14 @@ function App(props) {
           });
 
           if (!response.ok) {
+            console.error('Failed to poll message responses');
+            store.setState({
+              isLoading: false,
+              connection_token: null,
+              connected: false,
+              contract: null,
+              messageId: null
+            });
             //throw new Error('Failed to poll message responses');
           }
 
@@ -252,12 +262,19 @@ function App(props) {
               //console.log('Polled response:', responseData)
               store.setState({isLoading: false});
 
-              if(responseData?.response?.error){
+              if (responseData?.response?.error) {
                 toast.error(responseData?.response?.error, {autoClose: 5000})
+                store.setState({
+                  isLoading: false,
+                  connection_token: null,
+                  connected: false,
+                  contract: null,
+                  messageId: null
+                });
                 return;
               }
 
-              if(responseData?.response?.message){
+              if (responseData?.response?.message) {
                 toast.success(responseData?.response?.message, {autoClose: 5000})
               } else {
                 toast.success("Processing completed successfully")
@@ -267,6 +284,19 @@ function App(props) {
               if (responseData?.response?.logs) {
 
                 const logs = responseData.response.logs;
+
+                // store.setState((prevState) => {
+                //   const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
+                //
+                //   if (lastItem !== logs) {
+                //     return {
+                //       msgHistory: [...prevState.msgHistory, logs], // Append new item if it's different
+                //     };
+                //   }
+                //
+                //   return prevState; // If the item is the same, return the current state unchanged
+                // });
+
                 console.log('LOGS:', logs);
                 if (typeof globalThis.__postNativeMessage__ === 'function') {
                   globalThis.__postNativeMessage__(JSON.stringify({action: 'SET_OUTPUT_LOGS', payload: logs}));
@@ -275,7 +305,10 @@ function App(props) {
 
               //BEFORE DOWNLOADING THE ASSETS, WE NEED TO CLEAR THE OUTPUT FOLDER
               if (typeof globalThis.__postNativeMessage__ === 'function') {
-                globalThis.__postNativeMessage__(JSON.stringify({action: 'PREPARE_OUTPUT_DIR', payload: connection_token}));
+                globalThis.__postNativeMessage__(JSON.stringify({
+                  action: 'PREPARE_OUTPUT_DIR',
+                  payload: connection_token
+                }));
               }
 
               //DOWNLOAD THE ASSETS
@@ -292,14 +325,35 @@ function App(props) {
                 //   globalThis.__postNativeMessage__(JSON.stringify({action: 'NAVIGATE_TO', payload: "show_output_component"}));
                 // }
               }
+
+              store.setState({
+                isLoading: false,
+                connection_token: null,
+                connected: false,
+                contract: null,
+                messageId: null
+              });
+
             } else if (responseData && responseData.status === 'error') {
-              store.setState({isLoading: false});
+              store.setState({
+                isLoading: false,
+                connection_token: null,
+                connected: false,
+                contract: null,
+                messageId: null
+              });
               toast.error('ERROR', {autoClose: 5000})
             } else if (responseData && responseData.status === 'aborted') {
-              store.setState({isLoading: false});
+              store.setState({
+                isLoading: false,
+                connection_token: null,
+                connected: false,
+                contract: null,
+                messageId: null
+              });
               //toast.error('ERROR', {autoClose: 5000})
             } else {
-              store.setState({isLoading: true});
+              //store.setState({isLoading: true});
             }
           } else {
             // console.log('No changes in POLL RESPONSES');
@@ -307,11 +361,12 @@ function App(props) {
         } catch (error) {
           console.error("Error during polling:", error);
         }
+
       }
     };
 
     const pluginRegisterInterval = setInterval(() => {
-      if(connection_token) {
+      if (connection_token) {
         registerThePluginToken(connection_token, 1);
       }
     }, PLUGIN_REGISTER_INTERVAL_TIME);

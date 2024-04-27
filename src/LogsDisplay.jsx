@@ -1,15 +1,37 @@
-import {useStore} from "./main.jsx";
+import { useStore } from "./main.jsx";
 
 function LogsDisplay() {
-  const {results} = useStore();
+  const { msgHistory } = useStore();
 
-  if (!results || !results.response || !results.response.logs) {
-    return <div className="w-full h-full p-2 media-container">No media found.</div>;
+  if (!msgHistory || msgHistory.length < 1) {
+    return (
+      <div className="w-full h-full p-2">No media found.</div>
+    );
   }
 
+  // Reverse the order of messages to display newest on top
+  const reversedMessages = msgHistory.slice().reverse();
+
   return (
-    <div className="w-full h-full p-2 media-container">
-      {results.response.logs}
+    <div className="w-full h-full p-2">
+      {reversedMessages.map((message, index) => (
+        <div key={index}>
+          <div
+            className={`p-2 ${
+              index === 0
+                ? "text-white"
+                : "text-sas-text-grey"
+            }`}
+          >
+            {message}
+          </div>
+
+          {/* Add grey line separator between messages, but not after the last message */}
+          {index < reversedMessages.length - 1 && (
+            <hr className="my-2 border border-gray-400" />
+          )}
+        </div>
+      ))}
     </div>
   );
 }
