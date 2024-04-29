@@ -26,6 +26,7 @@ import {IoMdSettings} from "react-icons/io";
 import Settings from "./Settings.jsx";
 import LogsDisplay from "./LogsDisplay.jsx";
 import GamePortal from "./GamePortal.jsx";
+import MapDisplay from "./MapDisplay.jsx";
 
 
 function ErrorAlert({message, reset}) {
@@ -276,6 +277,8 @@ export default function Interface(props) {
           {!props.connected && props.navigation == 'settings' && (
             <Settings isVisible={true}/>
           )}
+
+
         </div>
       </div>
       {/* End of Section between Nav Bar and Action Bar */}
@@ -283,14 +286,15 @@ export default function Interface(props) {
       <ActionBar/>
       <div className="flex flex-col p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
         <div className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
-          {/* Conditional rendering based on `currentOutputView` */}
-          {/*{(currentOutputView === 'show_output_component' || currentOutputView === 'both') && (*/}
-          {/*  <ResultsDisplay />*/}
-          {/*)}*/}
-          {/*{(currentOutputView === 'show_output_logs_component' || currentOutputView === 'both') && (*/}
-          {/*  <LogsDisplay />*/}
-          {/*)}*/}
-          <LogsDisplay />
+          {(currentOutputView === 'show_output_component') && (
+            <ResultsDisplay />
+          )}
+          {(currentOutputView === 'show_output_logs_component') && (
+            <LogsDisplay />
+          )}
+          {(currentOutputView === 'show_map_component') && (
+            <MapDisplay />
+          )}
         </div>
       </div>
     </div>

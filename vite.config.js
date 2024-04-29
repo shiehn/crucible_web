@@ -14,6 +14,7 @@ export default defineConfig({
   define: {
     __COMMIT_HASH__: JSON.stringify(currentCommit),
     __BUILD_DATE__: JSON.stringify(dateString),
+    "global": {}
   },
   plugins: [react()],
   // build: {

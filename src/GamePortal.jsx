@@ -16,71 +16,68 @@ function GamePortal({isVisible}) {
   useEffect(() => {
     const fetchImages = async () => {
       if (msgHistory && msgHistory.length > 0) {
-        console.log('New item added:', msgHistory[msgHistory.length - 1]);
+        let newMsg = msgHistory[msgHistory.length - 1];
+        console.log('New item added:', newMsg);
 
-        if (results && results.response && results.response.logs) {
-          console.log('Logs have changed:', results.response.logs);
+        try {
+          // Fetch connection mappings
+          const mappings = await getConnectionMappings(server_ip, uuid);
 
-          try {
-            // Fetch connection mappings
-            const mappings = await getConnectionMappings(server_ip, uuid);
-
-            if (!mappings) {
-              console.log("No mappings found");
-              return;
-            }
-
-            const firstGameEngine = mappings.find(
-              (item) => item.connection_type === 'image_engine'
-            );
-
-            if (!firstGameEngine) {
-              console.log("No game engine found");
-              return;
-            }
-
-            // Check if engine is connected
-            let is_connected = false;
-            if (firstGameEngine.connection_token) {
-              const connectionStatus = await isTokenConnectedToRemote(server_ip, firstGameEngine.connection_token);
-
-              if (!connectionStatus.compute) {
-                toast.warn('Rune is not connected');
-              } else if (connectionStatus.compute && !connectionStatus.loaded) {
-                toast.warn('Rune is loading');
-              } else {
-                is_connected = true;
-              }
-            }
-
-            if (is_connected) {
-              // Get contract
-              const url = API_URLS.COMPUTE_CONTRACT(server_ip, firstGameEngine.connection_token);
-              const response = await fetch(url);
-
-              if (response.ok) {
-                const contract = await response.json();
-                console.log('Contract:', contract);
-
-                // Format contract and send request
-                const formattedRequestBody = formatContractForSubmission(contract, results.response.logs);
-
-                const sendRequestResponse = await sendRequest(server_ip, formattedRequestBody);
-
-                store.setState({
-                  connection_token: firstGameEngine.connection_token,
-                  messageId: sendRequestResponse.id,
-                  submitForm: false,
-                });
-
-                console.log("ResponseData:", sendRequestResponse);
-              } else {
-                console.log("Contract request failed");
-              }
-            }
-          } catch (error) {
-            console.error("Error in fetchImages:", error);
+          if (!mappings) {
+            console.log("No mappings found");
+            return;
           }
+
+          const firstGameEngine = mappings.find(
+            (item) => item.connection_type === 'image_engine'
+          );
+
+          if (!firstGameEngine) {
+            console.log("No game engine found");
+            return;
+          }
+
+          // Check if engine is connected
+          let is_connected = false;
+          if (firstGameEngine.connection_token) {
+            const connectionStatus = await isTokenConnectedToRemote(server_ip, firstGameEngine.connection_token);
+
+            if (!connectionStatus.compute) {
+              toast.warn('Rune is not connected');
+            } else if (connectionStatus.compute && !connectionStatus.loaded) {
+              toast.warn('Rune is loading');
+            } else {
+              is_connected = true;
+            }
+          }
+
+          if (is_connected) {
+            // Get contract
+            const url = API_URLS.COMPUTE_CONTRACT(server_ip, firstGameEngine.connection_token);
+            const response = await fetch(url);
+
+            if (response.ok) {
+              const contract = await response.json();
+              console.log('Contract:', contract);
+
+              // Format contract and send request
+              const formattedRequestBody = formatContractForSubmission(contract, newMsg);
+
+              const sendRequestResponse = await sendRequest(server_ip, formattedRequestBody);
+
+              store.setState({
+                connection_token: firstGameEngine.connection_token,
+                messageId: sendRequestResponse.id,
+                submitForm: false,
+              });
+
+              console.log("ResponseData:", sendRequestResponse);
+            } else {
+              console.log("Contract request failed");
+            }
+          }
+        } catch (error) {
+          console.error("Error in fetchImages:", error);
         }
       }
     };
@@ -333,7 +330,7 @@ function GamePortal({isVisible}) {
 
   const submitMsg = async () => {
 
-    let copiedString = "" + text; // Creates a new reference with the same string
+    let copiedString = text + " environment_id=def"; // Creates a new reference with the same string
     if(copiedString === "") {
       return;
     }

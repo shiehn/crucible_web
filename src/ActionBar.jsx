@@ -54,7 +54,7 @@ function ActionBar({}) {
         </button>
         <button
           className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'xxx' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-          onClick={() => handleNavigation('show_output_logs_component')}>Map
+          onClick={() => handleNavigation('show_map_component')}>Map
         </button>
       </div>
       <div className="w-1/3 flex justify-end">
