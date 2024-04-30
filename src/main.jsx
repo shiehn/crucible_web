@@ -39,6 +39,10 @@ export const store = createStore((set) => ({
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
+  game_map: {
+    nodes: [],
+    edges: [],
+  },
 }));
 export const useStore = createHooks(store);
 

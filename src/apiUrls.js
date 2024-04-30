@@ -25,5 +25,6 @@ export const API_URLS = {
   REMOTE_SOURCES: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/hub/remote-sources/`,
 
   //GAME PORTAL
-  GAME_ENGINE_QUERY: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-engine/query/`
+  GAME_ENGINE_QUERY: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-engine/query/`,
+  GAME_MAP_GET: (apiBaseUrl, map_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-map/${map_id}/`,
 };

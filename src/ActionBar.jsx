@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {store} from "./main.jsx";
 import {useStore} from "./main.jsx";
 import {toast} from "react-toastify";
-import {abortRequest} from "./api.js";
+import {abortRequest, getGameMap} from "./api.js";
 import {FaStop} from "react-icons/fa6";
 import {FaPlay} from "react-icons/fa";
 
@@ -35,7 +35,16 @@ function ActionBar({}) {
   };
 
   const handleNavigation = async (outputView) => {
-    store.setState({currentOutputView: outputView});
+    if(outputView === 'show_map_component'){
+      const game_map = await getGameMap(server_ip, '2effc088-ef86-48e0-99ed-469f55e2edc2');
+      if(game_map.map_graph){
+        store.setState({currentOutputView: outputView, game_map: game_map.map_graph});
+      } else {
+        store.setState({currentOutputView: outputView});
+      }
+    } else {
+      store.setState({currentOutputView: outputView});
+    }
   };
 
   return (

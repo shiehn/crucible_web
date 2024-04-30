@@ -1,6 +1,5 @@
 import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
-import {store} from "./main.jsx";
 
 async function sendRequest(server_ip, formattedRequestBody) {
   try {
@@ -244,6 +243,23 @@ async function sendGameEngineQuery(text, master_token, server_ip) {
   }
 }
 
+async function getGameMap(server_ip, game_map_id) {
+  try {
+    const url = API_URLS.GAME_MAP_GET(server_ip, game_map_id);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.log('Network response was not ok');
+      return false;
+    }
+
+    return await response.json(); // Return the boolean value
+  } catch (error) {
+    console.error('Error:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
 
 export {
   sendRequest,
@@ -251,6 +267,7 @@ export {
   abortRequest,
   addConnectionMapping,
   getConnectionMappings,
+  getGameMap,
   removeConnectionMapping,
   sendGameEngineQuery,
   isTokenConnected,
