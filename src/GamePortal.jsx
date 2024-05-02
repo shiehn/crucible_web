@@ -330,7 +330,7 @@ function GamePortal({isVisible}) {
 
   const submitMsg = async () => {
 
-    let copiedString = text + " environment_id=def"; // Creates a new reference with the same string
+    let copiedString = text + ""; // Creates a new reference with the same string
     if(copiedString === "") {
       return;
     }

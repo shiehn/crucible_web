@@ -11,6 +11,7 @@ import {API_URLS} from './apiUrls'; // Import the URLs
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
+import {getGameState} from "./api.js";
 
 export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
@@ -39,6 +40,7 @@ export const store = createStore((set) => ({
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
+  game_state: {},
   game_map: {
     nodes: [],
     edges: [],
@@ -73,6 +75,7 @@ if (storagePathFromLocalStorage) {
 if (savedUUID) {
   store.setState({uuid: savedUUID});
 }
+
 
 // if (navigationFromLocalStorage) {
 //   store.setState({navigation: navigationFromLocalStorage});
@@ -112,8 +115,20 @@ function App(props) {
   const {error} = useErrorStore();
   const {uuid, connection_token, connected, contract, embedded, messageId, currentOutputView, server_ip} = state;
 
+
   useEffect(() => {
-    // console.log(`MasterToken in main: ${uuid}`);
+    // Define an asynchronous function
+    const fetchGameState = async () => {
+      // console.log(`MasterToken in main: ${uuid}`);
+      // Start by fetching the game state
+      const gameState = await getGameState(server_ip, uuid);
+      if (gameState) {
+        store.setState({game_state: gameState});
+      }
+    };
+
+    // Call the asynchronous function
+    fetchGameState();
   }, [uuid]);
 
   useEffect(() => {

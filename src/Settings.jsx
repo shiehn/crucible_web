@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
-import {getConnectionMappings} from "./api.js";
+import {createGameState, deleteGameState, getConnectionMappings, getGameState} from "./api.js";
 
 
 function Settings({isVisible}) {
@@ -30,6 +30,22 @@ function Settings({isVisible}) {
     store.setState({storage_path: DEFAULT_STORAGE_PATH})
   };
 
+  const createNewGame = async () => {
+
+    // TRY TO GET AN EXISTING GAME
+    const gameState = await getGameState(server_ip, uuid);
+    if (gameState) {
+      console.log("gameState", gameState)
+      //IF IT EXISTS THEN DELETE IT
+      const deleteState = await deleteGameState(server_ip, gameState.id);
+    }
+
+    //CREATE A NEW GAME
+    const createdGameState = await createGameState(server_ip, uuid, "aesthetic");
+    console.log("createGameState", createdGameState);
+    store.setState({game_state: gameState});
+  }
+
 
   return (
     <div className="w-full h-full p-4 text-sas-text-grey">
@@ -43,7 +59,7 @@ function Settings({isVisible}) {
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
-      <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>
+        <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>
         <input type="text" id="build" name="server_id" value="0.8.3" readOnly
                className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"/>
       </div>
@@ -75,6 +91,9 @@ function Settings({isVisible}) {
           }}
         />
       </div>
+
+      <button className="w-full bg-sas-green-800 text-white rounded p-2 text-sm" onClick={createNewGame}>NEW GAME
+      </button>
     </div>
   );
 }

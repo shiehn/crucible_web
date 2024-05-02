@@ -7,7 +7,7 @@ import {FaStop} from "react-icons/fa6";
 import {FaPlay} from "react-icons/fa";
 
 function ActionBar({}) {
-  const {connection_token, connected, currentOutputView, server_ip} = useStore();
+  const {connection_token, connected, currentOutputView, game_state, server_ip} = useStore();
 
   const handleAbort = async () => {
     await abortRequest(server_ip, connection_token);
@@ -36,10 +36,17 @@ function ActionBar({}) {
 
   const handleNavigation = async (outputView) => {
     if(outputView === 'show_map_component'){
-      const game_map = await getGameMap(server_ip, '2effc088-ef86-48e0-99ed-469f55e2edc2');
-      if(game_map.map_graph){
-        store.setState({currentOutputView: outputView, game_map: game_map.map_graph});
-      } else {
+      console.log("game_state: ", game_state)
+      if(game_state && game_state.map_id){
+
+        const game_map = await getGameMap(server_ip, game_state.map_id);
+        console.log("GAME_MAP: ", game_map)
+        if(game_map.map_graph){
+          store.setState({currentOutputView: outputView, game_map: game_map.map_graph});
+        } else {
+          store.setState({currentOutputView: outputView});
+        }
+      }else {
         store.setState({currentOutputView: outputView});
       }
     } else {

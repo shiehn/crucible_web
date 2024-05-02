@@ -260,14 +260,81 @@ async function getGameMap(server_ip, game_map_id) {
   }
 }
 
+async function getGameState(server_ip, user_id) {
+  try {
+    const url = API_URLS.GAME_STATE_GET(server_ip, user_id);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      toast.error('No game state found for user_id: ' + user_id);
+      return false;
+    }
+
+    return await response.json(); // Return the boolean value
+  } catch (error) {
+    console.error('Error:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
+async function deleteGameState(server_ip, game_id) {
+  try {
+    const url = API_URLS.GAME_STATE_DELETE(server_ip, game_id);
+    const response = await fetch(url, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      toast.error('Failed to delete game state by id: ' + game_id);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
+async function createGameState(server_ip, user_id, aesthetic) {
+  try {
+    const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "user_id": user_id,
+        "level": 1,
+        "aesthetic": aesthetic,
+        "map_id": "123e4567-e89b-12d3-a456-426614174001",
+        "environment_id": "00000000-0000-0000-0000-000000000000"
+      }), // Send the text as JSON
+    });
+
+    if (!response.ok) {
+      console.error("Error sending request"); // Handle error
+      return null;
+    }
+
+    return await response.json(); // Return the parsed JSON response
+  } catch (error) {
+    console.error("Error in sendGameEngineQuery:", error); // Handle error
+    return null;
+  }
+}
+
 
 export {
   sendRequest,
   sendResponse,
   abortRequest,
   addConnectionMapping,
+  createGameState,
+  deleteGameState,
   getConnectionMappings,
   getGameMap,
+  getGameState,
   removeConnectionMapping,
   sendGameEngineQuery,
   isTokenConnected,

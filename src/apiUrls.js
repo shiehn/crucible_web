@@ -27,4 +27,7 @@ export const API_URLS = {
   //GAME PORTAL
   GAME_ENGINE_QUERY: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-engine/query/`,
   GAME_MAP_GET: (apiBaseUrl, map_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-map/${map_id}/`,
+  GAME_STATE_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${user_id}/`,
+  GAME_STATE_DELETE: (apiBaseUrl, game_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${game_id}/delete/`,
+  GAME_STATE_CREATE: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/`,
 };
