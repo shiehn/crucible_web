@@ -40,12 +40,15 @@ export const store = createStore((set) => ({
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
-  game_state: {},
+  game_state: {
+  },
   game_map: {
     nodes: [],
     edges: [],
   },
   game_inventory: [],
+  game_aesthetic: 'cloud kingdom',
+  open_ai_key: 'xyz',
 }));
 export const useStore = createHooks(store);
 
@@ -53,10 +56,10 @@ const errorStore = createStore(() => ({error: null}));
 const useErrorStore = createHooks(errorStore);
 
 // Constants for interval times
-const PLUGIN_REGISTER_INTERVAL_TIME = 1000;
-const STATUS_CHECK_INTERVAL_TIME = 1000;
-const RESPONSE_POLL_INTERVAL_TIME = 1000;
-const CONTRACT_POLL_INTERVAL_TIME = 500;
+const PLUGIN_REGISTER_INTERVAL_TIME = 5000;
+const STATUS_CHECK_INTERVAL_TIME = 5000;
+const RESPONSE_POLL_INTERVAL_TIME = 5000;
+const CONTRACT_POLL_INTERVAL_TIME = 5000;
 
 
 //SET VALUES FROM LOCAL STORAGE

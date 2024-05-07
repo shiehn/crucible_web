@@ -5,7 +5,7 @@ import {createGameState, deleteGameState, getConnectionMappings, getGameState} f
 
 function Settings({isVisible}) {
 
-  const {uuid, connected, server_ip, storage_path} = useStore();
+  const {uuid, connected, server_ip, storage_path, open_ai_key, game_aesthetic} = useStore();
 
   useEffect(() => {
     if (isVisible) {
@@ -21,6 +21,16 @@ function Settings({isVisible}) {
   function handleStoragePath(value) {
     store.setState({storage_path: value})
     localStorage.setItem('storage_path', value);
+  }
+
+  function handleOpenAIKey(value) {
+    store.setState({open_ai_key: value})
+    localStorage.setItem('open_ai_key', value);
+  }
+
+  function handleGameAesthetic(value) {
+    store.setState({game_aesthetic: value})
+    localStorage.setItem('game_aesthetic', value);
   }
 
   const handleReset = () => {
@@ -88,6 +98,34 @@ function Settings({isVisible}) {
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => {
             handleStoragePath(e.target.value)
+          }}
+        />
+      </div>
+
+      <div className="w-full text-sm flex mb-4 items-center">
+        <label htmlFor="storage_path" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
+        <input
+          type="text"
+          id="build"
+          name="open_ai_key"
+          value={open_ai_key} // Use storage_path from the global state
+          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
+          onChange={(e) => {
+            handleOpenAIKey(e.target.value)
+          }}
+        />
+      </div>
+
+      <div className="w-full text-sm flex mb-4 items-center">
+        <label htmlFor="game_aesthetic" className="w-1/3 text-left pr-2">GAME AESTHETIC:</label>
+        <textarea
+          type="text"
+          id="build"
+          name="game_aesthetic"
+          value={game_aesthetic} // Use storage_path from the global state
+          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
+          onChange={(e) => {
+            handleGameAesthetic(e.target.value)
           }}
         />
       </div>

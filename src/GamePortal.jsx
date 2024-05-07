@@ -18,7 +18,6 @@ function GamePortal({isVisible}) {
 
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
 
-
   useEffect(() => {
     const fetchImages = async () => {
       if (msgHistory && msgHistory.length > 0) {
@@ -371,6 +370,10 @@ function GamePortal({isVisible}) {
     const gameState = await getGameState(server_ip, uuid);
     if (gameState) {
       store.setState({game_state: gameState});
+
+      if(gameState.environment_img){
+        setBackgroundImage(gameState.environment_img)
+      }
     }
   };
 
@@ -378,7 +381,7 @@ function GamePortal({isVisible}) {
     <div
       className="w-full h-full flex justify-center"
       style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+        backgroundImage: backgroundImage ? `url(${backgroundImage})` : `url("https://storage.googleapis.com/byoc-file-transfer/img_placeholder.png")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
