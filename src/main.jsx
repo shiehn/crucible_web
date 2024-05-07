@@ -45,6 +45,7 @@ export const store = createStore((set) => ({
     nodes: [],
     edges: [],
   },
+  game_inventory: [],
 }));
 export const useStore = createHooks(store);
 

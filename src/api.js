@@ -324,6 +324,23 @@ async function createGameState(server_ip, user_id, aesthetic) {
   }
 }
 
+async function getGameInventory(server_ip, connection_token) {
+  try {
+    const url = API_URLS.GAME_INVENTORY_GET(server_ip, connection_token);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.log('Network response was not ok');
+      return false;
+    }
+
+    return await response.json(); // Return the boolean value
+  } catch (error) {
+    console.error('Error:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
 
 export {
   sendRequest,
@@ -335,6 +352,7 @@ export {
   getConnectionMappings,
   getGameMap,
   getGameState,
+  getGameInventory,
   removeConnectionMapping,
   sendGameEngineQuery,
   isTokenConnected,

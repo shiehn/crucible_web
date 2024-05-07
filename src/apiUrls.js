@@ -30,4 +30,5 @@ export const API_URLS = {
   GAME_STATE_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${user_id}/`,
   GAME_STATE_DELETE: (apiBaseUrl, game_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${game_id}/delete/`,
   GAME_STATE_CREATE: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/`,
+  GAME_INVENTORY_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-inventory/${user_id}/`,
 };

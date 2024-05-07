@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {store} from "./main.jsx";
 import {useStore} from "./main.jsx";
 import {toast} from "react-toastify";
-import {abortRequest, getGameMap} from "./api.js";
+import {abortRequest, getGameMap, getGameInventory} from "./api.js";
 import {FaStop} from "react-icons/fa6";
 import {FaPlay} from "react-icons/fa";
 
 function ActionBar({}) {
-  const {connection_token, connected, currentOutputView, game_state, server_ip} = useStore();
+  const {connection_token,uuid, connected, currentOutputView, game_state, server_ip} = useStore();
 
   const handleAbort = async () => {
     await abortRequest(server_ip, connection_token);
@@ -35,19 +35,25 @@ function ActionBar({}) {
   };
 
   const handleNavigation = async (outputView) => {
-    if(outputView === 'show_map_component'){
+    if (outputView === 'show_map_component') {
       console.log("game_state: ", game_state)
-      if(game_state && game_state.map_id){
+      if (game_state && game_state.map_id) {
 
         const game_map = await getGameMap(server_ip, game_state.map_id);
         console.log("GAME_MAP: ", game_map)
-        if(game_map.map_graph){
+        if (game_map.map_graph) {
           store.setState({currentOutputView: outputView, game_map: game_map.map_graph});
         } else {
           store.setState({currentOutputView: outputView});
         }
-      }else {
+      } else {
         store.setState({currentOutputView: outputView});
+      }
+    } else if (outputView === 'show_inventory_component') {
+      const inventory = await getGameInventory(server_ip, uuid);
+      console.log("INVENTORY: ", inventory)
+      if(inventory) {
+        store.setState({currentOutputView: outputView, game_inventory: inventory});
       }
     } else {
       store.setState({currentOutputView: outputView});
@@ -65,11 +71,11 @@ function ActionBar({}) {
           onClick={() => handleNavigation('show_output_logs_component')}>Dialogue
         </button>
         <button
-          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'xxx' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-          onClick={() => handleNavigation('show_output_logs_component')}>Backpack
+          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_inventory_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+          onClick={() => handleNavigation('show_inventory_component')}>Inventory
         </button>
         <button
-          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'xxx' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
+          className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_map_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
           onClick={() => handleNavigation('show_map_component')}>Map
         </button>
       </div>

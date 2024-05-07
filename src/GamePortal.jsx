@@ -1,6 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {store, useStore} from "./main.jsx";
-import {getConnectionMappings, isTokenConnectedToRemote, sendGameEngineQuery, sendRequest} from "./api.js";
+import {
+  getConnectionMappings,
+  getGameState,
+  isTokenConnectedToRemote,
+  sendGameEngineQuery,
+  sendRequest
+} from "./api.js";
 import {API_URLS} from "./apiUrls.js";
 import {FaPlay} from "react-icons/fa";
 import {toast} from "react-toastify"; // Import the new function
@@ -359,13 +365,13 @@ function GamePortal({isVisible}) {
       return prevState; // If the item is the same, return the current state unchanged
     });
 
-    //toast.success("MSG: " + text);
-    // if (connected) {
-    //   store.setState({submitForm: true});
-    //   store.setState({currentOutputView: 'show_output_component'});
-    // } else {
-    //   toast.error("Not connected!");
-    // }
+    //AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
+
+
+    const gameState = await getGameState(server_ip, uuid);
+    if (gameState) {
+      store.setState({game_state: gameState});
+    }
   };
 
   return (
