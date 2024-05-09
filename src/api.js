@@ -266,7 +266,7 @@ async function getGameState(server_ip, user_id) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      toast.error('No game state found for user_id: ' + user_id);
+      //toast.error('No game state found for user_id: ' + user_id);
       return false;
     }
 
@@ -325,6 +325,30 @@ async function createGameState(server_ip, user_id, aesthetic) {
   }
 }
 
+async function renderGameAssets(server_ip, user_id, aesthetic) {
+  try {
+    const response = await fetch(API_URLS.GAME_ASSETS_RENDER(server_ip, user_id), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "aesthetic": aesthetic
+      }), // Send the text as JSON
+    });
+
+    if (!response.ok) {
+      console.error("Error sending request"); // Handle error
+      return false;
+    }
+
+    return true; // Return the parsed JSON response
+  } catch (error) {
+    console.error("Error in sendGameEngineQuery:", error); // Handle error
+    return false;
+  }
+}
+
 
 async function getGameInventory(server_ip, connection_token) {
   try {
@@ -344,6 +368,28 @@ async function getGameInventory(server_ip, connection_token) {
 }
 
 
+async function getGameEnvironment(server_ip, environment_id) {
+  try {
+    const url = API_URLS.GAME_ENVIRONMENT_GET(server_ip, environment_id);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.log('Network response was not ok');
+      return {};
+    }
+
+    return await response.json(); // Return the boolean value
+  } catch (error) {
+    console.error('Error:', error);
+    return {}; // Handle errors and return false or another suitable value
+  }
+}
+
+
+
+//http://localhost:8081/api/game-environment/3cd9c84b-8b03-45be-af6a-a5a597662dd9/
+
+
 export {
   sendRequest,
   sendResponse,
@@ -352,10 +398,12 @@ export {
   createGameState,
   deleteGameState,
   getConnectionMappings,
+  getGameEnvironment,
   getGameMap,
   getGameState,
   getGameInventory,
   removeConnectionMapping,
+  renderGameAssets,
   sendGameEngineQuery,
   isTokenConnected,
   isTokenConnectedToRemote,

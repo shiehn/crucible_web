@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
-import {createGameState, deleteGameState, getConnectionMappings, getGameState} from "./api.js";
+import {createGameState, deleteGameState, getConnectionMappings, getGameState, renderGameAssets} from "./api.js";
 
 
 function Settings({isVisible}) {
 
-  const {uuid, connected, server_ip, storage_path, open_ai_key, game_aesthetic} = useStore();
+  const {game_aesthetic, uuid, connected, server_ip, storage_path, open_ai_key} = useStore();
 
   useEffect(() => {
     if (isVisible) {
@@ -54,6 +54,14 @@ function Settings({isVisible}) {
     const createdGameState = await createGameState(server_ip, uuid, "aesthetic");
     console.log("createGameState", createdGameState);
     store.setState({game_state: gameState});
+  }
+
+  const renderAssets = async () => {
+
+    const renderResult = await renderGameAssets(server_ip, uuid, game_aesthetic);
+    console.log("renderResult", renderResult);
+
+    //TODO - HANDLE REDRAWING OF GAME
   }
 
 
@@ -130,7 +138,12 @@ function Settings({isVisible}) {
         />
       </div>
 
-      <button className="w-full bg-sas-green-800 text-white rounded p-2 text-sm" onClick={createNewGame}>NEW GAME
+      <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm" onClick={createNewGame}>
+        NEW GAME
+      </button>
+
+      <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm" onClick={renderAssets}>
+        RENDER GAME ASSETS
       </button>
     </div>
   );

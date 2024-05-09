@@ -31,4 +31,6 @@ export const API_URLS = {
   GAME_STATE_DELETE: (apiBaseUrl, game_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${game_id}/delete/`,
   GAME_STATE_CREATE: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/`,
   GAME_INVENTORY_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-inventory/${user_id}/`,
+  GAME_ASSETS_RENDER: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-assets/generate/${user_id}/`,
+  GAME_ENVIRONMENT_GET: (apiBaseUrl, environment_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-environment/${environment_id}/`,
 };
