@@ -143,22 +143,22 @@ function App(props) {
     }
   }, [connection_token]);
 
-  useEffect(() => {
-    if (!currentOutputView) {
-      return;
-    }
-
-    if (currentOutputView === 'show_remote_links') {
-      //SHOW REMOTE LINKS IN THE WEB VIEW
-      toast.warn("SHOW REMOTE LINKS")
-    } else {
-      //NAVIGATE TO THE CURRENT OUTPUT VIEW
-      if (typeof globalThis.__postNativeMessage__ === 'function') {
-        //"show_drop_component", "show_process_component", "show_output_component"
-        globalThis.__postNativeMessage__(JSON.stringify({action: 'NAVIGATE_TO', payload: currentOutputView}));
-      }
-    }
-  }, [currentOutputView]);
+  // useEffect(() => {
+  //   if (!currentOutputView) {
+  //     return;
+  //   }
+  //
+  //   if (currentOutputView === 'show_remote_links') {
+  //     //SHOW REMOTE LINKS IN THE WEB VIEW
+  //     toast.warn("SHOW REMOTE LINKS")
+  //   } else {
+  //     //NAVIGATE TO THE CURRENT OUTPUT VIEW
+  //     if (typeof globalThis.__postNativeMessage__ === 'function') {
+  //       //"show_drop_component", "show_process_component", "show_output_component"
+  //       globalThis.__postNativeMessage__(JSON.stringify({action: 'NAVIGATE_TO', payload: currentOutputView}));
+  //     }
+  //   }
+  // }, [currentOutputView]);
 
   useEffect(() => {
     let contractInterval = null;
@@ -388,19 +388,19 @@ function App(props) {
       }
     };
 
-    const pluginRegisterInterval = setInterval(() => {
-      if (connection_token) {
-        registerThePluginToken(connection_token, 1);
-      }
-    }, PLUGIN_REGISTER_INTERVAL_TIME);
-    const statusInterval = setInterval(fetchConnectionStatus, STATUS_CHECK_INTERVAL_TIME);
-    const pollInterval = setInterval(pollResponses, RESPONSE_POLL_INTERVAL_TIME);
+    // const pluginRegisterInterval = setInterval(() => {
+    //   if (connection_token) {
+    //     registerThePluginToken(connection_token, 1);
+    //   }
+    // }, PLUGIN_REGISTER_INTERVAL_TIME);
+    // const statusInterval = setInterval(fetchConnectionStatus, STATUS_CHECK_INTERVAL_TIME);
+    // const pollInterval = setInterval(pollResponses, RESPONSE_POLL_INTERVAL_TIME);
 
     return () => {
-      clearInterval(statusInterval);
-      clearInterval(contractInterval);
-      clearInterval(pluginRegisterInterval);
-      clearInterval(pollInterval);
+      // clearInterval(statusInterval);
+      // clearInterval(contractInterval);
+      // clearInterval(pluginRegisterInterval);
+      // clearInterval(pollInterval);
     };
   }, [connection_token, connected]);
 

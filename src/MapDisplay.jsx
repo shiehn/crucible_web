@@ -3,8 +3,8 @@ import Graph from 'react-graph-vis';
 import { useStore } from './main.jsx';
 
 function MapDisplay() {
-  const { game_map } = useStore(); // Get the game_map data from the store
-  // Function to validate and sanitize game_map data
+  const { game_map, game_state } = useStore(); // Get the game_map and game_state data from the store
+
   const sanitizeGameMap = (map) => {
     if (!map || typeof map !== 'object' || !Array.isArray(map.nodes) || !Array.isArray(map.edges)) {
       return { nodes: [], edges: [] };
@@ -12,36 +12,67 @@ function MapDisplay() {
     return map;
   };
 
-  // Initialize the graph state with validated game_map
   const [graph, setGraph] = useState(sanitizeGameMap(game_map));
+  const [highlightedNodeId, setHighlightedNodeId] = useState(null);
 
-  // useEffect to update the graph state when game_map changes
   useEffect(() => {
-    console.log('Game Map:', game_map);
     setGraph(sanitizeGameMap(game_map));
   }, [game_map]);
 
+  // Automatically update the flashing node when game_state.environment_id changes
+  useEffect(() => {
+    console.log('Environment ID changed:', game_state.environment_id);
+    setHighlightedNodeId(game_state.environment_id);
+  }, [game_state.environment_id]);
+
+  useEffect(() => {
+    const interval = highlightedNodeId ? setInterval(() => {
+      let foundNode = false;
+      const newNodes = graph.nodes.map(node => {
+        // Check if the node exists and has a color property
+        if (node.id === highlightedNodeId && node.color) {
+          foundNode = true;
+          return {
+            ...node,
+            color: {
+              ...node.color,
+              background: node.color.background === '#000' ? '#fff' : '#000', // Toggle color
+            }
+          };
+        }
+        return node;
+      });
+      if (foundNode) {
+        console.log(`Flashing node ${highlightedNodeId}`);
+      } else {
+        console.log(`Node ${highlightedNodeId} not found or missing color property`);
+      }
+      setGraph(prevGraph => ({ ...prevGraph, nodes: newNodes }));
+    }, 500) : null;
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [highlightedNodeId, graph]);
+
+
   const options = {
-    // layout: {
-    //   hierarchical: true,
-    // },
     physics: false,
+    layout: {
+      randomSeed: "random-seed-xyz",
+    },
     interaction: {
-      dragNodes: false, // Disable node dragging
-      dragView: true    // Allow dragging the view
+      dragNodes: false,
+      dragView: true
     },
     edges: {
       color: '#fff',
       arrows: {
-        to: {
-          enabled: false
-        },
-        middle: {
-          enabled: false
-        },
-        from: {
-          enabled: false
-        }
+        to: { enabled: false },
+        middle: { enabled: false },
+        from: { enabled: false }
       },
     },
     height: '400px',
@@ -57,7 +88,6 @@ function MapDisplay() {
         },
       },
     },
-
   };
 
   const events = {
@@ -67,14 +97,16 @@ function MapDisplay() {
   };
 
   return (
-    <Graph
-      graph={graph}
-      options={options}
-      events={events}
-      getNetwork={(network) => {
-        console.log('Graph network instance:', network);
-      }}
-    />
+    <div className="w-full h-full">
+      <Graph
+        graph={graph}
+        options={options}
+        events={events}
+        getNetwork={(network) => {
+          console.log('Graph network instance:', network);
+        }}
+      />
+    </div>
   );
 }
 
