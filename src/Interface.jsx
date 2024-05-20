@@ -287,15 +287,18 @@ export default function Interface(props) {
       <ActionBar/>
       <div className="flex flex-col p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
         <div className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
-          {(currentOutputView === 'show_inventory_component') && (
-            <InventoryDisplay />
-          )}
-          {(currentOutputView === 'show_output_logs_component') && (
-            <LogsDisplay />
-          )}
-          {(currentOutputView === 'show_map_component') && (
-            <MapDisplay />
-          )}
+          {/*{(currentOutputView === 'show_inventory_component') && (*/}
+          {/*  <InventoryDisplay />*/}
+          {/*)}*/}
+          {/*{(currentOutputView === 'show_output_logs_component') && (*/}
+          {/*  <LogsDisplay />*/}
+          {/*)}*/}
+          {/*{(currentOutputView === 'show_map_component') && (*/}
+          {/*  <MapDisplay />*/}
+          {/*)}*/}
+          <LogsDisplay />
+          <MapDisplay />
+          <InventoryDisplay />
         </div>
       </div>
     </div>

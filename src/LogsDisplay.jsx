@@ -5,7 +5,7 @@ function LogsDisplay() {
 
   if (!msgHistory || msgHistory.length < 1) {
     return (
-      <div className="w-full h-full p-2">No media found.</div>
+      <div className="w-full h-24 p-2">No media found.</div>
     );
   }
 
@@ -13,7 +13,7 @@ function LogsDisplay() {
   const reversedMessages = msgHistory.slice().reverse();
 
   return (
-    <div className="w-full h-full p-2">
+    <div className="w-full h-24 overflow-hidden p-2">
       {reversedMessages.map((message, index) => (
         <div key={index}>
           <div

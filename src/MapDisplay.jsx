@@ -15,23 +15,21 @@ function MapDisplay() {
   const [graph, setGraph] = useState(sanitizeGameMap(game_map));
   const [highlightedNodeId, setHighlightedNodeId] = useState(null);
 
-  let oldGraph = JSON.stringify(graph)
+  // let oldGraph = JSON.stringify(graph)
 
   useEffect(() => {
-    console.log("BEFORE CRASH")
+    // console.log("BEFORE CRASH")
 
-    let newGraph = JSON.stringify(graph)
+    // let newGraph = JSON.stringify(sanitizeGameMap(game_map))
 
-    if(newGraph !== oldGraph){
-      console.log("GRAPH NOT EQUAL, REDRAW")
-      oldGraph = JSON.stringify(graph)
-      setGraph({ nodes: [], edges: [] })
-      setGraph(sanitizeGameMap(game_map))
-    } else {
-      console.log("GRAPH IS EQUAL")
-    }
+    // console.log("OLD_G", oldGraph)
+    // console.log("NEW_G", newGraph)
 
-    console.log("AFTER CRASH")
+    setGraph({ nodes: [], edges: [] })
+    setGraph(sanitizeGameMap(game_map))
+
+
+    // console.log("AFTER CRASH")
   }, [game_map]);
 
   // Automatically update the flashing node when game_state.environment_id changes
@@ -90,7 +88,7 @@ function MapDisplay() {
         from: { enabled: false }
       },
     },
-    height: '400px',
+    height: '100px',
     nodes: {
       shape: 'box',
       size: 20,
@@ -112,7 +110,7 @@ function MapDisplay() {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-24 overflow-hidden">
       <Graph
         graph={graph}
         options={options}

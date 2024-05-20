@@ -5,7 +5,7 @@ function InventoryDisplay() {
 
   if (!game_inventory || game_inventory.length < 1) {
     return (
-      <div className="w-full h-full p-2">No inventory found.</div>
+      <div className="w-full h-24 p-2">No inventory found.</div>
     );
   }
 
@@ -22,7 +22,7 @@ function InventoryDisplay() {
   };
 
   return (
-    <div className="w-full h-full p-2">
+    <div className="w-full h-24 p-2 overflow-hidden">
       {game_inventory.map((item, index) => (
         <div key={index} className="flex items-center p-2 bg-gray-800 my-2">
           {/* Image on the left */}

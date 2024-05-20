@@ -46,6 +46,10 @@ export const store = createStore((set) => ({
     nodes: [],
     edges: [],
   },
+  game_map_old: {
+    nodes: [],
+    edges: [],
+  },
   game_inventory: [],
   game_aesthetic: 'cloud kingdom',
   open_ai_key: 'xyz',
@@ -459,9 +463,7 @@ function App(props) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App/>
-  </React.StrictMode>,
+    <App/>,
 );
 
 // Request initial processor state
