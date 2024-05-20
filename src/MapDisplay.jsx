@@ -15,8 +15,23 @@ function MapDisplay() {
   const [graph, setGraph] = useState(sanitizeGameMap(game_map));
   const [highlightedNodeId, setHighlightedNodeId] = useState(null);
 
+  let oldGraph = JSON.stringify(graph)
+
   useEffect(() => {
-    setGraph(sanitizeGameMap(game_map));
+    console.log("BEFORE CRASH")
+
+    let newGraph = JSON.stringify(graph)
+
+    if(newGraph !== oldGraph){
+      console.log("GRAPH NOT EQUAL, REDRAW")
+      oldGraph = JSON.stringify(graph)
+      setGraph({ nodes: [], edges: [] })
+      setGraph(sanitizeGameMap(game_map))
+    } else {
+      console.log("GRAPH IS EQUAL")
+    }
+
+    console.log("AFTER CRASH")
   }, [game_map]);
 
   // Automatically update the flashing node when game_state.environment_id changes
