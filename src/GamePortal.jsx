@@ -12,11 +12,15 @@ import {FaPlay} from "react-icons/fa";
 import {toast} from "react-toastify"; // Import the new function
 
 function GamePortal({isVisible}) {
-  const {embedded, uuid, connected, msgHistory, results, server_ip} = useStore();
+  const {embedded, uuid, connected, currentBgImage, msgHistory, results, server_ip} = useStore();
   const [text, setText] = useState(""); // State for tracking the text input
   const [typingTimeout, setTypingTimeout] = useState(null); // State for the typing timeout
 
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
+
+  useEffect(()=>{
+    setBackgroundImage(currentBgImage)
+  }, [currentBgImage])
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -148,6 +152,11 @@ function GamePortal({isVisible}) {
 
     let logs = response?.response;
 
+    let encounter = response?.action?.encounter;
+    if (encounter) {
+      toast.warn("Encounter: " + JSON.stringify(encounter));
+    }
+
     store.setState((prevState) => {
       const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
 
@@ -171,7 +180,7 @@ function GamePortal({isVisible}) {
       console.log("XXX Environment:", environment);
       if (environment) {
         if(environment.game_info.environment.aesthetic.image){
-          setBackgroundImage(environment.game_info.environment.aesthetic.image)
+          store.setState({currentBgImage: environment.game_info.environment.aesthetic.image})
         }
       }
     }
