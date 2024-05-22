@@ -152,11 +152,6 @@ function GamePortal({isVisible}) {
 
     let logs = response?.response;
 
-    let encounter = response?.action?.encounter;
-    if (encounter) {
-      toast.warn("Encounter: " + JSON.stringify(encounter));
-    }
-
     store.setState((prevState) => {
       const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
 
@@ -171,20 +166,30 @@ function GamePortal({isVisible}) {
       return prevState; // If the item is the same, return the current state unchanged
     });
 
-    //AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
-    const gameState = await getGameState(server_ip, uuid);
-    if (gameState) {
-      store.setState({game_state: gameState});
+    let encounter = response?.action?.encounter;
+    if (encounter) {
+      //toast.warn("Encounter: " + JSON.stringify(encounter));
+      store.setState({currentBgImage: encounter.aesthetic.image})
+    } else {
+      //AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
+      const gameState = await getGameState(server_ip, uuid);
+      if (gameState) {
+        store.setState({game_state: gameState});
 
-      const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-      console.log("XXX Environment:", environment);
-      if (environment) {
-        if(environment.game_info.environment.aesthetic.image){
-          store.setState({currentBgImage: environment.game_info.environment.aesthetic.image})
+        const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+        console.log("XXX Environment:", environment);
+        if (environment) {
+          if(environment.game_info.environment.aesthetic.image){
+            store.setState({currentBgImage: environment.game_info.environment.aesthetic.image})
+          }
         }
       }
+    };
     }
-  };
+
+
+
+
 
   return (
     <div

@@ -5,7 +5,7 @@ import {createGameState, deleteGameState, getConnectionMappings, getGameState, r
 
 function Settings({isVisible}) {
 
-  const {game_aesthetic, uuid, connected, server_ip, storage_path, open_ai_key} = useStore();
+  const {game_setting_and_lore, game_art_style, uuid, connected, server_ip, storage_path, open_ai_key} = useStore();
 
   useEffect(() => {
     if (isVisible) {
@@ -28,9 +28,14 @@ function Settings({isVisible}) {
     localStorage.setItem('open_ai_key', value);
   }
 
-  function handleGameAesthetic(value) {
-    store.setState({game_aesthetic: value})
-    localStorage.setItem('game_aesthetic', value);
+  function handleGameSettingAndLore(value) {
+    store.setState({game_setting_and_lore: value})
+    localStorage.setItem('game_setting_and_lore', value);
+  }
+
+  function handleGameArtStyle(value) {
+    store.setState({game_art_style: value})
+    localStorage.setItem('game_art_style', value);
   }
 
   const handleReset = () => {
@@ -58,7 +63,7 @@ function Settings({isVisible}) {
 
   const renderAssets = async () => {
 
-    const renderResult = await renderGameAssets(server_ip, uuid, game_aesthetic);
+    const renderResult = await renderGameAssets(server_ip, uuid, game_setting_and_lore + ' illustrated in ' + game_art_style);
     console.log("renderResult", renderResult);
 
     //TODO - HANDLE REDRAWING OF GAME
@@ -125,20 +130,35 @@ function Settings({isVisible}) {
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="game_aesthetic" className="w-1/3 text-left pr-2">GAME AESTHETIC:</label>
+        <label htmlFor="game_aesthetic" className="w-1/3 text-left pr-2">GAME SETTING & LORE:</label>
         <textarea
           type="text"
           id="build"
-          name="game_aesthetic"
-          value={game_aesthetic} // Use storage_path from the global state
+          name="game_setting_and_lore"
+          value={game_setting_and_lore} // Use storage_path from the global state
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => {
-            handleGameAesthetic(e.target.value)
+            handleGameSettingAndLore(e.target.value)
           }}
         />
       </div>
 
-      <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm" onClick={createNewGame}>
+      <div className="w-full text-sm flex mb-4 items-center">
+        <label htmlFor="game_art_style" className="w-1/3 text-left pr-2">GAME ART STYLE:</label>
+        <textarea
+          type="text"
+          id="build"
+          name="game_art_style"
+          value={game_art_style} // Use storage_path from the global state
+          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
+          onChange={(e) => {
+            handleGameArtStyle(e.target.value)
+          }}
+        />
+      </div>
+
+      <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm mb-4"
+              onClick={createNewGame}>
         NEW GAME
       </button>
 

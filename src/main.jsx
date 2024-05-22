@@ -52,7 +52,8 @@ export const store = createStore((set) => ({
     edges: [],
   },
   game_inventory: [],
-  game_aesthetic: 'cloud kingdom',
+  game_setting_and_lore: '',
+  game_art_style: '',
   open_ai_key: 'xyz',
 }));
 export const useStore = createHooks(store);
