@@ -125,6 +125,13 @@ function App(props) {
   const {error} = useErrorStore();
   const {uuid, connection_token, connected, contract, embedded, game_state, messageId, currentOutputView, server_ip} = state;
 
+  // //JUST FOR LOGGING
+  // useEffect(() => {
+  //   console.log('game_state', game_state)
+  // }, [game_state])
+  // //JUST FOR LOGGING
+
+
 
   useEffect(() => {
 

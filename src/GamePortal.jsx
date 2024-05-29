@@ -9,16 +9,29 @@ import {
 } from "./api.js";
 import {API_URLS} from "./apiUrls.js";
 import {FaPlay} from "react-icons/fa";
-import {toast} from "react-toastify"; // Import the new function
+import {toast} from "react-toastify";
+import TextToSpeech from "./TextToSpeech.js"; // Import the new function
 
 function GamePortal({isVisible}) {
-  const {embedded, uuid, connected, currentBgImage, msgHistory, results, server_ip} = useStore();
+  const {embedded, uuid, connected, currentBgImage, game_state, msgHistory, results, server_ip} = useStore();
   const [text, setText] = useState(""); // State for tracking the text input
   const [typingTimeout, setTypingTimeout] = useState(null); // State for the typing timeout
 
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
+  const [speechEnabled, setSpeechEnabled] = useState(false); // New state for controlling speech
+  const [playersLevel, setPlayersLevel] = useState(1);
 
-  useEffect(()=>{
+
+
+  const tts = new TextToSpeech();
+
+
+
+  useEffect(() => {
+    setBackgroundImage(game_state?.level)
+  }, [game_state?.level])
+
+  useEffect(() => {
     setBackgroundImage(currentBgImage)
   }, [currentBgImage])
 
@@ -27,6 +40,12 @@ function GamePortal({isVisible}) {
       if (msgHistory && msgHistory.length > 0) {
         let newMsg = msgHistory[msgHistory.length - 1];
         console.log('New item added:', newMsg);
+
+        tts.speak(
+          newMsg,
+          () => console.log("Speaking started"),
+          () => console.log("Speaking finished")
+        );
 
         try {
           // Fetch connection mappings
@@ -138,7 +157,7 @@ function GamePortal({isVisible}) {
   const submitMsg = async () => {
 
     let copiedString = text + ""; // Creates a new reference with the same string
-    if(copiedString === "") {
+    if (copiedString === "") {
       return;
     }
 
@@ -168,7 +187,7 @@ function GamePortal({isVisible}) {
 
     let encounter = response?.action?.encounter;
     if (encounter) {
-      //toast.warn("Encounter: " + JSON.stringify(encounter));
+      toast.warn("Encounter: " + JSON.stringify(encounter));
       store.setState({currentBgImage: encounter.aesthetic.image})
     } else {
       //AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
@@ -179,13 +198,19 @@ function GamePortal({isVisible}) {
         const environment = await getGameEnvironment(server_ip, gameState.environment_id);
         console.log("XXX Environment:", environment);
         if (environment) {
-          if(environment.game_info.environment.aesthetic.image){
+          if (environment.game_info.environment.aesthetic.image) {
             store.setState({currentBgImage: environment.game_info.environment.aesthetic.image})
           }
         }
       }
-    };
     }
+  }
+
+
+  const handleEnableSpeech = () => {
+    setSpeechEnabled(true);
+    toast.info("Speech enabled for the session");
+  };
 
 
 
@@ -216,6 +241,14 @@ function GamePortal({isVisible}) {
           className="h-[28px] w-[60px] mr-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
           onClick={submitMsg}><FaPlay className="h-full w-full p-1"/></button>
       </div>
+
+      <button onClick={handleEnableSpeech} className="w-24 h-24 mr-4 p-2 bg-blue-500 text-white rounded">Enable Speech
+      </button>
+
+      <div className="flex items-center justify-center w-24 h-8 bg-white">
+        <p className="text-center">LVL: {playersLevel}</p>
+      </div>
+
     </div>
   );
 }
