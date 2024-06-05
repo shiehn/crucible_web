@@ -19,7 +19,7 @@ function GamePortal({isVisible}) {
 
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
   const [speechEnabled, setSpeechEnabled] = useState(false); // New state for controlling speech
-  const [playersLevel, setPlayersLevel] = useState(1);
+
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0); // State for tracking the current message index
 
   const tts = useRef(new TextToSpeech());
@@ -263,9 +263,7 @@ function GamePortal({isVisible}) {
         <button onClick={handleNextMessage} className="w-24 h-12 mr-4 p-2 bg-green-500 text-white rounded"><FaForward/>
         </button>
 
-        <div className="flex items-center justify-center w-24 h-8 bg-white">
-          <p className="text-center">LVL: {playersLevel}</p>
-        </div>
+
       </div>
 
 

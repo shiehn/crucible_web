@@ -67,6 +67,7 @@ function ErrorAlert({message, reset}) {
 export default function Interface(props) {
 
   const {isLoading, isConnecting, currentOutputView, embedded } = useStore();
+  const [playersLevel, setPlayersLevel] = useState(1);
 
   const colorProps = {
     meterColor: '#EC4899',
@@ -172,74 +173,37 @@ export default function Interface(props) {
   const pluginTitle = embedded === 'web' ? 'Crucible Web' : 'Crucible Audio';
 
   return (
-    <div className="w-screen max-w-[460px] h-full justify-between overflow-hidden bg-sas-background-light relative">
+    <div className="w-screen max-w-[460px] h-full justify-between overflow-hidden bg-sas-background-light  relative">
 
       {/*START TITLE BAR HERE*/}
-      <div className="flex flex-row items-center justify-between h-[56px] overflow-hidden bg-sas-background-dark">
-          <div className="flex items-center w-5/12 overflow-hidden">
-          <IoMdSettings
-            className={`h-8 w-8 ml-2 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
-            onClick={() => updateNavigation('settings')}
-          />
 
-          <div
-            className="flex flex-col items-center justify-center cursor-pointer pl-2"
-            onClick={handleClick}
-          >
-            <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
-              {pluginTitle}
-            </div>
-            <div className="flex items-center w-full justify-start text-white font-rye text-xxs">
-              Signals & Sorcery
-            </div>
-          </div>
-        </div>
-
-          <div className="flex flex-row flex-grow w-7/12 h-[32px] overflow-hidden text-white">
-            <UUIDButton setUUID={props.setUUID}/>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            className="text-sas-text-grey font-teko text-xs text-center w-4/6 h-[32px] bg-sas-background-light overflow-hidden"
-            />
-            <button
-              className="text-sas-background-light text-xxs font-bold bg-sas-text-grey rounded-r w-1/6 mr-2 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"
-              onClick={handleCopy}>
-              COPY
-            </button>
-          </div>
-      </div>
       {/*END TITLE BAR HERE*/}
 
       {/*START SUB NAV HERE*/}
-      <div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">
-        <button
-          className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'game_portal' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}
-          onClick={() => updateNavigation('game_portal')}
-        >
-          Game Portal
-        </button>
-        {/*<button*/}
-        {/*  className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
-        {/*  onClick={() => updateNavigation('connected_remotes')}*/}
-        {/*>*/}
-        {/*  Connected Runes*/}
-        {/*</button>*/}
-        {/*<button*/}
-        {/*  className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
-        {/*  onClick={() => updateNavigation('available_remotes')}*/}
-        {/*>*/}
-        {/*  Launch Colabs*/}
-        {/*</button>*/}
-      </div>
+      {/*<div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">*/}
+      {/*  <button*/}
+      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'game_portal' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
+      {/*    onClick={() => updateNavigation('game_portal')}*/}
+      {/*  >*/}
+      {/*    Game Portal*/}
+      {/*  </button>*/}
+      {/*  <button*/}
+      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
+      {/*    onClick={() => updateNavigation('connected_remotes')}*/}
+      {/*  >*/}
+      {/*    Connected Runes*/}
+      {/*  </button>*/}
+      {/*  <button*/}
+      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
+      {/*    onClick={() => updateNavigation('available_remotes')}*/}
+      {/*  >*/}
+      {/*    Launch Colabs*/}
+      {/*  </button>*/}
+      {/*</div>*/}
       {/*END SUB NAV HERE*/}
 
       {/* Section between Nav Bar and Action Bar */}
-      <div className="h-[350px]"> {/* Add a relative container for the section */}
+      <div className="h-1/2"> {/* Add a relative container for the section */}
         {isLoading && (
           <div
             className="absolute h-[360px] w-full top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
@@ -259,8 +223,53 @@ export default function Interface(props) {
         {/*'sas-background-dark': '#22272e', // Custom color name and its hex value*/}
         {/*'sas-background-light': '#37404c',*/}
 
+        <div className="flex flex-row items-center justify-between h-[56px] w-full overflow-hidden absolute">
+          <div className="flex items-center w-5/12 overflow-hidden bg-sas-background-dark">
+            <IoMdSettings
+              className={`h-8 w-8 ml-2 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
+              onClick={() => updateNavigation('settings')}
+            />
 
-        <div className="w-full max-w-[460px] h-[350px]  overflow-y-auto overflow-x-hidden custom-scrollbar">
+            <div
+              className="flex flex-col items-center justify-center cursor-pointer pl-2"
+              onClick={handleClick}
+            >
+              <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
+                {pluginTitle}
+              </div>
+              <div className="flex items-center w-full justify-start text-white font-rye text-xxs">
+                Signals & Sorcery
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-row w-7/12 h-[32px] overflow-hidden text-white">
+
+
+            <div className="flex items-center justify-center w-24 h-full bg-white">
+              <p className="text-center text-black">LVL: {playersLevel}</p>
+            </div>
+
+
+            {/*<UUIDButton setUUID={props.setUUID}/>*/}
+            {/*<input*/}
+            {/*  type="text"*/}
+            {/*  value={inputValue}*/}
+            {/*  onChange={handleChange}*/}
+            {/*  onFocus={handleFocus}*/}
+            {/*  onBlur={handleBlur}*/}
+            {/*  onKeyDown={handleKeyDown}*/}
+            {/*  className="text-sas-text-grey font-teko text-xs text-center w-4/6 h-[32px] bg-sas-background-light overflow-hidden"*/}
+            {/*/>*/}
+            {/*<button*/}
+            {/*  className="text-sas-background-light text-xxs font-bold bg-sas-text-grey rounded-r w-1/6 mr-2 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"*/}
+            {/*  onClick={handleCopy}>*/}
+            {/*  COPY*/}
+            {/*</button>*/}
+          </div>
+        </div>
+
+        <div className="w-full max-w-[460px] h-full  overflow-y-auto overflow-x-hidden custom-scrollbar">
           {props.connected && props.navigation != 'game_portal' && (
             <ContractDisplay contract={props.contract} isVisible={true}/>
           )}
@@ -288,17 +297,14 @@ export default function Interface(props) {
           {!props.connected && props.navigation == 'loading_level' && (
             <LoadingLevel isVisible={true}/>
           )}
-
-
-
-
         </div>
       </div>
       {/* End of Section between Nav Bar and Action Bar */}
 
-      <ActionBar/>
-      <div className="flex flex-col p-2 w-full max-w-[460px] min-h-full bg-sas-background-light">
-        <div className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
+
+      <div className="flex flex-col p-2 w-full max-w-[460px] h-1/2 bg-pink-100">
+        <div
+          className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
           {/*{(currentOutputView === 'show_inventory_component') && (*/}
           {/*  <InventoryDisplay />*/}
           {/*)}*/}
@@ -308,11 +314,13 @@ export default function Interface(props) {
           {/*{(currentOutputView === 'show_map_component') && (*/}
           {/*  <MapDisplay />*/}
           {/*)}*/}
-          <LogsDisplay />
-          <MapDisplay />
-          <InventoryDisplay />
+          <LogsDisplay/>
+          <MapDisplay/>
+          <InventoryDisplay/>
         </div>
+        <ActionBar/>
       </div>
+
     </div>
   );
 }
