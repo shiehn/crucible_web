@@ -177,6 +177,16 @@ function App(props) {
     const intervalId = setInterval(async () => {
         const gameEvents = await getGameEvents(server_ip, uuid);
         if(gameEvents && gameEvents.event){
+          
+          /*
+            ("level-up-ready", "LevelUpReady"),
+            ("level-up-complete", "LevelUpComplete"),
+            ("encounter-start", "EncounterStart"),
+            ("encounter-victory", "EncounterVictory"),
+            ("encounter-loss", "EncounterLoss"),
+            ("inventory-update", "InventoryUpdate"),
+           */
+
           toast.success("EVENT: " + gameEvents.event)
         }
     }, 3000);  // Calls getGameQueueUpdate every 5 seconds
