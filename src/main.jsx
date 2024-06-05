@@ -177,7 +177,7 @@ function App(props) {
     const intervalId = setInterval(async () => {
         const gameEvents = await getGameEvents(server_ip, uuid);
         if(gameEvents && gameEvents.event){
-          
+
           /*
             ("level-up-ready", "LevelUpReady"),
             ("level-up-complete", "LevelUpComplete"),

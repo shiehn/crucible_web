@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {store, useStore} from "./main.jsx";
 import {
   getConnectionMappings, getGameEnvironment,
@@ -8,7 +8,7 @@ import {
   sendRequest
 } from "./api.js";
 import {API_URLS} from "./apiUrls.js";
-import {FaPlay} from "react-icons/fa";
+import {FaPlay, FaStop, FaForward, FaBackward} from "react-icons/fa";
 import {toast} from "react-toastify";
 import TextToSpeech from "./TextToSpeech.js"; // Import the new function
 
@@ -20,99 +20,99 @@ function GamePortal({isVisible}) {
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
   const [speechEnabled, setSpeechEnabled] = useState(false); // New state for controlling speech
   const [playersLevel, setPlayersLevel] = useState(1);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0); // State for tracking the current message index
 
-
-
-  const tts = new TextToSpeech();
-
-
+  const tts = useRef(new TextToSpeech());
 
   useEffect(() => {
     setBackgroundImage(game_state?.level)
-  }, [game_state?.level])
+  }, [game_state?.level]);
 
   useEffect(() => {
     setBackgroundImage(currentBgImage)
-  }, [currentBgImage])
+  }, [currentBgImage]);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      if (msgHistory && msgHistory.length > 0) {
-        let newMsg = msgHistory[msgHistory.length - 1];
+    if (msgHistory && msgHistory.length > 0 && speechEnabled) {
+      tts.current.cancel(); // Cancel any ongoing speech
+
+      setTimeout(() => {
+        let newMsg = msgHistory[currentMessageIndex];
         console.log('New item added:', newMsg);
 
-        tts.speak(
+        tts.current.speak(
           newMsg,
           () => console.log("Speaking started"),
           () => console.log("Speaking finished")
         );
 
-        try {
-          // Fetch connection mappings
-          const mappings = await getConnectionMappings(server_ip, uuid);
+        fetchImages(newMsg);
+      }, 1000); // Wait for 1 second before continuing
+    }
+  }, [msgHistory, currentMessageIndex, speechEnabled]); // Dependency array
 
-          if (!mappings) {
-            console.log("No mappings found");
-            return;
-          }
+  const fetchImages = async (newMsg) => {
+    try {
+      // Fetch connection mappings
+      const mappings = await getConnectionMappings(server_ip, uuid);
 
-          const firstGameEngine = mappings.find(
-            (item) => item.connection_type === 'image_engine'
-          );
+      if (!mappings) {
+        console.log("No mappings found");
+        return;
+      }
 
-          if (!firstGameEngine) {
-            console.log("No game engine found");
-            return;
-          }
+      const firstGameEngine = mappings.find(
+        (item) => item.connection_type === 'image_engine'
+      );
 
-          // Check if engine is connected
-          let is_connected = false;
-          if (firstGameEngine.connection_token) {
-            const connectionStatus = await isTokenConnectedToRemote(server_ip, firstGameEngine.connection_token);
+      if (!firstGameEngine) {
+        console.log("No game engine found");
+        return;
+      }
 
-            if (!connectionStatus.compute) {
-              toast.warn('Rune is not connected');
-            } else if (connectionStatus.compute && !connectionStatus.loaded) {
-              toast.warn('Rune is loading');
-            } else {
-              is_connected = true;
-            }
-          }
+      // Check if engine is connected
+      let is_connected = false;
+      if (firstGameEngine.connection_token) {
+        const connectionStatus = await isTokenConnectedToRemote(server_ip, firstGameEngine.connection_token);
 
-          if (is_connected) {
-            // Get contract
-            const url = API_URLS.COMPUTE_CONTRACT(server_ip, firstGameEngine.connection_token);
-            const response = await fetch(url);
-
-            if (response.ok) {
-              const contract = await response.json();
-              console.log('Contract:', contract);
-
-              // Format contract and send request
-              const formattedRequestBody = formatContractForSubmission(contract, newMsg);
-
-              const sendRequestResponse = await sendRequest(server_ip, formattedRequestBody);
-
-              store.setState({
-                connection_token: firstGameEngine.connection_token,
-                messageId: sendRequestResponse.id,
-                submitForm: false,
-              });
-
-              console.log("ResponseData:", sendRequestResponse);
-            } else {
-              console.log("Contract request failed");
-            }
-          }
-        } catch (error) {
-          console.error("Error in fetchImages:", error);
+        if (!connectionStatus.compute) {
+          toast.warn('Rune is not connected');
+        } else if (connectionStatus.compute && !connectionStatus.loaded) {
+          toast.warn('Rune is loading');
+        } else {
+          is_connected = true;
         }
       }
-    };
 
-    fetchImages();
-  }, [msgHistory]); // Dependency array
+      if (is_connected) {
+        // Get contract
+        const url = API_URLS.COMPUTE_CONTRACT(server_ip, firstGameEngine.connection_token);
+        const response = await fetch(url);
 
+        if (response.ok) {
+          const contract = await response.json();
+          console.log('Contract:', contract);
+
+          // Format contract and send request
+          const formattedRequestBody = formatContractForSubmission(contract, newMsg);
+
+          const sendRequestResponse = await sendRequest(server_ip, formattedRequestBody);
+
+          store.setState({
+            connection_token: firstGameEngine.connection_token,
+            messageId: sendRequestResponse.id,
+            submitForm: false,
+          });
+
+          console.log("ResponseData:", sendRequestResponse);
+        } else {
+          console.log("Contract request failed");
+        }
+      }
+    } catch (error) {
+      console.error("Error in fetchImages:", error);
+    }
+  };
 
   const formatContractForSubmission = (contract, input) => {
     // Destructure relevant fields from the contract
@@ -155,7 +155,6 @@ function GamePortal({isVisible}) {
   const resultsString = JSON.stringify(results, null, 2);
 
   const submitMsg = async () => {
-
     let copiedString = text + ""; // Creates a new reference with the same string
     if (copiedString === "") {
       return;
@@ -206,26 +205,71 @@ function GamePortal({isVisible}) {
     }
   }
 
-
   const handleEnableSpeech = () => {
     setSpeechEnabled(true);
     toast.info("Speech enabled for the session");
   };
 
+  const handleStopSpeech = () => {
+    tts.current.cancel();
+    toast.info("Speech stopped");
+  };
 
+  const handleNextMessage = () => {
+    if (currentMessageIndex < msgHistory.length - 1) {
+      setCurrentMessageIndex(currentMessageIndex + 1);
+      // let newMsg = msgHistory[currentMessageIndex];
+      // tts.current.speak(
+      //   newMsg,
+      //   () => console.log("Speaking started"),
+      //   () => console.log("Speaking finished")
+      // );
+    } else {
+      toast.info("No more messages");
+    }
+  };
 
-
+  const handlePreviousMessage = () => {
+    if (currentMessageIndex > 0) {
+      setCurrentMessageIndex(currentMessageIndex - 1);
+      // let newMsg = msgHistory[currentMessageIndex];
+      // tts.current.speak(
+      //   newMsg,
+      //   () => console.log("Speaking started"),
+      //   () => console.log("Speaking finished")
+      // );
+    } else {
+      toast.info("No previous messages");
+    }
+  };
 
   return (
     <div
-      className="w-full h-full flex justify-center"
+      className="w-full h-full flex-col justify-center"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : `url("https://storage.googleapis.com/byoc-file-transfer/img_placeholder.png")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="flex justify-center items-end w-full h-full p-4">
+      <div className="flex items-center justify-center w-full h-28 p-4">
+        <button onClick={handleEnableSpeech} className="w-24 h-12 mr-4 p-2 bg-blue-500 text-white rounded">Enable
+          Speech
+        </button>
+        <button onClick={handleStopSpeech} className="w-24 h-12 mr-4 p-2 bg-red-500 text-white rounded"><FaStop/>
+        </button>
+        <button onClick={handlePreviousMessage} className="w-24 h-12 mr-4 p-2 bg-yellow-500 text-white rounded">
+          <FaBackward/></button>
+        <button onClick={handleNextMessage} className="w-24 h-12 mr-4 p-2 bg-green-500 text-white rounded"><FaForward/>
+        </button>
+
+        <div className="flex items-center justify-center w-24 h-8 bg-white">
+          <p className="text-center">LVL: {playersLevel}</p>
+        </div>
+      </div>
+
+
+      <div className="flex justify-center items-end w-full h-24 p-4">
         <input
           className="w-[80%] p-2 bg-sas-background-dark border text-sas-text-grey rounded border-sas-text-grey"
           value={text}
@@ -242,12 +286,6 @@ function GamePortal({isVisible}) {
           onClick={submitMsg}><FaPlay className="h-full w-full p-1"/></button>
       </div>
 
-      <button onClick={handleEnableSpeech} className="w-24 h-24 mr-4 p-2 bg-blue-500 text-white rounded">Enable Speech
-      </button>
-
-      <div className="flex items-center justify-center w-24 h-8 bg-white">
-        <p className="text-center">LVL: {playersLevel}</p>
-      </div>
 
     </div>
   );
