@@ -11,7 +11,14 @@ import {API_URLS} from './apiUrls'; // Import the URLs
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
-import {getGameEnvironment, getGameMap, getGameState, sendGameEngineQuery} from "./api.js";
+import {
+  getGameEnvironment,
+  getGameEvents,
+  getGameMap,
+  getGameQueueUpdate,
+  getGameState,
+  sendGameEngineQuery
+} from "./api.js";
 
 export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
@@ -37,7 +44,7 @@ export const store = createStore((set) => ({
   currentOutputView: 'show_output_logs_component',
   isLoading: false,
   isConnecting: false,
-  navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings
+  navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings,create_level, loading_level
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
@@ -87,6 +94,10 @@ if (savedUUID) {
 }
 
 
+
+
+
+
 // if (navigationFromLocalStorage) {
 //   store.setState({navigation: navigationFromLocalStorage});
 // }
@@ -130,6 +141,50 @@ function App(props) {
   //   console.log('game_state', game_state)
   // }, [game_state])
   // //JUST FOR LOGGING
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const gqu = await getGameQueueUpdate(server_ip, uuid);
+      console.log("GameQueueUpdate", gqu)
+      if(gqu && gqu.status){
+        if(gqu.status === 'queued'){
+          if(gqu.level > 1){
+            store.setState({navigation: 'create_level'});
+            console.log("GameQueueUpdate", "LEVEL UP VIEW")
+          }else{
+            store.setState({navigation: 'create_level'});
+            console.log("GameQueueUpdate", "NEW GAME VIEW")
+          }
+        }else if(gqu.status === 'started'){
+          store.setState({navigation: 'loading_level'});
+          console.log("GameQueueUpdate", "LOADING SCREEN")
+        } else {
+
+          store.setState({navigation: 'game_portal'});
+
+          console.log("GameQueueUpdate", "NORMAL GAME FLOW")
+        }
+      }
+    }, 5000);  // Calls getGameQueueUpdate every 5 seconds
+
+    return () => {
+      clearInterval(intervalId);  // Clears the interval when the component unmounts
+    };
+  }, []);
+
+  //PULL GAME EVENTS
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+        const gameEvents = await getGameEvents(server_ip, uuid);
+        if(gameEvents && gameEvents.event){
+          toast.success("EVENT: " + gameEvents.event)
+        }
+    }, 3000);  // Calls getGameQueueUpdate every 5 seconds
+
+    return () => {
+      clearInterval(intervalId);  // Clears the interval when the component unmounts
+    };
+  }, []);
 
 
 

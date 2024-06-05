@@ -385,6 +385,47 @@ async function getGameEnvironment(server_ip, environment_id) {
   }
 }
 
+async function getGameQueueUpdate(server_ip, userId) {
+  try {
+    const url = API_URLS.GAME_QUEUE_UPDATE(server_ip, userId);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.log('GameEvents - Network response was not ok');
+      return {};
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error: GameEvents:', error);
+    return {}; // Handle errors and return false or another suitable value
+  }
+}
+
+async function getGameEvents(server_ip, userId) {
+  try {
+    const url = API_URLS.GAME_EVENTS(server_ip, userId);
+    const response = await fetch(url);
+
+    if (response.status === 404) {
+      console.log("dude");
+      return {};
+    }
+
+    if (!response.ok) {
+      return {};
+    }
+
+    return await response.json();
+  } catch (error) {
+    // Catch network errors or other unexpected errors
+    console.error('Error: GameQueueUpdate:', error);
+    return {}; // Handle errors and return false or another suitable value
+  }
+}
+
+
+
 
 
 //http://localhost:8081/api/game-environment/3cd9c84b-8b03-45be-af6a-a5a597662dd9/
@@ -399,9 +440,11 @@ export {
   deleteGameState,
   getConnectionMappings,
   getGameEnvironment,
+  getGameEvents,
   getGameMap,
   getGameState,
   getGameInventory,
+  getGameQueueUpdate,
   removeConnectionMapping,
   renderGameAssets,
   sendGameEngineQuery,

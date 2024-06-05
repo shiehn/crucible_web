@@ -18,10 +18,10 @@ function Settings({isVisible}) {
     localStorage.setItem('server_ip', value);
   }
 
-  function handleStoragePath(value) {
-    store.setState({storage_path: value})
-    localStorage.setItem('storage_path', value);
-  }
+  // function handleStoragePath(value) {
+  //   store.setState({storage_path: value})
+  //   localStorage.setItem('storage_path', value);
+  // }
 
   function handleOpenAIKey(value) {
     store.setState({open_ai_key: value})
@@ -61,13 +61,13 @@ function Settings({isVisible}) {
     store.setState({game_state: gameState});
   }
 
-  const renderAssets = async () => {
-
-    const renderResult = await renderGameAssets(server_ip, uuid, game_setting_and_lore + ' illustrated in ' + game_art_style);
-    console.log("renderResult", renderResult);
-
-    //TODO - HANDLE REDRAWING OF GAME
-  }
+  // const renderAssets = async () => {
+  //
+  //   const renderResult = await renderGameAssets(server_ip, uuid, game_setting_and_lore + ' illustrated in ' + game_art_style);
+  //   console.log("renderResult", renderResult);
+  //
+  //   //TODO - HANDLE REDRAWING OF GAME
+  // }
 
 
   return (
@@ -101,19 +101,19 @@ function Settings({isVisible}) {
         />
       </div>
 
-      <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="storage_path" className="w-1/3 text-left pr-2">STORAGE PATH:</label>
-        <input
-          type="text"
-          id="build"
-          name="storage_path"
-          value={storage_path} // Use storage_path from the global state
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => {
-            handleStoragePath(e.target.value)
-          }}
-        />
-      </div>
+      {/*<div className="w-full text-sm flex mb-4 items-center">*/}
+      {/*  <label htmlFor="storage_path" className="w-1/3 text-left pr-2">STORAGE PATH:</label>*/}
+      {/*  <input*/}
+      {/*    type="text"*/}
+      {/*    id="build"*/}
+      {/*    name="storage_path"*/}
+      {/*    value={storage_path} // Use storage_path from the global state*/}
+      {/*    className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"*/}
+      {/*    onChange={(e) => {*/}
+      {/*      handleStoragePath(e.target.value)*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="storage_path" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
@@ -159,12 +159,12 @@ function Settings({isVisible}) {
 
       <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm mb-4"
               onClick={createNewGame}>
-        NEW GAME
+        START NEW GAME
       </button>
 
-      <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm" onClick={renderAssets}>
-        RENDER GAME ASSETS
-      </button>
+      {/*<button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm" onClick={renderAssets}>*/}
+      {/*  RENDER GAME ASSETS*/}
+      {/*</button>*/}
     </div>
   );
 }

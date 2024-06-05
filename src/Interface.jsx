@@ -28,6 +28,8 @@ import LogsDisplay from "./LogsDisplay.jsx";
 import GamePortal from "./GamePortal.jsx";
 import MapDisplay from "./MapDisplay.jsx";
 import InventoryDisplay from "./InventoryDisplay.jsx";
+import CreateLevel from "./CreateLevel.jsx";
+import LoadingLevel from "./LoadingLevel.jsx";
 
 
 function ErrorAlert({message, reset}) {
@@ -278,6 +280,16 @@ export default function Interface(props) {
           {!props.connected && props.navigation == 'settings' && (
             <Settings isVisible={true}/>
           )}
+
+          {!props.connected && props.navigation == 'create_level' && (
+            <CreateLevel isVisible={true}/>
+          )}
+
+          {!props.connected && props.navigation == 'loading_level' && (
+            <LoadingLevel isVisible={true}/>
+          )}
+
+
 
 
         </div>

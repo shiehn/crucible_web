@@ -33,4 +33,6 @@ export const API_URLS = {
   GAME_INVENTORY_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-inventory/${user_id}/`,
   GAME_ASSETS_RENDER: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-assets/generate/${user_id}/`,
   GAME_ENVIRONMENT_GET: (apiBaseUrl, environment_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-environment/${environment_id}/`,
+  GAME_QUEUE_UPDATE: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-update-queue/${user_id}/`,
+  GAME_EVENTS: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-events/${user_id}/`,
 };
