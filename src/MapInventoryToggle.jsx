@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {store} from "./main.jsx";
 import {useStore} from "./main.jsx";
+
+import { GiLockedChest } from "react-icons/gi";
+import { GiCompass } from "react-icons/gi";
+
 import {toast} from "react-toastify";
 import {
   abortRequest,
@@ -50,15 +54,16 @@ function MapInventoryToggle({}) {
       <div class="flex justify-center items-center w-1/5 h-full text-white">
         {(currentOutputView !== 'show_inventory_component') && (
           <button
-            className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_inventory_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-            onClick={() => handleNavigation('show_inventory_component')}>Inventory
+            className={`h-[28px]`}
+            onClick={() => handleNavigation('show_inventory_component')}>
+            <GiLockedChest className="text-3xl text-sas-text-grey hover:text-white"/>
           </button>
         )}
 
         {(currentOutputView === 'show_inventory_component') && (
           <button
-            className={`h-[28px] rounded text-white text-sm hover:bg-gray-500 active:bg-gray-400 px-4 ml-2 ${currentOutputView === 'show_map_component' ? 'bg-gray-600 hover:bg-gray-600' : ''}`}
-            onClick={() => handleNavigation('show_map_component')}>Map
+            className={`h-full`}
+            onClick={() => handleNavigation('show_map_component')}><GiCompass className="text-3xl text-sas-text-grey hover:text-white"/>
           </button>
         )}
       </div>

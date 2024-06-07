@@ -71,7 +71,7 @@ function AudioInput() {
   }
 
   return (
-    <div className="flex justify-center items-end w-full h-16 p-2">
+    <div className="flex justify-between items-end w-full h-16">
       <input
         className="w-[80%] h-full bg-sas-background-dark border text-sas-text-grey rounded border-sas-text-grey"
         value={text}
@@ -84,7 +84,7 @@ function AudioInput() {
         }}
       />
       <button
-        className="h-full w-[60px] ml-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
+        className="h-full w-[20%] ml-2 bg-sas-green rounded-lg text-sas-background-light hover:text-white text-sm hover:sas-green active:sas-green"
         onClick={submitMsg}><FaPlay className="h-full w-full p-2" /></button>
     </div>
   );

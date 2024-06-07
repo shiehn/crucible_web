@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useStore } from "./main.jsx";
 import { toast } from "react-toastify";
 import { FaStop, FaBackward, FaForward, FaPlay } from "react-icons/fa";
+import { FaVolumeUp } from "react-icons/fa";
+import { FaVolumeMute } from "react-icons/fa";
+
 import TextToSpeech from "./TextToSpeech.js";
+import InventoryDisplay from "./InventoryDisplay.jsx";
 
 function AudioControls() {
   const msgHistory = useStore((state) => state.msgHistory);
@@ -10,8 +14,8 @@ function AudioControls() {
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
   const decrementMsgHistoryIndex = useStore((state) => state.decrementMsgHistoryIndex);
   const getCurrentMsgHistoryItem = useStore((state) => state.getCurrentMsgHistoryItem);
-
-  const [speechEnabled, setSpeechEnabled] = useState(false);
+  const speechEnabled = useStore((state) => state.speechEnabled);
+  const setSpeechEnabled = useStore((state) => state.setSpeechEnabled);
 
   const tts = useRef(new TextToSpeech());
 
@@ -33,8 +37,11 @@ function AudioControls() {
   }, [msgHistoryIndex, speechEnabled]); // Dependency array
 
   const handleEnableSpeech = () => {
-    setSpeechEnabled(true);
-    toast.info("Speech enabled for the session");
+    if(speechEnabled) {
+      setSpeechEnabled(false);
+    } else {
+      setSpeechEnabled(true);
+    }
   };
 
   const handleStopSpeech = () => {
@@ -73,17 +80,27 @@ function AudioControls() {
   };
 
   return (
-    <div className="flex w-4/5 h-full p-2 justify-center items-center bg-orange-500">
+    <div className="flex w-4/5 h-full justify-around items-center">
       <button onClick={handleEnableSpeech}
-              className="w-18 h-full mr-4 px-2 bg-blue-500 text-sm text-white rounded">Sound On
+              className="h-full">
+        {(speechEnabled) && (
+          <FaVolumeMute className="text-3xl text-sas-text-grey hover:text-white"/>
+        )}
+
+        {(!speechEnabled) && (
+          <FaVolumeUp className="text-3xl text-sas-text-grey hover:text-white"/>
+        )}
       </button>
-      <button onClick={handleStopSpeech} className="w-12 h-full mr-4  bg-red-500 text-white rounded"><FaStop/>
+      <button onClick={handleStopSpeech} className="h-full">
+        <FaStop className="text-3xl text-sas-text-grey hover:text-white"/>
       </button>
-      <button onClick={handlePlayMessage} className="w-12 h-full mr-4  bg-red-500 text-white rounded"><FaPlay/>
+      <button onClick={handlePlayMessage} className="h-full"><FaPlay  className="text-3xl text-sas-text-grey hover:text-white"/>
       </button>
-      <button onClick={handlePreviousMessage} className="w-12 h-full mr-4  bg-yellow-500 text-white rounded">
-        <FaBackward/></button>
-      <button onClick={handleNextMessage} className="w-12 h-full bg-green-500 text-white rounded"><FaForward/>
+      <button onClick={handlePreviousMessage} className="h-full">
+        <FaBackward className="text-3xl text-sas-text-grey hover:text-white"/>
+      </button>
+      <button onClick={handleNextMessage} className="h-full">
+        <FaForward className="text-3xl text-sas-text-grey hover:text-white"/>
       </button>
     </div>
   );

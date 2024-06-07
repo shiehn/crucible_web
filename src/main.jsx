@@ -84,6 +84,8 @@ export const store = createStore((set) => ({
   game_inventory: [],
   game_setting_and_lore: '',
   game_art_style: '',
+  speechEnabled: false,
+  setSpeechEnabled: (speechEnabled) => set({speechEnabled}),
   open_ai_key: 'xyz',
 }));
 export const useStore = createHooks(store);
