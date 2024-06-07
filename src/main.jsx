@@ -37,18 +37,41 @@ export const store = createStore((set) => ({
   connected: false,
   contract: null,
   msgHistory: [],
+  msgHistoryIndex: -1,
+  addMessage: (message) =>
+    set((state) => ({
+      msgHistory: [...state.msgHistory, message],
+      msgHistoryIndex: state.msgHistory.length,
+    })),
+  incrementMsgHistoryIndex: () =>
+    set((state) => {
+      const newIndex = Math.min(state.msgHistoryIndex + 1, state.msgHistory.length - 1);
+      return {msgHistoryIndex: newIndex};
+    }),
+  decrementMsgHistoryIndex: () =>
+    set((state) => {
+      const newIndex = Math.max(state.msgHistoryIndex - 1, 0);
+      return {msgHistoryIndex: newIndex};
+    }),
+  getCurrentMsgHistoryItem: () => {
+    const state = get();
+    return state.msgHistory[state.msgHistoryIndex] || null;
+  },
   results: null,
   submitForm: false,
   dropTargetFileName: null,
   currentBgImage: null,
+  setCurrentBgImage: (image) => set({currentBgImage: image}),
   currentOutputView: 'show_map_component',
   isLoading: false,
+  setIsLoading: (isLoading) => set({isLoading}),
   isConnecting: false,
   navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings,create_level, loading_level
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
   game_state: {},
+  setGameState: (gameState) => set({game_state: gameState}),
   game_map: {
     nodes: [],
     edges: [],
@@ -67,13 +90,6 @@ export const useStore = createHooks(store);
 
 const errorStore = createStore(() => ({error: null}));
 const useErrorStore = createHooks(errorStore);
-
-// Constants for interval times
-const PLUGIN_REGISTER_INTERVAL_TIME = 5000;
-const STATUS_CHECK_INTERVAL_TIME = 5000;
-const RESPONSE_POLL_INTERVAL_TIME = 5000;
-const CONTRACT_POLL_INTERVAL_TIME = 5000;
-
 
 //SET VALUES FROM LOCAL STORAGE
 const serverIpFromLocalStorage = localStorage.getItem('server_ip' || DEFAULT_SERVER_IP);
@@ -123,14 +139,17 @@ globalThis.__receiveError__ = (err) => {
 };
 
 function App(props) {
-  const state = useStore();
+  const state = useStore((state) => state);
   const {error} = useErrorStore();
-  const {
-    uuid,
-    embedded,
-    game_state,
-    server_ip
-  } = state;
+  const uuid = useStore((state) => state.uuid);
+  const embedded = useStore((state) => state.embedded);
+  const game_state = useStore((state) => state.game_state);
+  const setGameState = useStore((state) => state.setGameState);
+  const server_ip = useStore((state) => state.server_ip);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const addMessage = useStore((state) => state.addMessage);
+  const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
+  const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
 
   const querySentRef = useRef(false); // Ref to track if the query has been sent
 
@@ -202,10 +221,7 @@ function App(props) {
         tries += 1;
 
         // Load map
-        const currentGameState = store.getState().game_state;
-        console.log('FUCKING 2 STATE', currentGameState);
-        console.log('FUCKING 2 MAP_ID', currentGameState?.map_id);
-
+        const currentGameState = useStore.getState().game_state;
         if (currentGameState && currentGameState.map_id) {
           const game_map = await getGameMap(server_ip, currentGameState.map_id);
           console.log("MAP GAME_MAP: ", game_map);
@@ -225,9 +241,6 @@ function App(props) {
       console.log("Max tries reached without successfully loading the map.");
     };
 
-    // Define an asynchronous function
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
     const fetchGameState = async () => {
       let tries = 0;
       const maxTries = 10;
@@ -238,54 +251,62 @@ function App(props) {
 
         // Start by fetching the game state
         const gameState = await getGameState(server_ip, uuid);
-        console.log('FUCKING GAME_STATE', gameState);
-        console.log('FUCKING GAME_STATE_MAP_ID', gameState.map_id);
-
         if (gameState && Object.keys(gameState).length > 0) {
-          console.log('FUCKING ENTERED');
-          store.setState({ game_state: gameState });
+          setGameState(gameState);
 
           await loadInitalMapAndEnvQuery();
 
-          store.setState({ isLoading: true });
-          let response = await sendGameEngineQuery("Where am I?", uuid, server_ip)
-          store.setState({ isLoading: false });
+          if (!querySentRef.current) {
+            querySentRef.current = true;
 
-          let logs = response?.response;
+            try {
+              setIsLoading(true);
+              let response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
+              setIsLoading(false);
 
-          store.setState((prevState) => {
-            const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
+              console.log("ResponseData:", response);
 
-            if (lastItem !== logs) {
-              return {
-                msgHistory: [...prevState.msgHistory, logs], // Append new item if it's different
-              };
-            }
+              let logs = response?.response;
+              addMessage(logs);
+              incrementMsgHistoryIndex();
 
-            return prevState; // If the item is the same, return the current state unchanged
-          });
+              let encounter = response?.action?.encounter;
+              if (encounter) {
+                toast.warn("Encounter: " + JSON.stringify(encounter));
+                setCurrentBgImage(encounter.aesthetic.image);
+              } else {
+                // AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
+                const gameState = await getGameState(server_ip, uuid);
+                if (gameState) {
+                  setGameState(gameState);
 
-          const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-          if (environment) {
-            if (environment.game_info.environment.aesthetic.image) {
-              store.setState({ currentBgImage: environment.game_info.environment.aesthetic.image });
+                  const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+                  console.log("XXX Environment:", environment);
+                  if (environment && environment.game_info.environment.aesthetic.image) {
+                    setCurrentBgImage(environment.game_info.environment.aesthetic.image);
+                  }
+                }
+              }
+            } catch (error) {
+              setIsLoading(false);
+              console.error("Error submitting message:", error);
+              toast.error("Failed to submit message. Please try again.");
             }
           }
 
           return; // Exit the function if successful
         } else {
           toast.error("Game Does Not Exist. Create a new game.");
-          store.setState({ navigation: 'settings' });
+          setNavigation('settings');
         }
 
         // Wait for 2 seconds before retrying
-        await delay(retryDelay);
+        await delayCheck(retryDelay);
       }
 
       console.log("Max tries reached without successfully fetching the game state.");
     };
 
-// Call the asynchronous function
     if (!querySentRef.current) {
       fetchGameState();
     } else {
