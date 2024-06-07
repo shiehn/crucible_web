@@ -30,6 +30,7 @@ import MapDisplay from "./MapDisplay.jsx";
 import InventoryDisplay from "./InventoryDisplay.jsx";
 import CreateLevel from "./CreateLevel.jsx";
 import LoadingLevel from "./LoadingLevel.jsx";
+import TopBanner from "./TopBanner.jsx";
 
 
 function ErrorAlert({message, reset}) {
@@ -67,7 +68,6 @@ function ErrorAlert({message, reset}) {
 export default function Interface(props) {
 
   const {isLoading, isConnecting, currentOutputView, embedded } = useStore();
-  const [playersLevel, setPlayersLevel] = useState(1);
 
   const colorProps = {
     meterColor: '#EC4899',
@@ -165,10 +165,7 @@ export default function Interface(props) {
   //   setIsVisible(props.connected);
   // }, [props.connected]);
 
-  const handleClick = () => {
-    // Redirect the user to the desired URL
-    window.location.href = 'https://signalsandsorcery.com';
-  };
+
 
   const pluginTitle = embedded === 'web' ? 'Crucible Web' : 'Crucible Audio';
 
@@ -225,51 +222,15 @@ export default function Interface(props) {
         {/*'sas-background-dark': '#22272e', // Custom color name and its hex value*/}
         {/*'sas-background-light': '#37404c',*/}
 
-        <div className="flex flex-row items-center justify-between h-[56px] w-full overflow-hidden absolute">
-          <div className="flex items-center w-5/12 overflow-hidden bg-sas-background-dark">
-            <IoMdSettings
-              className={`h-8 w-8 ml-2 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
-              onClick={() => updateNavigation('settings')}
-            />
-
-            <div
-              className="flex flex-col items-center justify-center cursor-pointer pl-2"
-              onClick={handleClick}
-            >
-              <div className="flex items-center w-full justify-start text-sas-green  font-logo text-xs">
-                {pluginTitle}
-              </div>
-              <div className="flex items-center w-full justify-start text-white font-rye text-xxs">
-                Signals & Sorcery
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-row w-7/12 h-[32px] overflow-hidden text-white">
 
 
-            <div className="flex items-center justify-center w-24 h-full bg-white">
-              <p className="text-center text-black">LVL: {playersLevel}</p>
-            </div>
 
 
-            {/*<UUIDButton setUUID={props.setUUID}/>*/}
-            {/*<input*/}
-            {/*  type="text"*/}
-            {/*  value={inputValue}*/}
-            {/*  onChange={handleChange}*/}
-            {/*  onFocus={handleFocus}*/}
-            {/*  onBlur={handleBlur}*/}
-            {/*  onKeyDown={handleKeyDown}*/}
-            {/*  className="text-sas-text-grey font-teko text-xs text-center w-4/6 h-[32px] bg-sas-background-light overflow-hidden"*/}
-            {/*/>*/}
-            {/*<button*/}
-            {/*  className="text-sas-background-light text-xxs font-bold bg-sas-text-grey rounded-r w-1/6 mr-2 h-[32px] hover:bg-sas-green hover:text-sas-background-dark"*/}
-            {/*  onClick={handleCopy}>*/}
-            {/*  COPY*/}
-            {/*</button>*/}
-          </div>
-        </div>
+        <TopBanner props={props}/>
+
+
+
+
 
         <div className="w-full max-w-[460px] h-full  overflow-y-auto overflow-x-hidden custom-scrollbar">
           {props.connected && props.navigation != 'game_portal' && (
