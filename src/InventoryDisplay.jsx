@@ -22,12 +22,13 @@ function InventoryDisplay() {
   };
 
   return (
-    <div className="w-full h-24 p-2 overflow-hidden">
+    <div className="w-full h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar">
       {game_inventory.map((item, index) => (
         <div key={index} className="flex items-center p-2 bg-gray-800 my-2">
           {/* Image on the left */}
           <div className="w-1/5">
-            <img src={item.item_details.aesthetic.image} alt={item.item_details.aesthetic.description} className="w-full h-auto"/>
+            <img src={item.item_details.aesthetic.image} alt={item.item_details.aesthetic.description}
+                 className="w-full h-auto"/>
           </div>
 
           {/* Text and buttons on the right */}
@@ -35,12 +36,16 @@ function InventoryDisplay() {
             <div>
               <div>Item Type: {item.item_details.item_type}</div>
               <div>Item ID: {item.item_details.item_id}</div>
-              <div>Size: {item.item_details.item_size}</div>
-              <div>Description: {item.item_details.aesthetic.description}</div>
+              {/*<div>Size: {item.item_details.item_size}</div>*/}
+              {/*<div>Description: {item.item_details.aesthetic.description}</div>*/}
             </div>
             <div className="flex justify-end space-x-2 mt-2">
-              <button onClick={() => handleUse(item.item_details.item_id)} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Use</button>
-              <button onClick={() => handleDrop(item.item_details.item_id)} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Drop</button>
+              <button onClick={() => handleUse(item.item_details.item_id)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Use
+              </button>
+              <button onClick={() => handleDrop(item.item_details.item_id)}
+                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Drop
+              </button>
             </div>
           </div>
         </div>

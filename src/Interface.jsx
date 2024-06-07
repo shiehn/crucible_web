@@ -203,7 +203,7 @@ export default function Interface(props) {
       {/*END SUB NAV HERE*/}
 
       {/* Section between Nav Bar and Action Bar */}
-      <div className="h-1/2"> {/* Add a relative container for the section */}
+      <div className="h-3/5 relative"> {/* Add a relative container for the section */}
         {isLoading && (
           <div
             className="absolute h-[360px] w-full top-12 left-0 right-0 bottom-8 flex items-center justify-center z-50">
@@ -219,6 +219,8 @@ export default function Interface(props) {
             />
           </div>
         )}
+
+        <LogsDisplay/>
 
         {/*'sas-background-dark': '#22272e', // Custom color name and its hex value*/}
         {/*'sas-background-light': '#37404c',*/}
@@ -302,21 +304,23 @@ export default function Interface(props) {
       {/* End of Section between Nav Bar and Action Bar */}
 
 
-      <div className="flex flex-col p-2 w-full max-w-[460px] h-1/2 bg-pink-100">
+      <div className="h-2/5 flex flex-col p-2 w-full max-w-[460px]">
         <div
-          className="flex-grow w-full h-full text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
-          {/*{(currentOutputView === 'show_inventory_component') && (*/}
-          {/*  <InventoryDisplay />*/}
-          {/*)}*/}
+          className="w-full h-1/2 text-xs bg-purple-400 text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
+
           {/*{(currentOutputView === 'show_output_logs_component') && (*/}
           {/*  <LogsDisplay />*/}
           {/*)}*/}
-          {/*{(currentOutputView === 'show_map_component') && (*/}
-          {/*  <MapDisplay />*/}
-          {/*)}*/}
-          <LogsDisplay/>
-          <MapDisplay/>
-          <InventoryDisplay/>
+
+          {(currentOutputView === 'show_inventory_component') && (
+            <InventoryDisplay />
+          )}
+          {(currentOutputView === 'show_map_component') && (
+            <MapDisplay />
+          )}
+
+          {/*<MapDisplay/>*/}
+          {/*<InventoryDisplay/>*/}
         </div>
         <ActionBar/>
       </div>

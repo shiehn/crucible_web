@@ -41,19 +41,19 @@ export const store = createStore((set) => ({
   submitForm: false,
   dropTargetFileName: null,
   currentBgImage: null,
-  currentOutputView: 'show_output_logs_component',
+  currentOutputView: 'show_map_component',
   isLoading: false,
   isConnecting: false,
   navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings,create_level, loading_level
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
-  game_state: {
-  },
+  game_state: {},
   game_map: {
     nodes: [],
     edges: [],
   },
+  setGameMap: (map) => set({game_map: map}),
   game_map_old: {
     nodes: [],
     edges: [],
@@ -93,15 +93,6 @@ if (savedUUID) {
   store.setState({uuid: savedUUID});
 }
 
-
-
-
-
-
-// if (navigationFromLocalStorage) {
-//   store.setState({navigation: navigationFromLocalStorage});
-// }
-
 // Interop bindings
 function requestParamValueUpdate(paramId, value) {
   if (typeof globalThis.__postNativeMessage__ === 'function') {
@@ -134,35 +125,36 @@ globalThis.__receiveError__ = (err) => {
 function App(props) {
   const state = useStore();
   const {error} = useErrorStore();
-  const {uuid, connection_token, connected, contract, embedded, game_state, messageId, currentOutputView, server_ip} = state;
+  const {
+    uuid,
+    embedded,
+    game_state,
+    server_ip
+  } = state;
 
-  // //JUST FOR LOGGING
-  // useEffect(() => {
-  //   console.log('game_state', game_state)
-  // }, [game_state])
-  // //JUST FOR LOGGING
+  const querySentRef = useRef(false); // Ref to track if the query has been sent
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const gqu = await getGameQueueUpdate(server_ip, uuid);
-      console.log("GameQueueUpdate", gqu)
-      if(gqu && gqu.status){
-        if(gqu.status === 'queued'){
-          if(gqu.level > 1){
+      //console.log("GameQueueUpdate", gqu)
+      if (gqu && gqu.status) {
+        if (gqu.status === 'queued') {
+          if (gqu.level > 1) {
             store.setState({navigation: 'create_level'});
-            console.log("GameQueueUpdate", "LEVEL UP VIEW")
-          }else{
+            //console.log("GameQueueUpdate", "LEVEL UP VIEW")
+          } else {
             store.setState({navigation: 'create_level'});
-            console.log("GameQueueUpdate", "NEW GAME VIEW")
+            //console.log("GameQueueUpdate", "NEW GAME VIEW")
           }
-        }else if(gqu.status === 'started'){
+        } else if (gqu.status === 'started') {
           store.setState({navigation: 'loading_level'});
-          console.log("GameQueueUpdate", "LOADING SCREEN")
+          //console.log("GameQueueUpdate", "LOADING SCREEN")
         } else {
 
           store.setState({navigation: 'game_portal'});
 
-          console.log("GameQueueUpdate", "NORMAL GAME FLOW")
+          //console.log("GameQueueUpdate", "NORMAL GAME FLOW")
         }
       }
     }, 5000);  // Calls getGameQueueUpdate every 5 seconds
@@ -175,20 +167,20 @@ function App(props) {
   //PULL GAME EVENTS
   useEffect(() => {
     const intervalId = setInterval(async () => {
-        const gameEvents = await getGameEvents(server_ip, uuid);
-        if(gameEvents && gameEvents.event){
+      const gameEvents = await getGameEvents(server_ip, uuid);
+      if (gameEvents && gameEvents.event) {
 
-          /*
-            ("level-up-ready", "LevelUpReady"),
-            ("level-up-complete", "LevelUpComplete"),
-            ("encounter-start", "EncounterStart"),
-            ("encounter-victory", "EncounterVictory"),
-            ("encounter-loss", "EncounterLoss"),
-            ("inventory-update", "InventoryUpdate"),
-           */
+        /*
+          ("level-up-ready", "LevelUpReady"),
+          ("level-up-complete", "LevelUpComplete"),
+          ("encounter-start", "EncounterStart"),
+          ("encounter-victory", "EncounterVictory"),
+          ("encounter-loss", "EncounterLoss"),
+          ("inventory-update", "InventoryUpdate"),
+         */
 
-          toast.success("EVENT: " + gameEvents.event)
-        }
+        toast.success("EVENT: " + gameEvents.event)
+      }
     }, 3000);  // Calls getGameQueueUpdate every 5 seconds
 
     return () => {
@@ -196,346 +188,110 @@ function App(props) {
     };
   }, []);
 
-
+  const setGameMap = useStore((state) => state.setGameMap);
 
   useEffect(() => {
+    const delayCheck = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const loadInitalMapAndEnvQuery = async () => {
-      //LOAD MAP
-      if (game_state && game_state.map_id) {
-          const game_map = await getGameMap(server_ip, game_state.map_id);
-          console.log("GAME_MAP: ", game_map)
+      let tries = 0;
+      const maxTries = 10;
+      const retryDelay = 2000; // 2 seconds
+
+      while (tries < maxTries) {
+        tries += 1;
+
+        // Load map
+        const currentGameState = store.getState().game_state;
+        console.log('FUCKING 2 STATE', currentGameState);
+        console.log('FUCKING 2 MAP_ID', currentGameState?.map_id);
+
+        if (currentGameState && currentGameState.map_id) {
+          const game_map = await getGameMap(server_ip, currentGameState.map_id);
+          console.log("MAP GAME_MAP: ", game_map);
           if (game_map.map_graph) {
-            store.setState({game_map: game_map.map_graph});
-            console.log("AUTO LOADED GAME_MAP")
+            setGameMap(game_map.map_graph);
+            console.log("MAP AUTO LOADED GAME_MAP");
+            return; // Exit the function if successful
           }
-        }
-    }
-
-    // Define an asynchronous function
-    const fetchGameState = async () => {
-      console.log(`MasterToken in main: ${uuid}`);
-      // Start by fetching the game state
-      const gameState = await getGameState(server_ip, uuid);
-      if (gameState) {
-        store.setState({game_state: gameState});
-        console.log("GET_STATE_SET")
-        // Delay loading the initial query by 1 second
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        await loadInitalMapAndEnvQuery();
-
-        store.setState({isLoading: true});
-        let response = await sendGameEngineQuery("Where am I?", uuid, server_ip)
-        store.setState({isLoading: false});
-
-        console.log("ResponseData:", response);
-
-        let logs = response?.response;
-
-        store.setState((prevState) => {
-          const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
-
-          console.log("Last item: " + logs)
-
-          if (lastItem !== logs) {
-            return {
-              msgHistory: [...prevState.msgHistory, logs], // Append new item if it's different
-            };
-          }
-
-          return prevState; // If the item is the same, return the current state unchanged
-        });
-
-
-        const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-        console.log("XXX Environment:", environment);
-        if (environment) {
-          if(environment.game_info.environment.aesthetic.image){
-            store.setState({currentBgImage: environment.game_info.environment.aesthetic.image})
-          }
+        } else {
+          console.log(`Attempt ${tries}: game_state or game_state.map_id not valid. Retrying...`);
         }
 
-
-      } else {
-        console.log("GET_STATE_NOT_SET")
-        toast.error("Game Does Not Exist. Create a new game.")
-        store.setState({navigation: 'settings'});
-
+        // Wait for 2 seconds before retrying
+        await delayCheck(retryDelay);
       }
+
+      console.log("Max tries reached without successfully loading the map.");
     };
 
-    // Call the asynchronous function
-    fetchGameState();
-  }, [uuid]);
+    // Define an asynchronous function
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  useEffect(() => {
-    if (connection_token) {
-      if (typeof globalThis.__postNativeMessage__ === 'function') {
-        globalThis.__postNativeMessage__(JSON.stringify({action: 'SET_TOKEN', payload: connection_token}));
+    const fetchGameState = async () => {
+      let tries = 0;
+      const maxTries = 10;
+      const retryDelay = 2000; // 2 seconds
+
+      while (tries < maxTries) {
+        tries += 1;
+
+        // Start by fetching the game state
+        const gameState = await getGameState(server_ip, uuid);
+        console.log('FUCKING GAME_STATE', gameState);
+        console.log('FUCKING GAME_STATE_MAP_ID', gameState.map_id);
+
+        if (gameState && Object.keys(gameState).length > 0) {
+          console.log('FUCKING ENTERED');
+          store.setState({ game_state: gameState });
+
+          await loadInitalMapAndEnvQuery();
+
+          store.setState({ isLoading: true });
+          let response = await sendGameEngineQuery("Where am I?", uuid, server_ip)
+          store.setState({ isLoading: false });
+
+          let logs = response?.response;
+
+          store.setState((prevState) => {
+            const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
+
+            if (lastItem !== logs) {
+              return {
+                msgHistory: [...prevState.msgHistory, logs], // Append new item if it's different
+              };
+            }
+
+            return prevState; // If the item is the same, return the current state unchanged
+          });
+
+          const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+          if (environment) {
+            if (environment.game_info.environment.aesthetic.image) {
+              store.setState({ currentBgImage: environment.game_info.environment.aesthetic.image });
+            }
+          }
+
+          return; // Exit the function if successful
+        } else {
+          toast.error("Game Does Not Exist. Create a new game.");
+          store.setState({ navigation: 'settings' });
+        }
+
+        // Wait for 2 seconds before retrying
+        await delay(retryDelay);
       }
+
+      console.log("Max tries reached without successfully fetching the game state.");
+    };
+
+// Call the asynchronous function
+    if (!querySentRef.current) {
+      fetchGameState();
+    } else {
+      console.log("Query already sent");
     }
-  }, [connection_token]);
-
-  // useEffect(() => {
-  //   if (!currentOutputView) {
-  //     return;
-  //   }
-  //
-  //   if (currentOutputView === 'show_remote_links') {
-  //     //SHOW REMOTE LINKS IN THE WEB VIEW
-  //     toast.warn("SHOW REMOTE LINKS")
-  //   } else {
-  //     //NAVIGATE TO THE CURRENT OUTPUT VIEW
-  //     if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //       //"show_drop_component", "show_process_component", "show_output_component"
-  //       globalThis.__postNativeMessage__(JSON.stringify({action: 'NAVIGATE_TO', payload: currentOutputView}));
-  //     }
-  //   }
-  // }, [currentOutputView]);
-
-  // useEffect(() => {
-  //   let contractInterval = null;
-  //
-  //   const registerThePluginToken = async (token, status) => {
-  //
-  //     //console.log('register the plugin token')
-  //     try {
-  //       if (!token || !status) {
-  //         return;
-  //       }
-  //
-  //       const url = API_URLS.PLUGIN_CONNECTION(server_ip, token, status);
-  //       const response = await fetch(url, {
-  //         method: 'PUT',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({status})
-  //       });
-  //
-  //       if (!response.ok) {
-  //         throw new Error('Plugin connection status update failed');
-  //       }
-  //
-  //       const statusData = await response.json();
-  //       if (statusData.success) {
-  //         //console.log("Plugin connection status updated successfully")
-  //         //clearInterval(pluginRegisterInterval);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error updating plugin connection status:", error);
-  //     }
-  //   };
-  //
-  //   const fetchConnectionStatus = async () => {
-  //     if (!connection_token) {
-  //       return;
-  //     }
-  //
-  //     //GET SESSION INFO
-  //     //NOTE: THIS DOESN'T NEED TO CALLED THIS OFTEN, BUT IT'S OKAY FOR NOW
-  //     //BUT IT NEEDS TO BE CALLED IF THE SESSION CHANGES
-  //     if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //       globalThis.__postNativeMessage__(JSON.stringify({action: 'GET_SESSION_INFO', payload: ""}));
-  //     }
-  //
-  //     try {
-  //       const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
-  //       const response = await fetch(url);
-  //       const data = await response.json();
-  //
-  //       if (data.plugin && data.compute) {
-  //         //TODO: would it be better to check connected status??
-  //         store.setState({isConnecting: false})
-  //       } else {
-  //         store.setState({isConnecting: true})
-  //       }
-  //
-  //       store.setState({connected: data.plugin && data.compute});
-  //
-  //       if (data.plugin && data.compute && !contractInterval && !state.contract) {
-  //         contractInterval = setInterval(fetchContract, CONTRACT_POLL_INTERVAL_TIME);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching connection status:", error);
-  //       store.setState({connected: false});
-  //     }
-  //   };
-  //
-  //   const fetchContract = async () => {
-  //     if (connection_token && connected && !state.contract) {
-  //       try {
-  //         const url = API_URLS.COMPUTE_CONTRACT(server_ip, connection_token);
-  //         const response = await fetch(url);
-  //         if (response.ok) {
-  //           const contractData = await response.json();
-  //           store.setState({contract: contractData});
-  //           console.log('CONTRACT:', contractData);
-  //           clearInterval(contractInterval);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching contract:", error);
-  //       }
-  //     }
-  //   };
-  //
-  //   const pollResponses = async () => {
-  //     const currentState = store.getState();
-  //     const {connection_token, messageId, connected, contract, results} = currentState;
-  //
-  //     //console.log('POLL STATUS', connection_token, connected, contract, messageId);
-  //     if (connection_token && connected && contract && messageId) {
-  //       //console.log('Polling responses...');
-  //       try {
-  //         const url = API_URLS.MESSAGE_RESPONSES(server_ip, messageId, connection_token);
-  //         const response = await fetch(url, {
-  //           method: 'GET',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //         });
-  //
-  //         if (!response.ok) {
-  //           console.error('Failed to poll message responses');
-  //           store.setState({
-  //             isLoading: false,
-  //             connection_token: null,
-  //             connected: false,
-  //             contract: null,
-  //             messageId: null
-  //           });
-  //           //throw new Error('Failed to poll message responses');
-  //         }
-  //
-  //         const responseData = await response.json();
-  //         // Check if the new results are different from the current results
-  //         // This assumes that `responseData` is a JSON object or array.
-  //         // For deep comparison, you might need a library like Lodash with its `_.isEqual` function
-  //         if (JSON.stringify(responseData) !== JSON.stringify(results)) {
-  //           store.setState({results: responseData});
-  //           if (responseData && responseData.status === 'completed') {
-  //
-  //             //console.log('Polled response:', responseData)
-  //             store.setState({isLoading: false});
-  //
-  //             if (responseData?.response?.error) {
-  //               toast.error(responseData?.response?.error, {autoClose: 5000})
-  //               store.setState({
-  //                 isLoading: false,
-  //                 connection_token: null,
-  //                 connected: false,
-  //                 contract: null,
-  //                 messageId: null
-  //               });
-  //               return;
-  //             }
-  //
-  //             if (responseData?.response?.message) {
-  //               toast.success(responseData?.response?.message, {autoClose: 5000})
-  //             } else {
-  //               toast.success("Processing completed successfully")
-  //             }
-  //
-  //             //IF THERE ARE LOGS, SHOW THEM
-  //             if (responseData?.response?.logs) {
-  //
-  //               const logs = responseData.response.logs;
-  //
-  //               // store.setState((prevState) => {
-  //               //   const lastItem = prevState.msgHistory[prevState.msgHistory.length - 1];
-  //               //
-  //               //   if (lastItem !== logs) {
-  //               //     return {
-  //               //       msgHistory: [...prevState.msgHistory, logs], // Append new item if it's different
-  //               //     };
-  //               //   }
-  //               //
-  //               //   return prevState; // If the item is the same, return the current state unchanged
-  //               // });
-  //
-  //               console.log('LOGS:', logs);
-  //               if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //                 globalThis.__postNativeMessage__(JSON.stringify({action: 'SET_OUTPUT_LOGS', payload: logs}));
-  //               }
-  //             }
-  //
-  //             //BEFORE DOWNLOADING THE ASSETS, WE NEED TO CLEAR THE OUTPUT FOLDER
-  //             if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //               globalThis.__postNativeMessage__(JSON.stringify({
-  //                 action: 'PREPARE_OUTPUT_DIR',
-  //                 payload: connection_token
-  //               }));
-  //             }
-  //
-  //             //DOWNLOAD THE ASSETS
-  //             if (responseData.response.files && responseData.response.files.length > 0) {
-  //               responseData.response.files.forEach((file) => {
-  //                 if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //                   globalThis.__postNativeMessage__(JSON.stringify({action: 'DOWNLOAD_ASSET', payload: file.url}));
-  //                 }
-  //               })
-  //
-  //               //SHOW THE OUTPUT COMPONENT
-  //               store.setState({currentOutputView: 'show_output_component'});
-  //               // if (typeof globalThis.__postNativeMessage__ === 'function') {
-  //               //   globalThis.__postNativeMessage__(JSON.stringify({action: 'NAVIGATE_TO', payload: "show_output_component"}));
-  //               // }
-  //             }
-  //
-  //             store.setState({
-  //               isLoading: false,
-  //               connection_token: null,
-  //               connected: false,
-  //               contract: null,
-  //               messageId: null
-  //             });
-  //
-  //           } else if (responseData && responseData.status === 'error') {
-  //             store.setState({
-  //               isLoading: false,
-  //               connection_token: null,
-  //               connected: false,
-  //               contract: null,
-  //               messageId: null
-  //             });
-  //             toast.error('ERROR', {autoClose: 5000})
-  //           } else if (responseData && responseData.status === 'aborted') {
-  //             store.setState({
-  //               isLoading: false,
-  //               connection_token: null,
-  //               connected: false,
-  //               contract: null,
-  //               messageId: null
-  //             });
-  //             //toast.error('ERROR', {autoClose: 5000})
-  //           } else {
-  //             //store.setState({isLoading: true});
-  //           }
-  //         } else {
-  //           // console.log('No changes in POLL RESPONSES');
-  //         }
-  //       } catch (error) {
-  //         console.error("Error during polling:", error);
-  //       }
-  //
-  //     }
-  //   };
-  //
-  //   // const pluginRegisterInterval = setInterval(() => {
-  //   //   if (connection_token) {
-  //   //     registerThePluginToken(connection_token, 1);
-  //   //   }
-  //   // }, PLUGIN_REGISTER_INTERVAL_TIME);
-  //   // const statusInterval = setInterval(fetchConnectionStatus, STATUS_CHECK_INTERVAL_TIME);
-  //   // const pollInterval = setInterval(pollResponses, RESPONSE_POLL_INTERVAL_TIME);
-  //
-  //   return () => {
-  //     // clearInterval(statusInterval);
-  //     // clearInterval(contractInterval);
-  //     // clearInterval(pluginRegisterInterval);
-  //     // clearInterval(pollInterval);
-  //   };
-  // }, [connection_token, connected]);
+  }, []);
 
   let outerWrapper = ''
   let outerColWidth = ''
@@ -592,7 +348,7 @@ function App(props) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App/>,
+  <App/>,
 );
 
 // Request initial processor state

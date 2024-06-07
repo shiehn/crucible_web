@@ -3,7 +3,9 @@ import Graph from 'react-graph-vis';
 import { useStore } from './main.jsx';
 
 function MapDisplay() {
-  const { game_map, game_state } = useStore(); // Get the game_map and game_state data from the store
+  const { game_state } = useStore(); // Get the game_map and game_state data from the store
+
+  const game_map = useStore((state) => state.game_map);
 
   const sanitizeGameMap = (map) => {
     if (!map || typeof map !== 'object' || !Array.isArray(map.nodes) || !Array.isArray(map.edges)) {
@@ -17,7 +19,9 @@ function MapDisplay() {
 
   // let oldGraph = JSON.stringify(graph)
 
+  // console.log('MAP', 'IS DISPLAYED');
   useEffect(() => {
+    console.log('MAP', 'game_map changed, should load');
     // console.log("BEFORE CRASH")
 
     // let newGraph = JSON.stringify(sanitizeGameMap(game_map))
@@ -26,8 +30,9 @@ function MapDisplay() {
     // console.log("NEW_G", newGraph)
 
     setGraph({ nodes: [], edges: [] })
+    console.log('MAP', 'cleared map')
     setGraph(sanitizeGameMap(game_map))
-
+    console.log('MAP', 'set map')
 
     // console.log("AFTER CRASH")
   }, [game_map]);
@@ -88,7 +93,7 @@ function MapDisplay() {
         from: { enabled: false }
       },
     },
-    height: '100px',
+    height: '100%',
     nodes: {
       shape: 'box',
       size: 20,
@@ -110,7 +115,7 @@ function MapDisplay() {
   };
 
   return (
-    <div className="w-full h-24 overflow-hidden">
+    <div className="w-full h-full overflow-hidden">
       <Graph
         graph={graph}
         options={options}

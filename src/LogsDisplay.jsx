@@ -13,7 +13,7 @@ function LogsDisplay() {
   const reversedMessages = msgHistory.slice().reverse();
 
   return (
-    <div className="w-full h-24 p-2 overflow-y-auto overflow-x-hidden custom-scrollbar">
+    <div className="w-full h-32 p-2 absolute bottom-8 overflow-y-auto overflow-x-hidden custom-scrollbar bg-black bg-opacity-40">
       {reversedMessages.map((message, index) => (
         <div key={index}>
           <div
