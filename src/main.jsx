@@ -109,35 +109,6 @@ if (savedUUID) {
   store.setState({uuid: savedUUID});
 }
 
-// Interop bindings
-function requestParamValueUpdate(paramId, value) {
-  if (typeof globalThis.__postNativeMessage__ === 'function') {
-    globalThis.__postNativeMessage__("setParameterValue", {
-      paramId,
-      value,
-    });
-  }
-}
-
-globalThis.__receiveStateChange__ = function (state) {
-  const props = JSON.parse(state);
-  //store.setState(props);
-
-  if (props && props.samplerate) {
-    store.setState({sampleRate: props.samplerate});
-  }
-
-  if (props && props.bpm) {
-    store.setState({bpm: props.bpm});
-  }
-
-  //toast.success(`SampleRate: ${JSON.stringify(props.samplerate)}`);
-};
-
-globalThis.__receiveError__ = (err) => {
-  errorStore.setState({error: err});
-};
-
 function App(props) {
   const state = useStore((state) => state);
   const {error} = useErrorStore();
@@ -261,7 +232,8 @@ function App(props) {
 
             try {
               setIsLoading(true);
-              let response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
+              // let response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
+              let response = {}
               setIsLoading(false);
 
               console.log("ResponseData:", response);
@@ -353,7 +325,6 @@ function App(props) {
           {...state}
           setUUID={(newUUID) => store.setState({uuid: newUUID})}
           error={error}
-          requestParamValueUpdate={requestParamValueUpdate}
           resetErrorState={() => errorStore.setState({error: null})}
         />
       </div>

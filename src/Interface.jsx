@@ -306,7 +306,7 @@ export default function Interface(props) {
 
       <div className="h-2/5 flex flex-col p-2 w-full max-w-[460px]">
         <div
-          className="w-full h-1/2 text-xs bg-purple-400 text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
+          className="w-full h-1/2 text-xs bg-sas-background-dark text-sas-text-grey rounded-md overflow-y-auto overflow-x-hidden custom-scrollbar">
 
           {/*{(currentOutputView === 'show_output_logs_component') && (*/}
           {/*  <LogsDisplay />*/}
