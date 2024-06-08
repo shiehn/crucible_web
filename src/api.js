@@ -296,9 +296,9 @@ async function deleteGameState(server_ip, game_id) {
   }
 }
 
-async function createGameState(server_ip, user_id, aesthetic) {
+async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
   try {
-    const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip), {
+    const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip, open_ai_key), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

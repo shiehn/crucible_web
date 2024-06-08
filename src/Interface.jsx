@@ -250,7 +250,7 @@ export default function Interface(props) {
           )}
 
           {!props.connected && props.navigation == 'settings' && (
-            <Settings isVisible={true}/>
+            <Settings isVisible={true} setUUID={props.setUUID}/>
           )}
 
           {!props.connected && props.navigation == 'create_level' && (

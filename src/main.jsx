@@ -67,6 +67,7 @@ export const store = createStore((set) => ({
   setIsLoading: (isLoading) => set({isLoading}),
   isConnecting: false,
   navigation: DEFAULT_NAVIGATION, //game_portal,available_remotes,connected_remotes,settings,create_level, loading_level
+  setNavigation: (navigation) => set({navigation}),
   server_ip: DEFAULT_SERVER_IP,
   storage_path: DEFAULT_STORAGE_PATH,
   embedded: EMBEDDED,
@@ -123,6 +124,7 @@ function App(props) {
   const addMessage = useStore((state) => state.addMessage);
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
   const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+  const setNavigation = useStore((state) => state.setNavigation);
 
   const querySentRef = useRef(false); // Ref to track if the query has been sent
 
@@ -187,7 +189,7 @@ function App(props) {
 
     const loadInitalMapAndEnvQuery = async () => {
       let tries = 0;
-      const maxTries = 10;
+      const maxTries = 3;
       const retryDelay = 2000; // 2 seconds
 
       while (tries < maxTries) {
@@ -216,7 +218,7 @@ function App(props) {
 
     const fetchGameState = async () => {
       let tries = 0;
-      const maxTries = 10;
+      const maxTries = 3;
       const retryDelay = 2000; // 2 seconds
 
       while (tries < maxTries) {
@@ -234,8 +236,7 @@ function App(props) {
 
             try {
               setIsLoading(true);
-              // let response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
-              let response = {}
+              let response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
               setIsLoading(false);
 
               console.log("ResponseData:", response);

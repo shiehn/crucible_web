@@ -41,7 +41,7 @@ function MapDisplay() {
   useEffect(() => {
     console.log('Environment ID changed:', game_state.environment_id);
     setHighlightedNodeId(game_state.environment_id);
-  }, [game_state.environment_id]);
+  }, [game_state?.environment_id]);
 
   useEffect(() => {
     const interval = highlightedNodeId ? setInterval(() => {
