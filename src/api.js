@@ -296,7 +296,35 @@ async function deleteGameState(server_ip, game_id) {
   }
 }
 
+async function generateLevelMap(server_ip, user_id, open_ai_key) {
+
+  try {
+    const url = API_URLS.GAME_MAP_GENERATE(server_ip, user_id, open_ai_key);
+    const response = await fetch(url,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      //toast.error('No game state found for user_id: ' + user_id);
+      return false;
+    }
+
+    return await response.json(); // Return the boolean value
+  } catch (error) {
+    console.error('Error:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
 async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
+  console.log('CGS SERVER', server_ip)
+  console.log('CGS USER', user_id)
+  console.log('CGS OPENAI', open_ai_key)
+  console.log('CGS AESTHETIC', aesthetic)
   try {
     const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip, open_ai_key), {
       method: "POST",
@@ -392,7 +420,7 @@ async function getGameQueueUpdate(server_ip, userId) {
 
     if (!response.ok) {
       console.log('GameEvents - Network response was not ok');
-      return {};
+      return {'status': 'game_not_found'};
     }
 
     return await response.json();
@@ -438,6 +466,7 @@ export {
   addConnectionMapping,
   createGameState,
   deleteGameState,
+  generateLevelMap,
   getConnectionMappings,
   getGameEnvironment,
   getGameEvents,

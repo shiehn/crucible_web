@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore } from "./main.jsx";
-import { createGameState, deleteGameState, getGameState, renderGameAssets } from "./api.js";
+import { DEFAULT_SERVER_IP, useStore } from "./main.jsx";
+import {createGameState, deleteGameState, generateLevelMap, getGameState} from "./api.js";
 
 function CreateLevel({ isVisible }) {
-  const { game_setting_and_lore, game_art_style, uuid, server_ip, open_ai_key } = useStore();
+  const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
+  const game_art_style = useStore((state) => state.game_art_style);
+  const uuid = useStore((state) => state.uuid);
+  const server_ip = useStore((state) => state.server_ip);
+  const open_ai_key = useStore((state) => state.open_ai_key);
+
+  const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
+  const setGameArtStyle = useStore((state) => state.setGameArtStyle);
+  const setOpenAIKey = useStore((state) => state.setOpenAIKey);
+  const setServerIp = useStore((state) => state.setServerIp);
+  const setGameState = useStore((state) => state.setGameState);
+
   const [isKeyVisible, setIsKeyVisible] = useState(false);
 
   useEffect(() => {
@@ -14,55 +25,44 @@ function CreateLevel({ isVisible }) {
       const storedGameArtStyle = localStorage.getItem('game_art_style');
 
       if (storedOpenAIKey) {
-        store.setState({ open_ai_key: storedOpenAIKey });
+        setOpenAIKey(storedOpenAIKey);
       }
       if (storedGameSettingAndLore) {
-        store.setState({ game_setting_and_lore: storedGameSettingAndLore });
+        setGameSettingAndLore(storedGameSettingAndLore);
       }
       if (storedGameArtStyle) {
-        store.setState({ game_art_style: storedGameArtStyle });
+        setGameArtStyle(storedGameArtStyle);
       }
     }
-  }, [isVisible, uuid]);
+  }, [isVisible, uuid, setOpenAIKey, setGameSettingAndLore, setGameArtStyle]);
 
   function handleOpenAIKey(value) {
-    store.setState({ open_ai_key: value });
+    setOpenAIKey(value);
     localStorage.setItem('open_ai_key', value);
   }
 
   function handleGameSettingAndLore(value) {
-    store.setState({ game_setting_and_lore: value });
+    setGameSettingAndLore(value);
     localStorage.setItem('game_setting_and_lore', value);
   }
 
   function handleGameArtStyle(value) {
-    store.setState({ game_art_style: value });
+    setGameArtStyle(value);
     localStorage.setItem('game_art_style', value);
   }
 
   const handleReset = () => {
     // Clear the local storage
     localStorage.clear();
-    store.setState({ server_ip: DEFAULT_SERVER_IP });
-    store.setState({ open_ai_key: '' });
-    store.setState({ game_setting_and_lore: '' });
-    store.setState({ game_art_style: '' });
+    setServerIp(DEFAULT_SERVER_IP);
+    setOpenAIKey('');
+    setGameSettingAndLore('');
+    setGameArtStyle('');
   };
 
   const createNewGame = async () => {
-    try {
-      const gameState = await getGameState(server_ip, uuid);
-      if (gameState) {
-        console.log("gameState", gameState);
-        const deleteState = await deleteGameState(server_ip, gameState.id);
-      }
-    } catch (e) {
-      console.log("Error deleting game state", e);
-    }
-
-    const createdGameState = await createGameState(server_ip, uuid, open_ai_key, game_setting_and_lore + ". " + game_art_style);
-    console.log("createGameState", createdGameState);
-    store.setState({ game_state: createdGameState });
+    const generationResponse = await generateLevelMap(server_ip, uuid, open_ai_key);
+    console.log("generationResponse", generationResponse);
   };
 
   return (

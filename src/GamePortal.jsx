@@ -10,15 +10,16 @@ import {
 import {API_URLS} from "./apiUrls.js";
 import {FaPlay, FaStop, FaForward, FaBackward} from "react-icons/fa";
 import {toast} from "react-toastify";
-import TextToSpeech from "./TextToSpeech.js"; // Import the new function
+import TextToSpeech from "./TextToSpeech.js";
+import {Bars} from "react-loader-spinner"; // Import the new function
 
 function GamePortal({isVisible}) {
   const {embedded, uuid, connected, currentBgImage, game_state, msgHistory, results, server_ip} = useStore();
-
   const [typingTimeout, setTypingTimeout] = useState(null); // State for the typing timeout
-
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
 
+  const combatMode = useStore((state) => state.combatMode);
+  const setCombatMode = useStore((state) => state.setCombatMode);
 
   useEffect(() => {
     setBackgroundImage(game_state?.level)
@@ -139,6 +140,15 @@ function GamePortal({isVisible}) {
         backgroundPosition: "center",
       }}
     >
+      {combatMode && (
+        <div
+          className="flex flex-col justify-center items-center absolute border border-white rounded bg-opacity-50 bg-gray-500 bottom-52 right-12 p-4">
+          <div className="border border-white rounded text-white m-2">COMBAT STATS</div>
+          <div className="border border-white rounded text-white m-2">STATS</div>
+          <div className="border border-white rounded text-white m-2">STATS</div>
+        </div>
+      )}
+
     </div>
   );
 }

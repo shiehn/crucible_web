@@ -18,7 +18,8 @@ function TopBanner(props) {
 
   const handleClick = () => {
     // Redirect the user to the desired URL
-    window.location.href = 'https://signalsandsorcery.com';
+    setNavigation('game_portal')
+    //window.location.href = 'https://signalsandsorcery.com';
   };
 
   return (

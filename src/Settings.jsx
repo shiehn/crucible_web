@@ -1,11 +1,25 @@
-import React, {useState, useEffect} from 'react';
-import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
-import {createGameState, deleteGameState, getGameState} from "./api.js";
-import {toast} from "react-toastify";
+// Settings.jsx
+
+import React, { useState, useEffect } from 'react';
+import { DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, useStore } from "./main.jsx";
+import { createGameState, deleteGameState, getGameState } from "./api.js";
+import { toast } from "react-toastify";
 import UUIDButton from "./UUIDButton.jsx";
 
-function Settings({isVisible, setUUID}) {
-  const {game_setting_and_lore, game_art_style, uuid, server_ip, open_ai_key} = useStore();
+function Settings({ isVisible, setUUID }) {
+  const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
+  const game_art_style = useStore((state) => state.game_art_style);
+  const uuid = useStore((state) => state.uuid);
+  const server_ip = useStore((state) => state.server_ip);
+  const open_ai_key = useStore((state) => state.open_ai_key);
+
+  const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
+  const setGameArtStyle = useStore((state) => state.setGameArtStyle);
+  const setOpenAIKey = useStore((state) => state.setOpenAIKey);
+  const setServerIp = useStore((state) => state.setServerIp);
+  const setStoragePath = useStore((state) => state.setStoragePath);
+  const setGameState = useStore((state) => state.setGameState);
+
   const [isKeyVisible, setIsKeyVisible] = useState(false);
 
   useEffect(() => {
@@ -16,66 +30,65 @@ function Settings({isVisible, setUUID}) {
       const storedGameArtStyle = localStorage.getItem('game_art_style');
 
       if (storedOpenAIKey) {
-        store.setState({open_ai_key: storedOpenAIKey});
+        setOpenAIKey(storedOpenAIKey);
       }
       if (storedGameSettingAndLore) {
-        store.setState({game_setting_and_lore: storedGameSettingAndLore});
+        setGameSettingAndLore(storedGameSettingAndLore);
       }
       if (storedGameArtStyle) {
-        store.setState({game_art_style: storedGameArtStyle});
+        setGameArtStyle(storedGameArtStyle);
       }
     }
-  }, [isVisible, uuid]);
+  }, [isVisible, uuid, setOpenAIKey, setGameSettingAndLore, setGameArtStyle]);
 
   function handleServerIpChange(value) {
-    store.setState({server_ip: value});
+    setServerIp(value);
     localStorage.setItem('server_ip', value);
   }
 
   function handleOpenAIKey(value) {
-    store.setState({open_ai_key: value});
+    setOpenAIKey(value);
     localStorage.setItem('open_ai_key', value);
   }
 
   function handleGameSettingAndLore(value) {
-    store.setState({game_setting_and_lore: value});
+    setGameSettingAndLore(value);
     localStorage.setItem('game_setting_and_lore', value);
   }
 
   function handleGameArtStyle(value) {
-    store.setState({game_art_style: value});
+    setGameArtStyle(value);
     localStorage.setItem('game_art_style', value);
   }
 
   const handleReset = () => {
     // Clear the local storage
     localStorage.clear();
-    store.setState({server_ip: DEFAULT_SERVER_IP});
-    store.setState({storage_path: DEFAULT_STORAGE_PATH});
-    store.setState({open_ai_key: ''});
-    store.setState({game_setting_and_lore: ''});
-    store.setState({game_art_style: ''});
+    setServerIp(DEFAULT_SERVER_IP);
+    setStoragePath(DEFAULT_STORAGE_PATH);
+    setOpenAIKey('');
+    setGameSettingAndLore('');
+    setGameArtStyle('');
   };
 
   const createNewGame = async () => {
     try {
-
       // TRY TO GET AN EXISTING GAME
       const gameState = await getGameState(server_ip, uuid);
       if (gameState) {
         console.log("gameState", gameState);
         // IF IT EXISTS THEN DELETE IT
-        const deleteState = await deleteGameState(server_ip, gameState.id);
+        await deleteGameState(server_ip, gameState?.user_id);
       }
 
       // CREATE A NEW GAME
       const createdGameState = await createGameState(server_ip, uuid, open_ai_key, game_setting_and_lore + ". " + game_art_style);
       console.log("createGameState", createdGameState);
-      store.setState({game_state: createdGameState});
+      setGameState(createdGameState);
     } catch (e) {
       console.log("Error managing game state", e);
     }
-  }
+  };
 
   return (
     <div className="w-full h-full p-4 text-sas-text-grey">
@@ -105,9 +118,7 @@ function Settings({isVisible, setUUID}) {
           name="server_ip"
           value={server_ip} // Use server_ip from the global state
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => {
-            handleServerIpChange(e.target.value)
-          }}
+          onChange={(e) => handleServerIpChange(e.target.value)}
         />
       </div>
 

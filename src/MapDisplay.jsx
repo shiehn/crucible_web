@@ -39,8 +39,8 @@ function MapDisplay() {
 
   // Automatically update the flashing node when game_state.environment_id changes
   useEffect(() => {
-    console.log('Environment ID changed:', game_state.environment_id);
-    setHighlightedNodeId(game_state.environment_id);
+    //console.log('Environment ID changed:', game_state?.environment_id);
+    setHighlightedNodeId(game_state?.environment_id);
   }, [game_state?.environment_id]);
 
   useEffect(() => {
@@ -61,9 +61,9 @@ function MapDisplay() {
         return node;
       });
       if (foundNode) {
-        console.log(`Flashing node ${highlightedNodeId}`);
+        //console.log(`Flashing node ${highlightedNodeId}`);
       } else {
-        console.log(`Node ${highlightedNodeId} not found or missing color property`);
+        //console.log(`Node ${highlightedNodeId} not found or missing color property`);
       }
       setGraph(prevGraph => ({ ...prevGraph, nodes: newNodes }));
     }, 500) : null;

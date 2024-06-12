@@ -172,32 +172,6 @@ export default function Interface(props) {
   return (
     <div className="w-screen max-w-[460px] h-full justify-between overflow-hidden bg-sas-background-light  relative">
 
-      {/*START TITLE BAR HERE*/}
-
-      {/*END TITLE BAR HERE*/}
-
-      {/*START SUB NAV HERE*/}
-      {/*<div className="flex w-full h-6 bg-sas-background-dark drop-shadow-md overflow-hidden">*/}
-      {/*  <button*/}
-      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'game_portal' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
-      {/*    onClick={() => updateNavigation('game_portal')}*/}
-      {/*  >*/}
-      {/*    Game Portal*/}
-      {/*  </button>*/}
-      {/*  <button*/}
-      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md hover:bg-sas-red-500 ${props.navigation === 'connected_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
-      {/*    onClick={() => updateNavigation('connected_remotes')}*/}
-      {/*  >*/}
-      {/*    Connected Runes*/}
-      {/*  </button>*/}
-      {/*  <button*/}
-      {/*    className={`w-1/3 rounded-t-lg text-xs drop-shadow-md ${props.navigation === 'available_remotes' ? 'bg-sas-text-grey text-bg-sas-background-dark' : 'bg-sas-background-light text-sas-text-grey'}`}*/}
-      {/*    onClick={() => updateNavigation('available_remotes')}*/}
-      {/*  >*/}
-      {/*    Launch Colabs*/}
-      {/*  </button>*/}
-      {/*</div>*/}
-      {/*END SUB NAV HERE*/}
 
       {/* Section between Nav Bar and Action Bar */}
       <div className="h-3/5 relative"> {/* Add a relative container for the section */}
@@ -217,20 +191,7 @@ export default function Interface(props) {
           </div>
         )}
 
-        <LogsDisplay/>
-
-        {/*'sas-background-dark': '#22272e', // Custom color name and its hex value*/}
-        {/*'sas-background-light': '#37404c',*/}
-
-
-
-
-
         <TopBanner props={props}/>
-
-
-
-
 
         <div className="w-full max-w-[460px] h-full  overflow-y-auto overflow-x-hidden custom-scrollbar">
           {props.connected && props.navigation != 'game_portal' && (
@@ -247,6 +208,10 @@ export default function Interface(props) {
 
           {props.navigation == 'game_portal' && (
             <GamePortal isVisible={true}/>
+          )}
+
+          {props.navigation == 'game_portal' && (
+            <LogsDisplay/>
           )}
 
           {!props.connected && props.navigation == 'settings' && (
