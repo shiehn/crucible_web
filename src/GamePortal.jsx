@@ -12,6 +12,7 @@ import {FaPlay, FaStop, FaForward, FaBackward} from "react-icons/fa";
 import {toast} from "react-toastify";
 import TextToSpeech from "./TextToSpeech.js";
 import {Bars} from "react-loader-spinner"; // Import the new function
+import CombatStats from "./CombatStats.jsx";
 
 function GamePortal({isVisible}) {
   const {embedded, uuid, connected, currentBgImage, game_state, msgHistory, results, server_ip} = useStore();
@@ -21,6 +22,21 @@ function GamePortal({isVisible}) {
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
 
+  const combatStats = useStore((state) => state.combatStats);
+
+
+  // const combatStats = {
+  //   "encounter": 6,
+  //   "modifiers": [
+  //     {
+  //       "item": "jewel_dagger",
+  //       "modifier": 32,
+  //     },
+  //   ],
+  //   "chance_of_success_base": 40,
+  //   "chance_of_success_total": 72,
+  // }
+
   useEffect(() => {
     setBackgroundImage(game_state?.level)
   }, [game_state?.level]);
@@ -28,6 +44,16 @@ function GamePortal({isVisible}) {
   useEffect(() => {
     setBackgroundImage(currentBgImage)
   }, [currentBgImage]);
+
+  useEffect(() => {
+
+    if (combatMode) {
+    //set bg image
+    } else {
+    //set bg image
+    }
+
+  }, [combatMode]);
 
 
   const fetchImages = async (newMsg) => {
@@ -140,14 +166,7 @@ function GamePortal({isVisible}) {
         backgroundPosition: "center",
       }}
     >
-      {combatMode && (
-        <div
-          className="flex flex-col justify-center items-center absolute border border-white rounded bg-opacity-50 bg-gray-500 bottom-52 right-12 p-4">
-          <div className="border border-white rounded text-white m-2">COMBAT STATS</div>
-          <div className="border border-white rounded text-white m-2">STATS</div>
-          <div className="border border-white rounded text-white m-2">STATS</div>
-        </div>
-      )}
+      {combatMode && <CombatStats combatMode={combatMode} combatStats={combatStats} />}
 
     </div>
   );

@@ -8,3 +8,42 @@
   background-attachment: fixed;
   background-size: cover;
 }
+
+
+/*
+COMBAT STATS ANIMATION CODE START
+ */
+
+.animate-stats {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--bar-width);
+  }
+}
+
+.animate-bar {
+  transition: width 2s ease-in-out;
+}
+
+
+/*
+COMBAT STATS ANIMATION CODE END
+ */

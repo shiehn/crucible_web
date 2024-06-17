@@ -21,7 +21,7 @@ function MapDisplay() {
 
   // console.log('MAP', 'IS DISPLAYED');
   useEffect(() => {
-    console.log('MAP', 'game_map changed, should load');
+    //console.log('MAP', 'game_map changed, should load');
     // console.log("BEFORE CRASH")
 
     // let newGraph = JSON.stringify(sanitizeGameMap(game_map))
@@ -30,9 +30,9 @@ function MapDisplay() {
     // console.log("NEW_G", newGraph)
 
     setGraph({ nodes: [], edges: [] })
-    console.log('MAP', 'cleared map')
+    //console.log('MAP', 'cleared map')
     setGraph(sanitizeGameMap(game_map))
-    console.log('MAP', 'set map')
+    //console.log('MAP', 'set map')
 
     // console.log("AFTER CRASH")
   }, [game_map]);

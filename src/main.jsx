@@ -60,13 +60,17 @@ export const store = createStore((set) => ({
   currentOutputView: 'show_map_component',
   combatMode: false,
   setCombatMode: (combatMode) => set({combatMode}),
+  combatStats: {},
+  setCombatStats: (combatStats) => set({combatStats}),
   isLoading: false,
   setIsLoading: (isLoading) => set({isLoading}),
   isConnecting: false,
   navigation: DEFAULT_NAVIGATION,
   setNavigation: (navigation) => set({navigation}),
   server_ip: DEFAULT_SERVER_IP,
+  setServerIp: (server_ip) => set({server_ip}),
   storage_path: DEFAULT_STORAGE_PATH,
+  setStoragePath: (storage_path) => set({storage_path}),
   embedded: EMBEDDED,
   game_state: {},
   setGameState: (gameState) => set({game_state: gameState}),
@@ -116,6 +120,7 @@ function App(props) {
   const uuid = useStore((state) => state.uuid);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
+  const setCombatStats = useStore((state) => state.setCombatStats);
   const embedded = useStore((state) => state.embedded);
   const game_state = useStore((state) => state.game_state);
   const setGameState = useStore((state) => state.setGameState);
@@ -162,7 +167,6 @@ function App(props) {
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-
       /*
       ("level-up-ready", "LevelUpReady"),
         ("level-up-complete", "LevelUpComplete"),
@@ -172,25 +176,66 @@ function App(props) {
         ("inventory-update", "InventoryUpdate"),
        */
 
-
       const gameEvents = await getGameEvents(server_ip, uuid);
+
+      console.log("GAME_EVENT:", gameEvents.event)
+
       if (gameEvents && gameEvents.event) {
         if(gameEvents.event === 'encounter-start'){
+          const combatStats = {
+            "encounter": 6,
+            "chance_of_success_base": 40,
+          }
+          setCombatStats(combatStats)
           setCombatMode(true)
         } else if(gameEvents.event === 'encounter-victory'){
+          const combatStats = {
+            "encounter": 6,
+            "modifiers": [
+              {
+                "item": "jewel_dagger",
+                "modifier": 32,
+              },
+            ],
+            "chance_of_success_base": 40,
+            "chance_of_success_total": 72,
+            "result": 82,
+          }
+          setCombatStats(combatStats)
           setCombatMode(false)
         } else if(gameEvents.event === 'encounter-loss'){
+          const combatStats = {
+            "encounter": 6,
+            "modifiers": [
+              {
+                "item": "jewel_dagger",
+                "modifier": 32,
+              },
+            ],
+            "chance_of_success_base": 40,
+            "chance_of_success_total": 72,
+            "result": 12,
+          }
+          setCombatStats(combatStats)
           setCombatMode(false)
         }else {
           toast.success("EVENT: " + gameEvents.event);
-        } 
+        }
+
+        // if(game_state && game_state.environment_id) {
+        //   const environment = await getGameEnvironment(server_ip, game_state.environment_id);
+        //   console.log("EVENT Environment:", environment);
+        // }
+        // if (environment && environment.game_info.environment.aesthetic.image) {
+        //   setCurrentBgImage(environment.game_info.environment.aesthetic.image);
+        // }
       }
     }, 3000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [server_ip, uuid]);
+  }, []);
 
   const setGameMap = useStore((state) => state.setGameMap);
 
@@ -246,7 +291,8 @@ function App(props) {
 
               const encounter = response?.action?.encounter;
               if (encounter) {
-                toast.warn("Encounter: " + JSON.stringify(encounter));
+                //toast.warn("Encounter: " + JSON.stringify(encounter));
+                console.log('ENCOUNTER SET FROM MAIN:', encounter.aesthetic.image);
                 setCurrentBgImage(encounter.aesthetic.image);
               } else {
                 const gameState = await getGameState(server_ip, uuid);

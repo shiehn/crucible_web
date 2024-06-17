@@ -16,6 +16,16 @@ function AudioInput() {
   const server_ip = useStore((state) => state.server_ip);
   const addMessage = useStore((state) => state.addMessage);
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
+  const currentBgImage = useStore((state) => state.currentBgImage);
+  const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+  const game_state = useStore((state) => state.game_state);
+  const setGameState = useStore((state) => state.setGameState);
+  const isLoading = useStore((state) => state.isLoading);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  /*
+  currentBgImage: null,
+  setCurrentBgImage: (image) => set({currentBgImage: image}),
+   */
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -35,9 +45,11 @@ function AudioInput() {
     }
 
     try {
-      useStore.setState({ isLoading: true });
+      //useStore.setState({ isLoading: true });
+      setIsLoading(true);
       let response = await sendGameEngineQuery(copiedString, uuid, server_ip);
-      useStore.setState({ isLoading: false });
+      //useStore.setState({ isLoading: false });
+      setIsLoading(false);
 
       console.log("ResponseData:", response);
 
@@ -48,18 +60,22 @@ function AudioInput() {
 
       let encounter = response?.action?.encounter;
       if (encounter) {
-        toast.warn("Encounter: " + JSON.stringify(encounter));
-        useStore.setState({ currentBgImage: encounter.aesthetic.image });
+        // toast.warn("Encounter: " + JSON.stringify(encounter));
+        // useStore.setState({ currentBgImage: encounter.aesthetic.image });
+        console.log('ENCOUNTER SET FROM AudioInput:', encounter.aesthetic.image);
+        setCurrentBgImage(encounter.aesthetic.image);
       } else {
         //AFTER EVERY MESSAGE, GET THE GAME STATE, in case it has changed
         const gameState = await getGameState(server_ip, uuid);
         if (gameState) {
-          useStore.setState({ game_state: gameState });
+          //useStore.setState({ game_state: gameState });
+          setGameState(gameState);
 
           const environment = await getGameEnvironment(server_ip, gameState.environment_id);
           console.log("XXX Environment:", environment);
           if (environment && environment.game_info.environment.aesthetic.image) {
-            useStore.setState({ currentBgImage: environment.game_info.environment.aesthetic.image });
+            //useStore.setState({ currentBgImage: environment.game_info.environment.aesthetic.image });
+            setCurrentBgImage(environment.game_info.environment.aesthetic.image);
           }
         }
       }
