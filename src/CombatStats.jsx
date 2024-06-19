@@ -1,71 +1,108 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const CombatStats = ({ combatMode, combatStats }) => {
   const baseBarRef = useRef(null);
   const totalBarRef = useRef(null);
+  const modBarRef = useRef(null);
+  const modBarNameRef = useRef(null);
+  const resultRef = useRef(null);
+  const [result, setResult] = useState(0);
+  const [pulse, setPulse] = useState(false);
+  const [bgColor, setBgColor] = useState('bg-gray-500');
 
   useEffect(() => {
     if (combatMode && baseBarRef.current) {
-
-      // Trigger reflow to restart the animation
       baseBarRef.current.style.width = '0';
-
       requestAnimationFrame(() => {
         baseBarRef.current.style.width = `${combatStats.chance_of_success_base}%`;
       });
     }
 
     if (combatMode && totalBarRef.current) {
-
-      // Trigger reflow to restart the animation
       totalBarRef.current.style.width = '0';
-
       requestAnimationFrame(() => {
         totalBarRef.current.style.width = `${combatStats.chance_of_success_total}%`;
       });
     }
+
+    if (combatMode && modBarNameRef.current) {
+      modBarNameRef.current.innerText = `+ ${combatStats?.modifiers?.[0].item}`;
+    }
+
+    if (combatMode && modBarRef.current) {
+      modBarRef.current.style.width = '0';
+      requestAnimationFrame(() => {
+        modBarRef.current.style.width = `${combatStats?.modifiers?.[0].modifier}%`;
+      });
+    }
+
+    if (combatMode && resultRef.current) {
+      setTimeout(() => {
+        let currentResult = 0;
+        const increment = Math.ceil(combatStats.result / 20);
+        const interval = setInterval(() => {
+          currentResult += increment;
+          if (currentResult >= combatStats.result) {
+            currentResult = combatStats.result;
+            clearInterval(interval);
+            setTimeout(() => {
+              setPulse(true);
+              setBgColor(combatStats.phase === 'encounter-victory' ? 'bg-green-500' : 'bg-red-500');
+            }, 200);
+          }
+          setResult(currentResult);
+        }, 100);
+      }, 2000);
+    }
   }, [combatMode, combatStats]);
 
   return (
-    <div
-      className="combat-stats flex flex-col justify-center  absolute border border-white rounded bg-opacity-50 bg-gray-500 bottom-52 right-12 p-4">
+    <div className="combat-stats flex flex-col justify-center absolute border border-white rounded bg-opacity-50 bg-gray-500 bottom-52 right-12 p-4">
       <div className="text-white m-2">
         Encounter Level: <span className="font-bold text-2xl">{combatStats.encounter}</span>
         <span className="text-xs"> /10</span>
       </div>
 
-      <div className="w-full bg-gray-700 rounded-full h-6 m-2 relative">
+      <div className="w-full bg-red-800 rounded-full h-6 m-2 relative">
         <div className="absolute inset-0 flex items-center justify-center text-white">
           Base Success %
         </div>
         <div
           ref={baseBarRef}
-          className="bg-blue-500 h-6 rounded-full animate-bar"
+          className="bg-green-600 h-6 rounded-full animate-bar"
         ></div>
       </div>
 
-      {(combatStats?.phase && combatStats.phase !== 'encounter-start') &&  (
-        <div className="text-white m-2">
-          Mods:
-          <ul>
-            {combatStats?.modifiers?.map((mod, index) => (
-              <li key={index} className="text-white">
-                - {mod.item}: {mod.modifier}
-              </li>
-            ))}
-          </ul>
+      {(combatStats?.phase && combatStats.phase !== 'encounter-start') && (
+        <div className="w-full bg-red-800 rounded-full h-6 m-2 relative">
+          <div ref={modBarNameRef} className="absolute inset-0 flex items-center justify-center text-white">
+          </div>
+          <div
+            ref={modBarRef}
+            className="bg-green-600 h-6 rounded-full animate-bar"
+          ></div>
         </div>
       )}
 
-      {(combatStats?.phase && combatStats.phase !== 'encounter-start') &&  (
-        <div className="w-full bg-gray-700 rounded-full h-6 m-2 relative">
+      {(combatStats?.phase && combatStats.phase !== 'encounter-start') && (
+        <div className="w-full bg-red-800 rounded-full h-6 m-2 relative">
           <div className="absolute inset-0 flex items-center justify-center text-white">
             Total Success %
           </div>
           <div
             ref={totalBarRef}
-            className="bg-green-500 h-6 rounded-full animate-bar"
+            className="bg-green-600 h-6 rounded-full animate-bar"
           ></div>
+        </div>
+      )}
+
+      {(combatStats?.phase && (combatStats.phase === 'encounter-victory' || combatStats.phase === 'encounter-loss')) && (
+        <div className="w-full flex items-center justify-center relative">
+          <div
+            ref={resultRef}
+            className={`w-20 h-20 rounded-full h-6 m-2 flex items-center justify-center relative ${bgColor} ${pulse ? 'animate-pulse' : ''}`}>
+            <div className="text-white text-3xl">{result}%</div>
+          </div>
         </div>
       )}
     </div>

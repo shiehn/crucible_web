@@ -198,6 +198,9 @@ function App(props) {
 
       if (gameEvents && gameEvents.event) {
         if(gameEvents.event === 'encounter-start'){
+
+          console.log('BRO_DAWG', gameEvents)
+
           const combatStats = {
             "phase": "encounter-start",
             "encounter": 6,
@@ -206,6 +209,9 @@ function App(props) {
           setCombatStats(combatStats)
           setCombatMode(true)
         } else if(gameEvents.event === 'encounter-victory'){
+
+          console.log('BRO_DAWG', gameEvents)
+
           const combatStats = {
             "phase": "encounter-victory",
             "encounter": 6,
@@ -220,8 +226,11 @@ function App(props) {
             "result": 82,
           }
           setCombatStats(combatStats)
-          setCombatMode(false)
+          setCombatMode(true)
         } else if(gameEvents.event === 'encounter-loss'){
+
+          console.log('BRO_DAWG', gameEvents)
+
           const combatStats = {
             "phase": "encounter-loss",
             "encounter": 6,
@@ -236,7 +245,7 @@ function App(props) {
             "result": 12,
           }
           setCombatStats(combatStats)
-          setCombatMode(false)
+          setCombatMode(true)
         }else {
           toast.success("EVENT: " + gameEvents.event);
         }
