@@ -7,7 +7,7 @@ import {IoMdSettings} from "react-icons/io";
 function UUIDButton({ setUUID }) {
   useEffect(() => {
     // Check local storage for a saved token
-    const savedUUID = localStorage.getItem('token');
+    const savedUUID = localStorage.getItem('sas_user_id');
     if (savedUUID) {
       setUUID(savedUUID);
     } else {

@@ -5,13 +5,22 @@ const CombatStats = ({ combatMode, combatStats }) => {
   const totalBarRef = useRef(null);
 
   useEffect(() => {
-    if (combatMode && baseBarRef.current && totalBarRef.current) {
+    if (combatMode && baseBarRef.current) {
+
       // Trigger reflow to restart the animation
       baseBarRef.current.style.width = '0';
-      totalBarRef.current.style.width = '0';
 
       requestAnimationFrame(() => {
         baseBarRef.current.style.width = `${combatStats.chance_of_success_base}%`;
+      });
+    }
+
+    if (combatMode && totalBarRef.current) {
+
+      // Trigger reflow to restart the animation
+      totalBarRef.current.style.width = '0';
+
+      requestAnimationFrame(() => {
         totalBarRef.current.style.width = `${combatStats.chance_of_success_total}%`;
       });
     }
@@ -35,28 +44,30 @@ const CombatStats = ({ combatMode, combatStats }) => {
         ></div>
       </div>
 
-
-      <div className="text-white m-2">
-        Mods:
-        <ul>
-          {combatStats.modifiers.map((mod, index) => (
-            <li key={index} className="text-white">
-              - {mod.item}: {mod.modifier}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-
-      <div className="w-full bg-gray-700 rounded-full h-6 m-2 relative">
-        <div className="absolute inset-0 flex items-center justify-center text-white">
-          Total Success %
+      {(combatStats?.phase && combatStats.phase !== 'encounter-start') &&  (
+        <div className="text-white m-2">
+          Mods:
+          <ul>
+            {combatStats?.modifiers?.map((mod, index) => (
+              <li key={index} className="text-white">
+                - {mod.item}: {mod.modifier}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div
-          ref={totalBarRef}
-          className="bg-green-500 h-6 rounded-full animate-bar"
-        ></div>
-      </div>
+      )}
+
+      {(combatStats?.phase && combatStats.phase !== 'encounter-start') &&  (
+        <div className="w-full bg-gray-700 rounded-full h-6 m-2 relative">
+          <div className="absolute inset-0 flex items-center justify-center text-white">
+            Total Success %
+          </div>
+          <div
+            ref={totalBarRef}
+            className="bg-green-500 h-6 rounded-full animate-bar"
+          ></div>
+        </div>
+      )}
     </div>
   );
 };

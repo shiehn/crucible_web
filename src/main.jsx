@@ -100,7 +100,19 @@ const useErrorStore = createHooks(errorStore);
 
 const serverIpFromLocalStorage = localStorage.getItem('server_ip' || DEFAULT_SERVER_IP);
 const storagePathFromLocalStorage = localStorage.getItem('storage_path' || DEFAULT_STORAGE_PATH);
-const savedUUID = localStorage.getItem('token');
+
+//localStorage.setItem('sas_user_id', '15afc625-9a7e-45d6-bc38-5bcc22700b52'); //HACK
+
+//localStorage.setItem('sas_user_id', '900906e0-d40b-417f-82bb-5a1524137e61');
+
+localStorage.setItem('sas_user_id', 'f7cd3174-7883-4f67-8dae-f7797dbb11cd');
+
+const savedUUID = localStorage.getItem('sas_user_id');
+
+//HACK
+if (savedUUID) {
+  store.setState({ uuid: savedUUID });
+}
 
 if (serverIpFromLocalStorage) {
   store.setState({ server_ip: serverIpFromLocalStorage });
@@ -110,14 +122,14 @@ if (storagePathFromLocalStorage) {
   store.setState({ storage_path: storagePathFromLocalStorage });
 }
 
-if (savedUUID) {
-  store.setState({ uuid: savedUUID });
-}
-
 function App(props) {
   const state = useStore((state) => state);
   const { error } = useErrorStore();
   const uuid = useStore((state) => state.uuid);
+
+  console.log('DUDE', uuid)
+
+  const setUUID = useStore((state) => state.setUUID);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
   const setCombatStats = useStore((state) => state.setCombatStats);
@@ -131,6 +143,10 @@ function App(props) {
   const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
   const setNavigation = useStore((state) => state.setNavigation);
   const navigation = useStore((state) => state.navigation);
+
+
+
+  //setUUID('15afc625-9a7e-45d6-bc38-5bcc22700b52');
 
   const querySentRef = useRef(false);
 
@@ -183,6 +199,7 @@ function App(props) {
       if (gameEvents && gameEvents.event) {
         if(gameEvents.event === 'encounter-start'){
           const combatStats = {
+            "phase": "encounter-start",
             "encounter": 6,
             "chance_of_success_base": 40,
           }
@@ -190,6 +207,7 @@ function App(props) {
           setCombatMode(true)
         } else if(gameEvents.event === 'encounter-victory'){
           const combatStats = {
+            "phase": "encounter-victory",
             "encounter": 6,
             "modifiers": [
               {
@@ -205,6 +223,7 @@ function App(props) {
           setCombatMode(false)
         } else if(gameEvents.event === 'encounter-loss'){
           const combatStats = {
+            "phase": "encounter-loss",
             "encounter": 6,
             "modifiers": [
               {
