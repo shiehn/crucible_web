@@ -127,8 +127,6 @@ function App(props) {
   const { error } = useErrorStore();
   const uuid = useStore((state) => state.uuid);
 
-  console.log('DUDE', uuid)
-
   const setUUID = useStore((state) => state.setUUID);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
@@ -194,57 +192,54 @@ function App(props) {
 
       const gameEvents = await getGameEvents(server_ip, uuid);
 
-      console.log("GAME_EVENT:", gameEvents.event)
+      //console.log("GAME_EVENT:", gameEvents.event)
 
       if (gameEvents && gameEvents.event) {
         if(gameEvents.event === 'encounter-start'){
 
-          console.log('BRO_DAWG', gameEvents)
+          //console.log('BRO_DAWG', gameEvents)
 
-          const combatStats = {
-            "phase": "encounter-start",
-            "encounter": 6,
-            "chance_of_success_base": 40,
-          }
-          setCombatStats(combatStats)
+          // const combatStats = {
+          //   "phase": "encounter-start",
+          //   "encounter": 6,
+          //   "chance_of_success_base": 40,
+          // }
+          setCombatStats(gameEvents.payload)
           setCombatMode(true)
         } else if(gameEvents.event === 'encounter-victory'){
-
-          console.log('BRO_DAWG', gameEvents)
-
-          const combatStats = {
-            "phase": "encounter-victory",
-            "encounter": 6,
-            "modifiers": [
-              {
-                "item": "jewel_dagger",
-                "modifier": 32,
-              },
-            ],
-            "chance_of_success_base": 40,
-            "chance_of_success_total": 72,
-            "result": 82,
-          }
-          setCombatStats(combatStats)
+          // const combatStats = {
+          //   "phase": "encounter-victory",
+          //   "encounter": 6,
+          //   "modifiers": [
+          //     {
+          //       "item": "jewel_dagger",
+          //       "modifier": 32,
+          //     },
+          //   ],
+          //   "chance_of_success_base": 40,
+          //   "chance_of_success_total": 72,
+          //   "result": 82,
+          // }
+          setCombatStats(gameEvents.payload)
           setCombatMode(true)
         } else if(gameEvents.event === 'encounter-loss'){
 
-          console.log('BRO_DAWG', gameEvents)
+          //console.log('BRO_DAWG', gameEvents)
 
-          const combatStats = {
-            "phase": "encounter-loss",
-            "encounter": 6,
-            "modifiers": [
-              {
-                "item": "jewel_dagger",
-                "modifier": 32,
-              },
-            ],
-            "chance_of_success_base": 40,
-            "chance_of_success_total": 72,
-            "result": 12,
-          }
-          setCombatStats(combatStats)
+          // const combatStats = {
+          //   "phase": "encounter-loss",
+          //   "encounter": 6,
+          //   "modifiers": [
+          //     {
+          //       "item": "jewel_dagger",
+          //       "modifier": 32,
+          //     },
+          //   ],
+          //   "chance_of_success_base": 40,
+          //   "chance_of_success_total": 72,
+          //   "result": 12,
+          // }
+          setCombatStats(gameEvents.payload)
           setCombatMode(true)
         }else {
           toast.success("EVENT: " + gameEvents.event);

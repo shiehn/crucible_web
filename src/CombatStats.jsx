@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {useStore} from "./main.jsx";
+import {getGameEnvironment} from "./api.js";
 
 const CombatStats = ({ combatMode, combatStats }) => {
   const baseBarRef = useRef(null);
@@ -9,6 +11,35 @@ const CombatStats = ({ combatMode, combatStats }) => {
   const [result, setResult] = useState(0);
   const [pulse, setPulse] = useState(false);
   const [bgColor, setBgColor] = useState('bg-gray-500');
+  const [finalMessage, setFinalMessage] = useState('');
+  const [finalPulse, setFinalPulse] = useState(false);
+  const [showFinalMessage, setShowFinalMessage] = useState(false);
+  const [finalBgColor, setFinalBgColor] = useState('');
+  const server_ip = useStore((state) => state.server_ip);
+  const gameState = useStore((state) => state.game_state);
+
+  const setCombatMode = useStore((state) => state.setCombatMode);
+  const setCombatStats = useStore((state) => state.setCombatStats);
+  const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+
+  const combatComplete = (outcome) => {
+    if (outcome === 'victory') {
+      setTimeout(async () => {
+        setCombatStats({});
+        setCombatMode(false);
+
+
+        //RESET BG IMAGE FROM COMBAT TO NORMAL
+        const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+        if (environment && environment.game_info.environment.aesthetic.image) {
+          setCurrentBgImage(environment.game_info.environment.aesthetic.image);
+        }
+
+
+      }, 4000); // 4000 milliseconds = 4 seconds
+    }
+  };
+
 
   useEffect(() => {
     if (combatMode && baseBarRef.current) {
@@ -47,7 +78,15 @@ const CombatStats = ({ combatMode, combatStats }) => {
             clearInterval(interval);
             setTimeout(() => {
               setPulse(true);
-              setBgColor(combatStats.phase === 'encounter-victory' ? 'bg-green-500' : 'bg-red-500');
+              const isVictory = combatStats.phase === 'encounter-victory';
+              setBgColor(isVictory ? 'bg-green-500' : 'bg-red-500');
+              setFinalBgColor(isVictory ? 'bg-green-500' : 'bg-red-500');
+              setTimeout(() => {
+                setShowFinalMessage(true);
+                setFinalMessage(isVictory ? 'VICTORY!' : 'LOSS :(');
+                setFinalPulse(true);
+                combatComplete(isVictory ? 'victory' : 'loss');
+              }, 200);
             }, 200);
           }
           setResult(currentResult);
@@ -100,9 +139,16 @@ const CombatStats = ({ combatMode, combatStats }) => {
         <div className="w-full flex items-center justify-center relative">
           <div
             ref={resultRef}
-            className={`w-20 h-20 rounded-full h-6 m-2 flex items-center justify-center relative ${bgColor} ${pulse ? 'animate-pulse' : ''}`}>
+            className={`w-20 h-20 rounded-full m-2 flex items-center justify-center relative ${bgColor} ${pulse ? 'animate-pulse' : ''}`}
+          >
             <div className="text-white text-3xl">{result}%</div>
           </div>
+        </div>
+      )}
+
+      {showFinalMessage && (
+        <div className={`w-full flex items-center justify-center relative text-3xl text-white rounded ${finalBgColor} ${finalPulse ? 'animate-pulse' : ''}`}>
+          {finalMessage}
         </div>
       )}
     </div>

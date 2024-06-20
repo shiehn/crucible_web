@@ -436,7 +436,6 @@ async function getGameEvents(server_ip, userId) {
     const response = await fetch(url);
 
     if (response.status === 404) {
-      console.log("dude");
       return {};
     }
 

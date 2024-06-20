@@ -37,9 +37,6 @@ function GamePortal({isVisible}) {
   //   "chance_of_success_total": 72,
   // }
 
-  useEffect(() => {
-    setBackgroundImage(game_state?.level)
-  }, [game_state?.level]);
 
   useEffect(() => {
     setBackgroundImage(currentBgImage)
