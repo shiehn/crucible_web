@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {useStore} from "./main.jsx";
-import {getGameEnvironment} from "./api.js";
+import { useStore } from './main.jsx';
+import { getGameEnvironment } from './api.js';
 
 const CombatStats = ({ combatMode, combatStats }) => {
   const baseBarRef = useRef(null);
@@ -28,18 +28,14 @@ const CombatStats = ({ combatMode, combatStats }) => {
         setCombatStats({});
         setCombatMode(false);
 
-
-        //RESET BG IMAGE FROM COMBAT TO NORMAL
+        // RESET BG IMAGE FROM COMBAT TO NORMAL
         const environment = await getGameEnvironment(server_ip, gameState.environment_id);
         if (environment && environment.game_info.environment.aesthetic.image) {
           setCurrentBgImage(environment.game_info.environment.aesthetic.image);
         }
-
-
       }, 4000); // 4000 milliseconds = 4 seconds
     }
   };
-
 
   useEffect(() => {
     if (combatMode && baseBarRef.current) {
@@ -57,7 +53,9 @@ const CombatStats = ({ combatMode, combatStats }) => {
     }
 
     if (combatMode && modBarNameRef.current) {
-      modBarNameRef.current.innerText = `+ ${combatStats?.modifiers?.[0].item}`;
+      const modifierText = combatStats?.modifiers?.[0].item || '';
+      const truncatedText = modifierText.length > 8 ? `${modifierText.substring(0, 8)}...` : modifierText;
+      modBarNameRef.current.innerText = `+ ${truncatedText}`;
     }
 
     if (combatMode && modBarRef.current) {
@@ -112,10 +110,9 @@ const CombatStats = ({ combatMode, combatStats }) => {
         ></div>
       </div>
 
-      {(combatStats?.phase && combatStats.phase !== 'encounter-start') && (
+      {combatStats?.phase && combatStats.phase !== 'encounter-start' && (
         <div className="w-full bg-red-800 rounded-full h-6 m-2 relative">
-          <div ref={modBarNameRef} className="absolute inset-0 flex items-center justify-center text-white">
-          </div>
+          <div ref={modBarNameRef} className="absolute inset-0 flex items-center justify-center text-white"></div>
           <div
             ref={modBarRef}
             className="bg-green-600 h-6 rounded-full animate-bar"
@@ -123,7 +120,7 @@ const CombatStats = ({ combatMode, combatStats }) => {
         </div>
       )}
 
-      {(combatStats?.phase && combatStats.phase !== 'encounter-start') && (
+      {combatStats?.phase && combatStats.phase !== 'encounter-start' && (
         <div className="w-full bg-red-800 rounded-full h-6 m-2 relative">
           <div className="absolute inset-0 flex items-center justify-center text-white">
             Total Success %
@@ -135,11 +132,13 @@ const CombatStats = ({ combatMode, combatStats }) => {
         </div>
       )}
 
-      {(combatStats?.phase && (combatStats.phase === 'encounter-victory' || combatStats.phase === 'encounter-loss')) && (
+      {combatStats?.phase && (combatStats.phase === 'encounter-victory' || combatStats.phase === 'encounter-loss') && (
         <div className="w-full flex items-center justify-center relative">
           <div
             ref={resultRef}
-            className={`w-20 h-20 rounded-full m-2 flex items-center justify-center relative ${bgColor} ${pulse ? 'animate-pulse' : ''}`}
+            className={`w-20 h-20 rounded-full m-2 flex items-center justify-center relative ${bgColor} ${
+              pulse ? 'animate-pulse' : ''
+            }`}
           >
             <div className="text-white text-3xl">{result}%</div>
           </div>
@@ -147,7 +146,11 @@ const CombatStats = ({ combatMode, combatStats }) => {
       )}
 
       {showFinalMessage && (
-        <div className={`w-full flex items-center justify-center relative text-3xl text-white rounded ${finalBgColor} ${finalPulse ? 'animate-pulse' : ''}`}>
+        <div
+          className={`w-full flex items-center justify-center relative text-3xl text-white rounded ${finalBgColor} ${
+            finalPulse ? 'animate-pulse' : ''
+          }`}
+        >
           {finalMessage}
         </div>
       )}

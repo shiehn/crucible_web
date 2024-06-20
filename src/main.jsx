@@ -192,9 +192,12 @@ function App(props) {
 
       const gameEvents = await getGameEvents(server_ip, uuid);
 
-      //console.log("GAME_EVENT:", gameEvents.event)
+
 
       if (gameEvents && gameEvents.event) {
+
+        console.log("GAME_EVENT:", gameEvents)
+
         if(gameEvents.event === 'encounter-start'){
 
           //console.log('BRO_DAWG', gameEvents)
