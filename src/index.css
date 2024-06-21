@@ -47,3 +47,23 @@ COMBAT STATS ANIMATION CODE START
 /*
 COMBAT STATS ANIMATION CODE END
  */
+
+
+/* AUDIO CONTROL CSS START */
+.pulse-red {
+  animation: pulse-red 1s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    color: red;
+  }
+  50% {
+    color: darkred;
+  }
+  100% {
+    color: red;
+  }
+}
+
+/* Audio Control CSS STOP */

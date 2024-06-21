@@ -26,6 +26,7 @@ export const EMBEDDED = 'web';
 export const store = createStore((set) => ({
   messageId: null,
   uuid: null, //master_token
+  setUUID: (uuid) => set({ uuid }),
   connection_token: null, //connection_token
   bpm: 0,
   sampleRate: 0,
@@ -103,9 +104,9 @@ const storagePathFromLocalStorage = localStorage.getItem('storage_path' || DEFAU
 
 //localStorage.setItem('sas_user_id', '15afc625-9a7e-45d6-bc38-5bcc22700b52'); //HACK
 
-//localStorage.setItem('sas_user_id', '900906e0-d40b-417f-82bb-5a1524137e61');
 
-localStorage.setItem('sas_user_id', 'f7cd3174-7883-4f67-8dae-f7797dbb11cd');
+
+//localStorage.setItem('sas_user_id', 'f7cd3174-7883-4f67-8dae-f7797dbb11cd');
 
 const savedUUID = localStorage.getItem('sas_user_id');
 
@@ -308,7 +309,22 @@ function App(props) {
 
             try {
               setIsLoading(true);
-              const response = await sendGameEngineQuery("What do I see when I look around?", uuid, server_ip);
+
+              const defaultQueries = [
+                "What do I see when I look around?",
+                "Describe my surroundings.",
+                "What is around me?",
+                "What do I see?",
+                "What is in my vicinity?",
+                "What is in my immediate area?",
+                "Tell me about my current location.",
+                "What is nearby?",
+                "Describe my current environment.",
+              ]
+
+              const randomDefaultQuery = defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
+
+              const response = await sendGameEngineQuery(randomDefaultQuery, uuid, server_ip);
               setIsLoading(false);
 
               const logs = response?.response;

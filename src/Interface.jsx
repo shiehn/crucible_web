@@ -226,6 +226,9 @@ export default function Interface(props) {
             <LoadingLevel isVisible={true}/>
           )}
         </div>
+
+
+
       </div>
       {/* End of Section between Nav Bar and Action Bar */}
 

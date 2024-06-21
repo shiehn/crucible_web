@@ -1,24 +1,43 @@
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
 import {createGameState, deleteGameState, getConnectionMappings, getGameState, renderGameAssets} from "./api.js";
+import {Bars} from "react-loader-spinner";
 
 
 function LoadingLevel({isVisible}) {
 
   const {game_setting_and_lore, game_art_style, uuid, connected, server_ip, storage_path, open_ai_key} = useStore();
 
+  // const setIsLoading = useStore((state) => state.setIsLoading);
+
+
   useEffect(() => {
-    if (isVisible) {
-      //perform action on show
-    }
+
   }, [isVisible, uuid]);
 
 
   return (
     <div className="w-full h-full p-4 text-sas-text-grey">
-      <div className="flex justify-end w-full border-b-2 border-gray-200 mb-4">
+      <div className="flex justify-end w-full border-b-2 border-gray-200 mt-12 mb-4">
         <h1 className="w-full font-bold">Loading Level</h1>
-        <h1>Generating New Level.  One sec ...</h1>
+      </div>
+
+      <div className="p-2">
+        <h1>Generating a new level. This can take time ...</h1>
+      </div>
+
+      <div
+        className="absolute h-[360px] w-full top-18 left-0 right-0 bottom-8 flex items-center justify-center z-50">
+        {/* Loading animation */}
+        <Bars
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="bars-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
       </div>
     </div>
   );

@@ -51,14 +51,14 @@ function CreateLevel({ isVisible }) {
     localStorage.setItem('game_art_style', value);
   }
 
-  const handleReset = () => {
-    // Clear the local storage
-    localStorage.clear();
-    setServerIp(DEFAULT_SERVER_IP);
-    setOpenAIKey('');
-    setGameSettingAndLore('');
-    setGameArtStyle('');
-  };
+  // const handleReset = () => {
+  //   // Clear the local storage
+  //   localStorage.clear();
+  //   setServerIp(DEFAULT_SERVER_IP);
+  //   setOpenAIKey('');
+  //   setGameSettingAndLore('');
+  //   setGameArtStyle('');
+  // };
 
   const createNewGame = async () => {
     const generationResponse = await generateLevelMap(server_ip, uuid, open_ai_key);
@@ -67,32 +67,30 @@ function CreateLevel({ isVisible }) {
 
   return (
     <div className="w-full h-full p-4 text-sas-text-grey">
-      <div className="flex justify-end w-full border-b-2 border-gray-200 mb-4">
+      <div className="flex justify-end w-full border-b-2 border-gray-200 mt-12 mb-4">
         <h1 className="w-full font-bold">GENERATE LEVEL</h1>
-        <span
-          className="text-xs text-sas-green-800 hover:text-red-700 hover:cursor-pointer"
-          onClick={handleReset}>
-          reset
-        </span>
+
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="open_ai_key" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
-        <input
-          type={isKeyVisible ? "text" : "password"}
-          id="open_ai_key"
-          name="open_ai_key"
-          value={open_ai_key}
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => handleOpenAIKey(e.target.value)}
-        />
-        <button
-          type="button"
-          className="ml-2"
-          onClick={() => setIsKeyVisible(!isKeyVisible)}
-        >
-          {isKeyVisible ? 'Hide' : 'Show'}
-        </button>
+        <div className="w-2/3 flex items-center">
+          <input
+            type={isKeyVisible ? "text" : "password"}
+            id="open_ai_key"
+            name="open_ai_key"
+            value={open_ai_key} // Use open_ai_key from the global state
+            className="w-full border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
+            onChange={(e) => handleOpenAIKey(e.target.value)}
+          />
+          <button
+            type="button"
+            className="ml-2 h-8 border-2 border-gray-300 rounded text-xs bg-sas-background-light text-sas-text-grey px-2"
+            onClick={() => setIsKeyVisible(!isKeyVisible)}
+          >
+            {isKeyVisible ? 'Hide' : 'Show'}
+          </button>
+        </div>
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">

@@ -101,8 +101,12 @@ function Settings({ isVisible, setUUID }) {
         </span>
       </div>
 
-      <UUIDButton setUUID={setUUID}/>
-      <div>{uuid}</div>
+      <div className="w-full text-sm flex mb-4 items-center">
+        <label htmlFor="user_id" className="w-1/3 text-left pr-2">USER ID:</label>
+        <UUIDButton name="user_id" setUUID={setUUID}/>
+      </div>
+
+
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>
@@ -124,21 +128,23 @@ function Settings({ isVisible, setUUID }) {
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="open_ai_key" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
-        <input
-          type={isKeyVisible ? "text" : "password"}
-          id="open_ai_key"
-          name="open_ai_key"
-          value={open_ai_key} // Use storage_path from the global state
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => handleOpenAIKey(e.target.value)}
-        />
-        <button
-          type="button"
-          className="ml-2"
-          onClick={() => setIsKeyVisible(!isKeyVisible)}
-        >
-          {isKeyVisible ? 'Hide' : 'Show'}
-        </button>
+        <div className="w-2/3 flex items-center">
+          <input
+            type={isKeyVisible ? "text" : "password"}
+            id="open_ai_key"
+            name="open_ai_key"
+            value={open_ai_key} // Use open_ai_key from the global state
+            className="w-full border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
+            onChange={(e) => handleOpenAIKey(e.target.value)}
+          />
+          <button
+            type="button"
+            className="ml-2 h-8 border-2 border-gray-300 rounded text-xs bg-sas-background-light text-sas-text-grey px-2"
+            onClick={() => setIsKeyVisible(!isKeyVisible)}
+          >
+            {isKeyVisible ? 'Hide' : 'Show'}
+          </button>
+        </div>
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
@@ -146,7 +152,7 @@ function Settings({ isVisible, setUUID }) {
         <textarea
           id="game_setting_and_lore"
           name="game_setting_and_lore"
-          value={game_setting_and_lore} // Use storage_path from the global state
+          value={game_setting_and_lore} // Use game_setting_and_lore from the global state
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => handleGameSettingAndLore(e.target.value)}
         />
@@ -157,7 +163,7 @@ function Settings({ isVisible, setUUID }) {
         <textarea
           id="game_art_style"
           name="game_art_style"
-          value={game_art_style} // Use storage_path from the global state
+          value={game_art_style} // Use game_art_style from the global state
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
           onChange={(e) => handleGameArtStyle(e.target.value)}
         />

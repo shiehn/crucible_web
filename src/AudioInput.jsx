@@ -89,7 +89,7 @@ function AudioInput() {
   return (
     <div className="flex justify-between items-end w-full h-1/2 mt-2">
       <input
-        className="w-[80%] h-full bg-sas-background-dark border text-sas-text-grey rounded border-sas-text-grey"
+        className="w-[80%] h-full px-4 bg-sas-background-dark border text-sas-text-grey rounded border-sas-text-grey"
         value={text}
         onChange={handleChange}
         onKeyDown={(e) => {
