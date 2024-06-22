@@ -17,7 +17,6 @@ import MapInventoryToggle from "./MapInventoryToggle.jsx";
 import AudioInput from "./AudioInput.jsx";
 
 function ActionBar({}) {
-  const {connection_token,uuid, connected, currentOutputView, game_state, server_ip} = useStore();
 
   return (
     <div

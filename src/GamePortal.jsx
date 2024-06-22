@@ -15,15 +15,17 @@ import {Bars} from "react-loader-spinner"; // Import the new function
 import CombatStats from "./CombatStats.jsx";
 
 function GamePortal({isVisible}) {
-  const {embedded, uuid, connected, currentBgImage, game_state, msgHistory, results, server_ip} = useStore();
+  const results = useStore((state) => state.results);
   const [typingTimeout, setTypingTimeout] = useState(null); // State for the typing timeout
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
 
+
+  const uuid = useStore((state) => state.uuid);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
-
   const combatStats = useStore((state) => state.combatStats);
-
+  const currentBgImage = useStore((state) => state.currentBgImage);
+  const server_ip = useStore((state) => state.server_ip);
 
   // const combatStats = {
   //   "encounter": 6,

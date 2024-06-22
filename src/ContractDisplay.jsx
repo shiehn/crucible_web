@@ -77,7 +77,7 @@ function createTestFile() {
 
 async function uploadFileToGCP(file, signedUrl) {
   try {
-    const {storage_path} = useStore();
+    const storage_path = useStore(state => state.storage_path);
     const response = await fetch(signedUrl, {
       method: 'PUT',      // Signed URL is generated for a PUT request
       body: file,         // The file to be uploaded
@@ -102,7 +102,8 @@ async function uploadFileToGCP(file, signedUrl) {
 async function getSignedUrl(file) {
 
   const tempFileToUpload = createTestFile();
-  const {connection_token, server_ip} = useStore();
+  const server_ip = useStore(state => state.server_ip);
+  const connection_token = useStore(state => state.connection_token);
 
   // Fetch the signed URL from your DRF API with the custom token in the header
   const response = await fetch(API_URLS.STORAGE_GET_SIGNED_URL(server_ip,file.name, connection_token), {

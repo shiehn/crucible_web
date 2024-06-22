@@ -14,6 +14,7 @@ function AudioInput() {
 
   const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
+  const open_ai_key = useStore((state) => state.open_ai_key);
   const addMessage = useStore((state) => state.addMessage);
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
   const currentBgImage = useStore((state) => state.currentBgImage);
@@ -47,7 +48,7 @@ function AudioInput() {
     try {
       //useStore.setState({ isLoading: true });
       setIsLoading(true);
-      let response = await sendGameEngineQuery(copiedString, uuid, server_ip);
+      let response = await sendGameEngineQuery(copiedString, uuid, server_ip, open_ai_key);
       //useStore.setState({ isLoading: false });
       setIsLoading(false);
 

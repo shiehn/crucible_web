@@ -218,7 +218,7 @@ async function isTokenConnectedToPlugin(server_ip, connection_token) {
   }
 }
 
-async function sendGameEngineQuery(text, master_token, server_ip) {
+async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
   try {
     const response = await fetch(API_URLS.GAME_ENGINE_QUERY(server_ip), {
       method: "POST",
@@ -227,7 +227,8 @@ async function sendGameEngineQuery(text, master_token, server_ip) {
       },
       body: JSON.stringify({
         "token": master_token,
-        "query": text
+        "query": text,
+        "api_key": api_key,
       }), // Send the text as JSON
     });
 
@@ -305,7 +306,9 @@ async function generateLevelMap(server_ip, user_id, open_ai_key) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({
+        "api_key": open_ai_key
+      }),
     });
 
     if (!response.ok) {

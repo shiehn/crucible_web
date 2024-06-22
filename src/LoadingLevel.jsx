@@ -6,7 +6,8 @@ import {Bars} from "react-loader-spinner";
 
 function LoadingLevel({isVisible}) {
 
-  const {game_setting_and_lore, game_art_style, uuid, connected, server_ip, storage_path, open_ai_key} = useStore();
+
+  const uuid = useStore((state) => state.uuid);
 
   // const setIsLoading = useStore((state) => state.setIsLoading);
 

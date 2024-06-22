@@ -4,20 +4,20 @@ import {store, useStore} from './main.jsx';
 import { MdRefresh } from "react-icons/md";
 import {IoMdSettings} from "react-icons/io";
 
-function UUIDButton({ setUUID }) {
+function UUIDButton() {
 
   const uuid = useStore((state) => state.uuid);
-  //const setUUID = useStore((state) => state.setUUID);
+  const setUUID = useStore((state) => state.setUUID);
 
-  useEffect(() => {
-    // Check local storage for a saved token
-    const savedUUID = localStorage.getItem('sas_user_id');
-    if (savedUUID) {
-      setUUID(savedUUID);
-    } else {
-      generateAndSaveUUID();
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Check local storage for a saved token
+  //   const savedUUID = localStorage.getItem('sas_user_id');
+  //   if (savedUUID) {
+  //     setUUID(savedUUID);
+  //   } else {
+  //     generateAndSaveUUID();
+  //   }
+  // }, []);
 
   const generateAndSaveUUID = () => {
     resetState();

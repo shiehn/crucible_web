@@ -3,7 +3,7 @@ import Graph from 'react-graph-vis';
 import { useStore } from './main.jsx';
 
 function MapDisplay() {
-  const { game_state } = useStore(); // Get the game_map and game_state data from the store
+  const game_state = useStore((state) => state.game_state);
 
   const game_map = useStore((state) => state.game_map);
 

@@ -6,7 +6,7 @@ import { createGameState, deleteGameState, getGameState } from "./api.js";
 import { toast } from "react-toastify";
 import UUIDButton from "./UUIDButton.jsx";
 
-function Settings({ isVisible, setUUID }) {
+function Settings({ isVisible }) {
   const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
   const game_art_style = useStore((state) => state.game_art_style);
   const uuid = useStore((state) => state.uuid);
@@ -103,7 +103,7 @@ function Settings({ isVisible, setUUID }) {
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="user_id" className="w-1/3 text-left pr-2">USER ID:</label>
-        <UUIDButton name="user_id" setUUID={setUUID}/>
+        <UUIDButton name="user_id" />
       </div>
 
 

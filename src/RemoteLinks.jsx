@@ -3,7 +3,11 @@ import {useStore} from "./main.jsx";
 import {API_URLS} from "./apiUrls.js";
 
 function RemoteLinks({isVisible}) {
-  const {embedded, uuid, connected, server_ip} = useStore();
+  const {embedded ,connected} = useStore();
+
+  const uuid = useStore((state) => state.uuid);
+  const server_ip = useStore((state) => state.server_ip);
+
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

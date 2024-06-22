@@ -25,7 +25,7 @@ function MediaTypeDisplay({ url }) {
   }
 }
 function ResultsDisplay() {
-  const {results} = useStore();
+  const results = useStore((state) => state.results);
 
   if (!results || !results.response || !results.response.files) {
     return <div className="w-full h-full p-2 media-container">No media found.</div>;
