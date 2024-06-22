@@ -176,75 +176,18 @@ function App(props) {
     };
   }, [server_ip, uuid, setNavigation]);
 
-  // useEffect(() => {
-  //   console.log('NAVIGATING TO GAME PORTAL', navigation);
-  // }, [navigation]);
-
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      /*
-      ("level-up-ready", "LevelUpReady"),
-        ("level-up-complete", "LevelUpComplete"),
-        ("encounter-start", "EncounterStart"),
-        ("encounter-victory", "EncounterVictory"),
-        ("encounter-loss", "EncounterLoss"),
-        ("inventory-update", "InventoryUpdate"),
-       */
-
       const gameEvents = await getGameEvents(server_ip, uuid);
-
-
-
       if (gameEvents && gameEvents.event) {
-
-        console.log("GAME_EVENT:", gameEvents)
-
-        if(gameEvents.event === 'encounter-start'){
-
-          //console.log('BRO_DAWG', gameEvents)
-
-          // const combatStats = {
-          //   "phase": "encounter-start",
-          //   "encounter": 6,
-          //   "chance_of_success_base": 40,
-          // }
+        if(gameEvents.event === 'encounter-start'
+        || gameEvents.event === 'encounter-victory'
+        || gameEvents.event === 'encounter-loss'
+        ){
           setCombatStats(gameEvents.payload)
           setCombatMode(true)
-        } else if(gameEvents.event === 'encounter-victory'){
-          // const combatStats = {
-          //   "phase": "encounter-victory",
-          //   "encounter": 6,
-          //   "modifiers": [
-          //     {
-          //       "item": "jewel_dagger",
-          //       "modifier": 32,
-          //     },
-          //   ],
-          //   "chance_of_success_base": 40,
-          //   "chance_of_success_total": 72,
-          //   "result": 82,
-          // }
-          setCombatStats(gameEvents.payload)
-          setCombatMode(true)
-        } else if(gameEvents.event === 'encounter-loss'){
-
-          //console.log('BRO_DAWG', gameEvents)
-
-          // const combatStats = {
-          //   "phase": "encounter-loss",
-          //   "encounter": 6,
-          //   "modifiers": [
-          //     {
-          //       "item": "jewel_dagger",
-          //       "modifier": 32,
-          //     },
-          //   ],
-          //   "chance_of_success_base": 40,
-          //   "chance_of_success_total": 72,
-          //   "result": 12,
-          // }
-          setCombatStats(gameEvents.payload)
-          setCombatMode(true)
+        } else if (gameEvents.event === 'level-up-complete') {
+          location.reload(); //TODO IDEALLY JUST LOAD NEW LEVEL not refresh
         }else {
           toast.success("EVENT: " + gameEvents.event);
         }
