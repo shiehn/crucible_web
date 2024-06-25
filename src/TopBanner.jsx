@@ -14,6 +14,8 @@ function TopBanner(props) {
   const gameState = useStore((state) => state.game_state);
   const setNavigation = useStore((state) => state.setNavigation);
   const navigation = useStore((state) => state.navigation);
+  const showSettings = useStore((state) => state.showSettings);
+  const setShowSettings = useStore((state) => state.setShowSettings);
 
 
   const handleClick = () => {
@@ -27,7 +29,7 @@ function TopBanner(props) {
       <div className="flex items-center h-8 overflow-hidden bg-sas-background-dark rounded p-2 ml-2 bg-opacity-50">
         <IoMdSettings
           className={`h-6 w-6 text-sas-text-grey hover:text-sas-green ${props.navigation === 'settings' ? 'text-sas-green' : ''}`}
-          onClick={() => setNavigation('settings')}
+          onClick={() => setShowSettings(!showSettings)}
         />
 
         <div

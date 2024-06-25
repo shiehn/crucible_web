@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import ReactDOM from 'react-dom/client';
 import Interface from './Interface.jsx';
 import createHooks from 'zustand';
 import createStore from 'zustand/vanilla';
 import './index.css';
-import { API_URLS } from './apiUrls';
-import { ToastContainer, toast } from 'react-toastify';
+import {API_URLS} from './apiUrls';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
 import {
@@ -26,7 +26,7 @@ export const EMBEDDED = 'web';
 export const store = createStore((set, get) => ({
   messageId: null,
   uuid: null, // master_token
-  setUUID: (uuid) => set({ uuid }),
+  setUUID: (uuid) => set({uuid}),
   connection_token: null, // connection_token
   bpm: 0,
   sampleRate: 0,
@@ -42,12 +42,12 @@ export const store = createStore((set, get) => ({
   incrementMsgHistoryIndex: () =>
     set((state) => {
       const newIndex = Math.min(state.msgHistoryIndex + 1, state.msgHistory.length - 1);
-      return { msgHistoryIndex: newIndex };
+      return {msgHistoryIndex: newIndex};
     }),
   decrementMsgHistoryIndex: () =>
     set((state) => {
       const newIndex = Math.max(state.msgHistoryIndex - 1, 0);
-      return { msgHistoryIndex: newIndex };
+      return {msgHistoryIndex: newIndex};
     }),
   getCurrentMsgHistoryItem: () => {
     const state = get();
@@ -57,60 +57,65 @@ export const store = createStore((set, get) => ({
   submitForm: false,
   dropTargetFileName: null,
   currentBgImage: null,
-  setCurrentBgImage: (image) => set({ currentBgImage: image }),
+  setCurrentBgImage: (image) => set({currentBgImage: image}),
   currentOutputView: 'show_map_component',
   combatMode: false,
-  setCombatMode: (combatMode) => set({ combatMode }),
+  setCombatMode: (combatMode) => set({combatMode}),
   combatStats: {},
-  setCombatStats: (combatStats) => set({ combatStats }),
+  setCombatStats: (combatStats) => set({combatStats}),
   isLoading: false,
-  setIsLoading: (isLoading) => set({ isLoading }),
+  setIsLoading: (isLoading) => set({isLoading}),
   isConnecting: false,
+  showSettings: false,
+  setShowSettings: (showSettings) => set({showSettings}),
   navigation: DEFAULT_NAVIGATION,
-  setNavigation: (navigation) => set({ navigation }),
+  setNavigation: (navigation) => set({navigation}),
   server_ip: DEFAULT_SERVER_IP,
-  setServerIp: (server_ip) => set({ server_ip }),
+  setServerIp: (server_ip) => set({server_ip}),
   storage_path: DEFAULT_STORAGE_PATH,
-  setStoragePath: (storage_path) => set({ storage_path }),
+  setStoragePath: (storage_path) => set({storage_path}),
   embedded: EMBEDDED,
   game_state: {},
-  setGameState: (gameState) => set({ game_state: gameState }),
+  setGameState: (gameState) => set({game_state: gameState}),
   game_map: {
     nodes: [],
     edges: [],
   },
-  setGameMap: (map) => set({ game_map: map }),
+  setGameMap: (map) => set({game_map: map}),
   game_map_old: {
     nodes: [],
     edges: [],
   },
   game_inventory: [],
   game_setting_and_lore: '',
-  setGameSettingAndLore: (game_setting_and_lore) => set({ game_setting_and_lore }),
+  setGameSettingAndLore: (game_setting_and_lore) => set({game_setting_and_lore}),
   game_art_style: '',
-  setGameArtStyle: (game_art_style) => set({ game_art_style }),
+  setGameArtStyle: (game_art_style) => set({game_art_style}),
   speechEnabled: false,
-  setSpeechEnabled: (speechEnabled) => set({ speechEnabled }),
+  setSpeechEnabled: (speechEnabled) => set({speechEnabled}),
   open_ai_key: 'placeholder_key',
-  setOpenAIKey: (open_ai_key) => set({ open_ai_key }),
+  setOpenAIKey: (open_ai_key) => set({open_ai_key}),
 }));
 export const useStore = createHooks(store);
 
-const errorStore = createStore(() => ({ error: null }));
+const errorStore = createStore(() => ({error: null}));
 const useErrorStore = createHooks(errorStore);
 
 function App(props) {
   const state = useStore((state) => state);
-  const { error } = useErrorStore();
+  const {error} = useErrorStore();
   const uuid = useStore((state) => state.uuid);
   const setUUID = useStore((state) => state.setUUID);
   const open_ai_key = useStore((state) => state.open_ai_key);
+  const setOpenAIKey = useStore((state) => state.setOpenAIKey);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
   const setCombatStats = useStore((state) => state.setCombatStats);
   const embedded = useStore((state) => state.embedded);
   const game_state = useStore((state) => state.game_state);
   const setGameState = useStore((state) => state.setGameState);
+  const setGameArtStyle = useStore((state) => state.setGameArtStyle);
+  const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
   const server_ip = useStore((state) => state.server_ip);
   const setServerIp = useStore((state) => state.setServerIp);
   const setIsLoading = useStore((state) => state.setIsLoading);
@@ -125,6 +130,23 @@ function App(props) {
   const querySentRef = useRef(false);
 
   useEffect(() => {
+    // Load values from local storage
+    const storedOpenAIKey = localStorage.getItem('open_ai_key');
+    const storedGameSettingAndLore = localStorage.getItem('game_setting_and_lore');
+    const storedGameArtStyle = localStorage.getItem('game_art_style');
+
+    if (storedOpenAIKey) {
+      setOpenAIKey(storedOpenAIKey);
+    }
+    if (storedGameSettingAndLore) {
+      setGameSettingAndLore(storedGameSettingAndLore);
+    }
+    if (storedGameArtStyle) {
+      setGameArtStyle(storedGameArtStyle);
+    }
+  }, []);
+
+  useEffect(() => {
     const savedUUID = localStorage.getItem('sas_user_id');
     if (savedUUID) {
       setUUID(savedUUID);
@@ -133,10 +155,10 @@ function App(props) {
     const serverIpFromLocalStorage = localStorage.getItem('server_ip');
     if (serverIpFromLocalStorage) {
       setServerIp(serverIpFromLocalStorage);
-      console.log('SIFLS1:', serverIpFromLocalStorage);
-      setTimeout(() => {
-        console.log('SIFLS2:', useStore.getState().server_ip);
-      }, 1000); // 1 second timeout
+      // console.log('SIFLS1:', serverIpFromLocalStorage);
+      // setTimeout(() => {
+      //   // console.log('SIFLS2:', useStore.getState().server_ip);
+      // }, 1000); // 1 second timeout
     }
 
     const storagePathFromLocalStorage = localStorage.getItem('storage_path') || DEFAULT_STORAGE_PATH;
@@ -157,7 +179,7 @@ function App(props) {
           setNavigation('game_portal');
         } else if (gqu.status === 'error') {
           toast.error("Error: " + gqu.error);
-        } else if (gqu.status === 'game_not_found'){
+        } else if (gqu.status === 'game_not_found') {
           toast.warn("game_not_found");
           setNavigation('settings');
         }
@@ -171,13 +193,13 @@ function App(props) {
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      console.log("FUCKING SERVER_IP", server_ip);
+      //console.log("FUCKING SERVER_IP", server_ip);
       const gameEvents = await getGameEvents(server_ip, uuid);
       if (gameEvents && gameEvents.event) {
-        if(gameEvents.event === 'encounter-start'
+        if (gameEvents.event === 'encounter-start'
           || gameEvents.event === 'encounter-victory'
           || gameEvents.event === 'encounter-loss'
-        ){
+        ) {
           setCombatStats(gameEvents.payload);
           setCombatMode(true);
         } else if (gameEvents.event === 'level-up-complete') {
@@ -324,7 +346,7 @@ function App(props) {
         <Interface
           {...state}
           error={error}
-          resetErrorState={() => errorStore.setState({ error: null })}
+          resetErrorState={() => errorStore.setState({error: null})}
         />
       </div>
       <div className={outerColWidth}>
@@ -339,7 +361,7 @@ function App(props) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App />,
+  <App/>,
 );
 
 if (typeof globalThis.__postNativeMessage__ === 'function') {

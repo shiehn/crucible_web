@@ -20,26 +20,28 @@ function Settings({ isVisible }) {
   const setStoragePath = useStore((state) => state.setStoragePath);
   const setGameState = useStore((state) => state.setGameState);
 
+  const setShowSettings = useStore((state) => state.setShowSettings);
+
   const [isKeyVisible, setIsKeyVisible] = useState(false);
 
-  useEffect(() => {
-    if (isVisible) {
-      // Load values from local storage
-      const storedOpenAIKey = localStorage.getItem('open_ai_key');
-      const storedGameSettingAndLore = localStorage.getItem('game_setting_and_lore');
-      const storedGameArtStyle = localStorage.getItem('game_art_style');
-
-      if (storedOpenAIKey) {
-        setOpenAIKey(storedOpenAIKey);
-      }
-      if (storedGameSettingAndLore) {
-        setGameSettingAndLore(storedGameSettingAndLore);
-      }
-      if (storedGameArtStyle) {
-        setGameArtStyle(storedGameArtStyle);
-      }
-    }
-  }, [isVisible, uuid, setOpenAIKey, setGameSettingAndLore, setGameArtStyle]);
+  // useEffect(() => {
+  //   if (isVisible) {
+  //     // Load values from local storage
+  //     const storedOpenAIKey = localStorage.getItem('open_ai_key');
+  //     const storedGameSettingAndLore = localStorage.getItem('game_setting_and_lore');
+  //     const storedGameArtStyle = localStorage.getItem('game_art_style');
+  //
+  //     if (storedOpenAIKey) {
+  //       setOpenAIKey(storedOpenAIKey);
+  //     }
+  //     if (storedGameSettingAndLore) {
+  //       setGameSettingAndLore(storedGameSettingAndLore);
+  //     }
+  //     if (storedGameArtStyle) {
+  //       setGameArtStyle(storedGameArtStyle);
+  //     }
+  //   }
+  // }, [isVisible, uuid, setOpenAIKey, setGameSettingAndLore, setGameArtStyle]);
 
   function handleServerIpChange(value) {
     setServerIp(value);
@@ -47,18 +49,18 @@ function Settings({ isVisible }) {
   }
 
   function handleOpenAIKey(value) {
-    setOpenAIKey(value);
     localStorage.setItem('open_ai_key', value);
+    setOpenAIKey(value);
   }
 
   function handleGameSettingAndLore(value) {
-    setGameSettingAndLore(value);
     localStorage.setItem('game_setting_and_lore', value);
+    setGameSettingAndLore(value);
   }
 
   function handleGameArtStyle(value) {
-    setGameArtStyle(value);
     localStorage.setItem('game_art_style', value);
+    setGameArtStyle(value);
   }
 
   const handleReset = () => {
@@ -85,13 +87,15 @@ function Settings({ isVisible }) {
       const createdGameState = await createGameState(server_ip, uuid, open_ai_key, game_setting_and_lore + ". " + game_art_style);
       console.log("createGameState", createdGameState);
       setGameState(createdGameState);
+
+      setShowSettings(false);
     } catch (e) {
       console.log("Error managing game state", e);
     }
   };
 
   return (
-    <div className="w-full h-full p-4 text-sas-text-grey">
+    <div className="w-full h-full p-4 text-sas-text-grey z-50">
       <div className="flex justify-end w-full border-b-2 border-gray-200 mt-12 mb-4">
         <h1 className="w-full font-bold">SETTINGS</h1>
         <span

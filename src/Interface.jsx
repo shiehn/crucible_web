@@ -64,6 +64,8 @@ export default function Interface(props) {
 
   const isLoading = useStore(state => state.isLoading);
 
+  const showSettings = useStore(state => state.showSettings);
+
   const colorProps = {
     meterColor: '#EC4899',
     knobColor: '#64748B',
@@ -171,35 +173,23 @@ export default function Interface(props) {
         <TopBanner props={props} />
 
         <div className="w-full max-w-[460px] h-full overflow-y-auto overflow-x-hidden custom-scrollbar">
-          {props.connected && props.navigation !== 'game_portal' && (
-            <ContractDisplay contract={props.contract} isVisible={true} />
-          )}
-
-          {!props.connected && props.navigation === 'available_remotes' && (
-            <RemoteLinks isVisible={true} />
-          )}
-
-          {!props.connected && props.navigation === 'connected_remotes' && (
-            <RemoteConnections isVisible={true} />
-          )}
-
-          {props.navigation === 'game_portal' && (
-            <GamePortal isVisible={true} />
-          )}
-
-          {props.navigation === 'game_portal' && (
-            <LogsDisplay />
-          )}
-
-          {!props.connected && props.navigation === 'settings' && (
+          {showSettings && (
             <Settings isVisible={true} />
           )}
 
-          {!props.connected && props.navigation === 'create_level' && (
+          {props.navigation === 'game_portal' && !showSettings && (
+            <GamePortal isVisible={true} />
+          )}
+
+          {props.navigation === 'game_portal' && !showSettings && (
+            <LogsDisplay />
+          )}
+
+          {props.navigation === 'create_level' && !showSettings && (
             <CreateLevel isVisible={true} />
           )}
 
-          {!props.connected && props.navigation === 'loading_level' && (
+          {props.navigation === 'loading_level' && !showSettings && (
             <LoadingLevel isVisible={true} />
           )}
         </div>

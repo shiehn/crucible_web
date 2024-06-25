@@ -9,47 +9,28 @@ function CreateLevel({ isVisible }) {
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
 
-  const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
-  const setGameArtStyle = useStore((state) => state.setGameArtStyle);
-  const setOpenAIKey = useStore((state) => state.setOpenAIKey);
-  const setServerIp = useStore((state) => state.setServerIp);
-  const setGameState = useStore((state) => state.setGameState);
+  // const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
+  // const setGameArtStyle = useStore((state) => state.setGameArtStyle);
+  // const setOpenAIKey = useStore((state) => state.setOpenAIKey);
+  // const setServerIp = useStore((state) => state.setServerIp);
+  // const setGameState = useStore((state) => state.setGameState);
 
-  const [isKeyVisible, setIsKeyVisible] = useState(false);
+  // const [isKeyVisible, setIsKeyVisible] = useState(false);
 
-  useEffect(() => {
-    if (isVisible) {
-      // Load values from local storage
-      const storedOpenAIKey = localStorage.getItem('open_ai_key');
-      const storedGameSettingAndLore = localStorage.getItem('game_setting_and_lore');
-      const storedGameArtStyle = localStorage.getItem('game_art_style');
-
-      if (storedOpenAIKey) {
-        setOpenAIKey(storedOpenAIKey);
-      }
-      if (storedGameSettingAndLore) {
-        setGameSettingAndLore(storedGameSettingAndLore);
-      }
-      if (storedGameArtStyle) {
-        setGameArtStyle(storedGameArtStyle);
-      }
-    }
-  }, [isVisible, uuid, setOpenAIKey, setGameSettingAndLore, setGameArtStyle]);
-
-  function handleOpenAIKey(value) {
-    setOpenAIKey(value);
-    localStorage.setItem('open_ai_key', value);
-  }
-
-  function handleGameSettingAndLore(value) {
-    setGameSettingAndLore(value);
-    localStorage.setItem('game_setting_and_lore', value);
-  }
-
-  function handleGameArtStyle(value) {
-    setGameArtStyle(value);
-    localStorage.setItem('game_art_style', value);
-  }
+  // function handleOpenAIKey(value) {
+  //   setOpenAIKey(value);
+  //   localStorage.setItem('open_ai_key', value);
+  // }
+  //
+  // function handleGameSettingAndLore(value) {
+  //   setGameSettingAndLore(value);
+  //   localStorage.setItem('game_setting_and_lore', value);
+  // }
+  //
+  // function handleGameArtStyle(value) {
+  //   setGameArtStyle(value);
+  //   localStorage.setItem('game_art_style', value);
+  // }
 
   // const handleReset = () => {
   //   // Clear the local storage
@@ -69,49 +50,25 @@ function CreateLevel({ isVisible }) {
     <div className="w-full h-full p-4 text-sas-text-grey">
       <div className="flex justify-end w-full border-b-2 border-gray-200 mt-12 mb-4">
         <h1 className="w-full font-bold">GENERATE LEVEL</h1>
-
-      </div>
-
-      <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="open_ai_key" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
-        <div className="w-2/3 flex items-center">
-          <input
-            type={isKeyVisible ? "text" : "password"}
-            id="open_ai_key"
-            name="open_ai_key"
-            value={open_ai_key} // Use open_ai_key from the global state
-            className="w-full border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-            onChange={(e) => handleOpenAIKey(e.target.value)}
-          />
-          <button
-            type="button"
-            className="ml-2 h-8 border-2 border-gray-300 rounded text-xs bg-sas-background-light text-sas-text-grey px-2"
-            onClick={() => setIsKeyVisible(!isKeyVisible)}
-          >
-            {isKeyVisible ? 'Hide' : 'Show'}
-          </button>
-        </div>
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="game_setting_and_lore" className="w-1/3 text-left pr-2">GAME SETTING & LORE:</label>
-        <textarea
+        <textarea readOnly
           id="game_setting_and_lore"
           name="game_setting_and_lore"
           value={game_setting_and_lore}
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => handleGameSettingAndLore(e.target.value)}
         />
       </div>
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="game_art_style" className="w-1/3 text-left pr-2">GAME ART STYLE:</label>
-        <textarea
+        <textarea readOnly
           id="game_art_style"
           name="game_art_style"
           value={game_art_style}
           className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => handleGameArtStyle(e.target.value)}
         />
       </div>
 

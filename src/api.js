@@ -3,6 +3,7 @@ import {toast} from "react-toastify";
 
 async function sendRequest(server_ip, formattedRequestBody) {
   try {
+    //console.log('SERVER_IP_A', server_ip)
     const url = API_URLS.MESSAGE_SEND(server_ip);
     const response = await fetch(url, {
       method: 'POST',
@@ -27,6 +28,9 @@ async function sendRequest(server_ip, formattedRequestBody) {
 async function sendResponse(server_ip, id, connection_token, responseData) {
   const status = 'completed';
   const url = API_URLS.MESSAGE_SEND_RESPONSE(server_ip);
+
+  console.log('SERVER_IP_B', server_ip)
+  console.log('TOKEN_B', connection_token)
 
   try {
     const response = await fetch(url, {
@@ -54,6 +58,8 @@ async function sendResponse(server_ip, id, connection_token, responseData) {
 
 const abortRequest = async (server_ip, connection_token) => {
   try {
+    // console.log('SERVER_IP_C', server_ip)
+    // console.log('TOKEN_C', connection_token)
     const url = API_URLS.MESSAGE_ABORT(server_ip, connection_token);
     const response = await fetch(url, {
       method: 'POST',
@@ -77,6 +83,8 @@ const abortRequest = async (server_ip, connection_token) => {
 };
 
 async function addConnectionMapping(server_ip, master_token, connection_token, connection_name, description) {
+
+  // console.log('SERVER_IP_D', server_ip)
   const url = API_URLS.ADD_CONNECTION_MAPPING(server_ip);
 
   try {
@@ -110,6 +118,8 @@ async function addConnectionMapping(server_ip, master_token, connection_token, c
 async function getConnectionMappings(server_ip, masterToken) {
   const url = API_URLS.GET_CONNECTION_MAPPINGS(server_ip, masterToken);
 
+  // console.log('SERVER_IP_E', server_ip)
+
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -133,6 +143,9 @@ async function getConnectionMappings(server_ip, masterToken) {
 async function removeConnectionMapping(server_ip, masterToken, connectionToken) {
   const url = API_URLS.REMOVE_CONNECTION_MAPPING(server_ip, masterToken, connectionToken);
 
+
+  // console.log('SERVER_IP_F', server_ip)
+
   try {
     const response = await fetch(url, {
       method: 'DELETE',
@@ -154,6 +167,9 @@ async function removeConnectionMapping(server_ip, masterToken, connectionToken) 
 
 async function isTokenConnected(server_ip, connection_token) {
   try {
+
+    // console.log('SERVER_IP_G', server_ip)
+
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
     const response = await fetch(url);
 
@@ -174,6 +190,9 @@ async function isTokenConnected(server_ip, connection_token) {
 
 async function isTokenConnectedToRemote(server_ip, connection_token) {
   try {
+
+    // console.log('SERVER_IP_H', server_ip)
+
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
     const response = await fetch(url);
 
@@ -198,6 +217,8 @@ async function isTokenConnectedToRemote(server_ip, connection_token) {
 
 async function isTokenConnectedToPlugin(server_ip, connection_token) {
   try {
+
+    // console.log('SERVER_IP_I', server_ip)
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
     const response = await fetch(url);
 
@@ -220,6 +241,10 @@ async function isTokenConnectedToPlugin(server_ip, connection_token) {
 
 async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
   try {
+
+    // console.log('SERVER_IP_J', server_ip)
+    // console.log('TOKEN_J', master_token)
+
     const response = await fetch(API_URLS.GAME_ENGINE_QUERY(server_ip), {
       method: "POST",
       headers: {
@@ -246,6 +271,7 @@ async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
 
 async function getGameMap(server_ip, game_map_id) {
   try {
+    // console.log('SERVER_IP_K', server_ip)
     const url = API_URLS.GAME_MAP_GET(server_ip, game_map_id);
     const response = await fetch(url);
 
@@ -263,6 +289,7 @@ async function getGameMap(server_ip, game_map_id) {
 
 async function getGameState(server_ip, user_id) {
   try {
+    // console.log('SERVER_IP_L', server_ip)
     const url = API_URLS.GAME_STATE_GET(server_ip, user_id);
     const response = await fetch(url);
 
@@ -280,6 +307,7 @@ async function getGameState(server_ip, user_id) {
 
 async function deleteGameState(server_ip, game_id) {
   try {
+    // console.log('SERVER_IP_M', server_ip)
     const url = API_URLS.GAME_STATE_DELETE(server_ip, game_id);
     const response = await fetch(url, {
       method: 'DELETE'
@@ -298,7 +326,7 @@ async function deleteGameState(server_ip, game_id) {
 }
 
 async function generateLevelMap(server_ip, user_id, open_ai_key) {
-
+  // console.log('SERVER_IP_N', server_ip)
   try {
     const url = API_URLS.GAME_MAP_GENERATE(server_ip, user_id, open_ai_key);
     const response = await fetch(url,{
@@ -324,10 +352,7 @@ async function generateLevelMap(server_ip, user_id, open_ai_key) {
 }
 
 async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
-  console.log('CGS SERVER', server_ip)
-  console.log('CGS USER', user_id)
-  console.log('CGS OPENAI', open_ai_key)
-  console.log('CGS AESTHETIC', aesthetic)
+  // console.log('SERVER_IP_O', server_ip)
   try {
     const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip, open_ai_key), {
       method: "POST",
@@ -358,6 +383,7 @@ async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
 
 async function renderGameAssets(server_ip, user_id, aesthetic) {
   try {
+    // console.log('SERVER_IP_P', server_ip)
     const response = await fetch(API_URLS.GAME_ASSETS_RENDER(server_ip, user_id), {
       method: "POST",
       headers: {
@@ -383,6 +409,9 @@ async function renderGameAssets(server_ip, user_id, aesthetic) {
 
 async function getGameInventory(server_ip, connection_token) {
   try {
+    // console.log('SERVER_IP_Q', server_ip)
+    // console.log('TOKEN_Q', connection_token)
+
     const url = API_URLS.GAME_INVENTORY_GET(server_ip, connection_token);
     const response = await fetch(url);
 
@@ -401,6 +430,7 @@ async function getGameInventory(server_ip, connection_token) {
 
 async function getGameEnvironment(server_ip, environment_id) {
   try {
+    // console.log('SERVER_IP_R', server_ip)
     const url = API_URLS.GAME_ENVIRONMENT_GET(server_ip, environment_id);
     const response = await fetch(url);
 
@@ -418,6 +448,7 @@ async function getGameEnvironment(server_ip, environment_id) {
 
 async function getGameQueueUpdate(server_ip, userId) {
   try {
+    // console.log('SERVER_IP_S', server_ip)
     const url = API_URLS.GAME_QUEUE_UPDATE(server_ip, userId);
     const response = await fetch(url);
 
@@ -435,6 +466,7 @@ async function getGameQueueUpdate(server_ip, userId) {
 
 async function getGameEvents(server_ip, userId) {
   try {
+    // console.log('SERVER_IP_T', server_ip)
     const url = API_URLS.GAME_EVENTS(server_ip, userId);
     const response = await fetch(url);
 
