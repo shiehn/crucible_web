@@ -84,6 +84,11 @@ const CombatStats = ({ combatMode, combatStats }) => {
                 setFinalMessage(isVictory ? 'VICTORY!' : 'LOSS :(');
                 setFinalPulse(true);
                 combatComplete(isVictory ? 'victory' : 'loss');
+                if(!isVictory){
+                  setTimeout(() => {
+                    setCombatMode(false);
+                  }, 3000);
+                }
               }, 200);
             }, 200);
           }

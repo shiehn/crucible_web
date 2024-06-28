@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useStore } from "./main.jsx";
 import { toast } from "react-toastify";
 import { FaStop, FaBackward, FaForward, FaPlay, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
@@ -15,8 +15,6 @@ function AudioControls() {
   const tts = useRef(new TextToSpeech());
 
   useEffect(() => {
-    //toast.warn("new message detected!");
-
     if (msgHistory && msgHistory.length > 0 && speechEnabled) {
       tts.current.cancel(); // Cancel any ongoing speech
 
@@ -27,11 +25,9 @@ function AudioControls() {
           () => console.log("Speaking started"),
           () => console.log("Speaking finished")
         );
-
-        //fetchImages(newMsg);
       }, 1000); // Wait for 1 second before continuing
     }
-  }, [msgHistory, speechEnabled]); // Dependency array
+  }, [msgHistoryIndex, speechEnabled]); // Dependency array
 
   const handleEnableSpeech = () => {
     setSpeechEnabled(!speechEnabled);
@@ -67,8 +63,6 @@ function AudioControls() {
         () => console.log("Speaking started"),
         () => console.log("Speaking finished")
       );
-
-      //fetchImages(newMsg);
     }, 1000); // Wait for 1 second before continuing
   };
 

@@ -1,6 +1,6 @@
 import { useStore } from "./main.jsx";
 import {toast} from "react-toastify";
-import {getGameEnvironment, getGameState, sendGameEngineQuery} from "./api.js";
+import {getGameEnvironment, getGameState, sendCombatAttack, sendGameEngineQuery} from "./api.js";
 
 function InventoryDisplay() {
   const { game_inventory } = useStore();  // Assuming you have these functions in your store
@@ -21,11 +21,18 @@ function InventoryDisplay() {
 
   // Function to handle item use
   const handleUse = async (itemId) => {
-    let copiedString = `Attack encounter with item_id=${itemId}`
+    let copiedString = `What is the encounters state after attacking it?`;
 
     if (!uuid || !server_ip) {
       toast.error("UUID or Server IP is missing.");
       return;
+    }
+
+
+    let attackRes = sendCombatAttack(server_ip, uuid, itemId)
+    console.log("Attack Response:", attackRes)
+    if(!attackRes){
+      toast.error("Failed to attack. Please try again.")
     }
 
     try {

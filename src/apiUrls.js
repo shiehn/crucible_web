@@ -36,4 +36,6 @@ export const API_URLS = {
   GAME_ENVIRONMENT_GET: (apiBaseUrl, environment_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-environment/${environment_id}/`,
   GAME_QUEUE_UPDATE: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-update-queue/${user_id}/`,
   GAME_EVENTS: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-events/${user_id}/`,
+  GAME_NAVIGATE: (apiBaseUrl, user_id, target_env_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-navigate-to/${user_id}/${target_env_id}/`,
+  GAME_COMBAT: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-combat/`,
 };

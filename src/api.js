@@ -486,6 +486,47 @@ async function getGameEvents(server_ip, userId) {
   }
 }
 
+async function navigateTo(server_ip, userId, target_environment_id) {
+  try {
+    const url = API_URLS.GAME_NAVIGATE(server_ip, userId, target_environment_id);
+    const response = await fetch(url);
+
+    console.log('NAVIGATE_RESPONSE', response)
+
+    return response.ok;
+  } catch (error) {
+    // Catch network errors or other unexpected errors
+    console.error('Error: GameQueueUpdate:', error);
+    return false; // Handle errors and return false or another suitable value
+  }
+}
+
+async function sendCombatAttack(server_ip, user_id, item_id) {
+  try {
+    // console.log('SERVER_IP_P', server_ip)
+    const response = await fetch(API_URLS.GAME_COMBAT(server_ip), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "user_id": user_id,
+        "item_id": item_id
+      }), // Send the text as JSON
+    });
+
+    if (!response.ok) {
+      console.error("Error sending request"); // Handle error
+      return false;
+    }
+
+    return true; // Return the parsed JSON response
+  } catch (error) {
+    console.error("Error in sendCombatAttack:", error); // Handle error
+    return false;
+  }
+}
+
 
 
 
@@ -508,9 +549,11 @@ export {
   getGameState,
   getGameInventory,
   getGameQueueUpdate,
+  navigateTo,
   removeConnectionMapping,
   renderGameAssets,
   sendGameEngineQuery,
+  sendCombatAttack,
   isTokenConnected,
   isTokenConnectedToRemote,
   isTokenConnectedToPlugin
