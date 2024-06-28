@@ -15,7 +15,7 @@ function AudioControls() {
   const tts = useRef(new TextToSpeech());
 
   useEffect(() => {
-    toast.warn("new message detected!");
+    //toast.warn("new message detected!");
 
     if (msgHistory && msgHistory.length > 0 && speechEnabled) {
       tts.current.cancel(); // Cancel any ongoing speech

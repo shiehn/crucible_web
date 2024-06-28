@@ -1,7 +1,17 @@
 import { useStore } from "./main.jsx";
+import {toast} from "react-toastify";
+import {getGameEnvironment, getGameState, sendGameEngineQuery} from "./api.js";
 
 function InventoryDisplay() {
-  const { game_inventory, dropItem, useItem } = useStore();  // Assuming you have these functions in your store
+  const { game_inventory } = useStore();  // Assuming you have these functions in your store
+  const uuid = useStore((state) => state.uuid);
+  const server_ip = useStore((state) => state.server_ip);
+  const open_ai_key = useStore((state) => state.open_ai_key);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+  const setGameState = useStore((state) => state.setGameState);
+  const addMessage = useStore((state) => state.addMessage);
+  const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
 
   if (!game_inventory || game_inventory.length < 1) {
     return (
@@ -9,16 +19,45 @@ function InventoryDisplay() {
     );
   }
 
-  // Function to handle item drop
-  const handleDrop = (itemId) => {
-    dropItem(itemId);
-    console.log(`Dropped item with ID: ${itemId}`);
-  };
-
   // Function to handle item use
-  const handleUse = (itemId) => {
-    useItem(itemId);
-    console.log(`Used item with ID: ${itemId}`);
+  const handleUse = async (itemId) => {
+    let copiedString = `Attack encounter with item_id=${itemId}`
+
+    if (!uuid || !server_ip) {
+      toast.error("UUID or Server IP is missing.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      let response = await sendGameEngineQuery(copiedString, uuid, server_ip, open_ai_key);
+      setIsLoading(false);
+
+      let logs = response?.response;
+
+      addMessage(logs);
+      incrementMsgHistoryIndex();
+
+      let encounter = response?.action?.encounter;
+      if (encounter) {
+        console.log('ENCOUNTER SET FROM AudioInput:', encounter.aesthetic.image);
+        setCurrentBgImage(encounter.aesthetic.image);
+      } else {
+        const gameState = await getGameState(server_ip, uuid);
+        if (gameState) {
+          setGameState(gameState);
+
+          const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+          console.log("XXX Environment:", environment);
+          if (environment && environment.game_info.environment.aesthetic.image) {
+            setCurrentBgImage(environment.game_info.environment.aesthetic.image);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting message:", error);
+      toast.error("Failed to submit message. Please try again.");
+    }
   };
 
   return (
@@ -42,9 +81,6 @@ function InventoryDisplay() {
             <div className="flex justify-end space-x-2 mt-2">
               <button onClick={() => handleUse(item.item_details.item_id)}
                       className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Use
-              </button>
-              <button onClick={() => handleDrop(item.item_details.item_id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Drop
               </button>
             </div>
           </div>

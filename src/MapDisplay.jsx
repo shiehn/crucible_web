@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Graph from 'react-graph-vis';
 import { useStore } from './main.jsx';
+import {getGameEnvironment, getGameState, sendGameEngineQuery} from "./api.js";
+import {toast} from "react-toastify";
 
 function MapDisplay() {
   const game_state = useStore((state) => state.game_state);
+  const uuid = useStore((state) => state.uuid);
+  const server_ip = useStore((state) => state.server_ip);
+  const open_ai_key = useStore((state) => state.open_ai_key);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+  const setGameState = useStore((state) => state.setGameState);
+  const addMessage = useStore((state) => state.addMessage);
+  const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
+  const isLoading = useStore((state) => state.isLoading);
 
   const game_map = useStore((state) => state.game_map);
 
@@ -31,7 +42,9 @@ function MapDisplay() {
 
     setGraph({ nodes: [], edges: [] })
     //console.log('MAP', 'cleared map')
-    setGraph(sanitizeGameMap(game_map))
+    const sanitizedMap = sanitizeGameMap(game_map);
+    console.log('GAME_MAP', game_map)
+    setGraph(sanitizedMap)
     //console.log('MAP', 'set map')
 
     // console.log("AFTER CRASH")
@@ -40,8 +53,11 @@ function MapDisplay() {
   // Automatically update the flashing node when game_state.environment_id changes
   useEffect(() => {
     //console.log('Environment ID changed:', game_state?.environment_id);
-    setHighlightedNodeId(game_state?.environment_id);
-  }, [game_state?.environment_id]);
+    if(game_state?.environment_id) {
+      setHighlightedNodeId(game_state?.environment_id);
+    }
+    console.log("SELECTED NODE", highlightedNodeId)
+  }, [game_state]);
 
   useEffect(() => {
     const interval = highlightedNodeId ? setInterval(() => {
@@ -54,14 +70,14 @@ function MapDisplay() {
             ...node,
             color: {
               ...node.color,
-              background: node.color.background === '#000' ? '#fff' : '#000', // Toggle color
+              background: node.color.background === '#666' ? '#fff' : '#666', // Toggle color
             }
           };
         }
         return node;
       });
       if (foundNode) {
-        //console.log(`Flashing node ${highlightedNodeId}`);
+        console.log(`Flashing node ${highlightedNodeId}`);
       } else {
         //console.log(`Node ${highlightedNodeId} not found or missing color property`);
       }
@@ -77,7 +93,17 @@ function MapDisplay() {
 
 
   const options = {
-    physics: false,
+    physics: {
+      enabled: true,
+      barnesHut: {
+        gravitationalConstant: -2000,
+        centralGravity: 0.3,
+        springLength: 95,
+        springConstant: 0.04,
+        damping: 0.09,
+        avoidOverlap: 1, // This is important to avoid overlapping
+      },
+    },
     layout: {
       randomSeed: "random-seed-xyz",
     },
@@ -101,16 +127,66 @@ function MapDisplay() {
         border: '#222222',
         background: '#666666',
         highlight: {
-          border: '#22ff22',
-          background: '#44ff44',
+          border: '#222222',
+          background: '#666666',
         },
       },
     },
   };
 
+
+
   const events = {
-    select: (event) => {
-      console.log('Node selected', event.nodes);
+    select: async (event) => {
+
+      if(isLoading){
+        console.log("Loading, please wait");
+        return;
+      }
+
+
+      let {nodes} = event;
+      console.log('Selected event:', nodes);
+      if (nodes.length > 0) {
+        const nodeId = nodes[0];
+        let copiedString = `Travel through door ${nodeId}`
+
+        if (!uuid || !server_ip) {
+          toast.error("UUID or Server IP is missing.");
+          return;
+        }
+
+        try {
+          setIsLoading(true);
+          let response = await sendGameEngineQuery(copiedString, uuid, server_ip, open_ai_key);
+          setIsLoading(false);
+
+          let logs = response?.response;
+
+          addMessage(logs);
+          incrementMsgHistoryIndex();
+
+          let encounter = response?.action?.encounter;
+          if (encounter) {
+            console.log('ENCOUNTER SET FROM AudioInput:', encounter.aesthetic.image);
+            setCurrentBgImage(encounter.aesthetic.image);
+          } else {
+            const gameState = await getGameState(server_ip, uuid);
+            if (gameState) {
+              setGameState(gameState);
+
+              const environment = await getGameEnvironment(server_ip, gameState.environment_id);
+              console.log("XXX Environment:", environment);
+              if (environment && environment.game_info.environment.aesthetic.image) {
+                setCurrentBgImage(environment.game_info.environment.aesthetic.image);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error submitting message:", error);
+          toast.error("Failed to submit message. Please try again.");
+        }
+      }
     },
   };
 
