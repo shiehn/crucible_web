@@ -5,19 +5,10 @@ import {useStore} from "./main.jsx";
 import { GiLockedChest } from "react-icons/gi";
 import { GiCompass } from "react-icons/gi";
 
-import {toast} from "react-toastify";
 import {
-  abortRequest,
   getGameMap,
   getGameInventory,
-  sendGameEngineQuery,
-  getGameState,
-  getGameEnvironment
 } from "./api.js";
-import {FaStop} from "react-icons/fa6";
-import {FaPlay} from "react-icons/fa";
-import AudioControls from "./AudioControls.jsx";
-import InventoryDisplay from "./InventoryDisplay.jsx";
 
 function MapInventoryToggle({}) {
 

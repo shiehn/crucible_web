@@ -1,8 +1,10 @@
+// MapDisplay.jsx
 import React, { useEffect, useState } from 'react';
 import Graph from 'react-graph-vis';
 import { useStore } from './main.jsx';
-import {getGameEnvironment, getGameState, navigateTo, sendGameEngineQuery} from "./api.js";
+import { getGameEnvironment, getGameState, navigateTo } from "./api.js";
 import { toast } from "react-toastify";
+import submitMsg from './submitMsg.js'; // Import the refactored function
 
 function MapDisplay() {
   const game_state = useStore((state) => state.game_state);
@@ -135,51 +137,30 @@ function MapDisplay() {
           return;
         }
 
-        //FIRST SET THE NAVIGATION MANUALLY
+        // FIRST SET THE NAVIGATION MANUALLY
         let navResponse = await navigateTo(server_ip, uuid, nodeId);
-        console.log('DUDE RES', navResponse)
-        if(!navResponse){
+        console.log('DUDE RES', navResponse);
+        if (!navResponse) {
           cannedQuery = `After failing to change environments, What do I see now?`;
         }
-//game-navigate-to
 
+        // THEN SEND THE QUERY TO THE GAME ENGINE
+        submitMsg({
+          text: cannedQuery,
+          setText: () => {}, // No-op function since we don't need to set text in this context
+          uuid,
+          server_ip,
+          open_ai_key,
+          addMessage,
+          incrementMsgHistoryIndex,
+          setCurrentBgImage,
+          setGameState,
+          setIsLoading
+        });
 
-        //THEN SEND THE QUERY TO THE GAME ENGINE
-
-
-        try {
-          setIsLoading(true);
-          let response = await sendGameEngineQuery(cannedQuery, uuid, server_ip, open_ai_key);
-          setIsLoading(false);
-
-          let logs = response?.response;
-
-          addMessage(logs);
-          incrementMsgHistoryIndex();
-
-          let encounter = response?.action?.encounter;
-          if (encounter) {
-            setCurrentBgImage(encounter.aesthetic.image);
-          } else {
-            const gameState = await getGameState(server_ip, uuid);
-            if (gameState) {
-              setGameState(gameState);
-
-              const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-              if (environment && environment.game_info.environment.aesthetic.image) {
-                setCurrentBgImage(environment.game_info.environment.aesthetic.image);
-              }
-            }
-          }
-
-          // Unselect the node after processing the request
-          if (network) {
-            network.unselectAll();
-          }
-
-        } catch (error) {
-          console.error("Error submitting message:", error);
-          toast.error("Failed to submit message. Please try again.");
+        // Unselect the node after processing the request
+        if (network) {
+          network.unselectAll();
         }
       }
     },

@@ -6,7 +6,6 @@ import {
   abortRequest,
   getGameMap,
   getGameInventory,
-  sendGameEngineQuery,
   getGameState,
   getGameEnvironment
 } from "./api.js";

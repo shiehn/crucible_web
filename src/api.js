@@ -503,29 +503,30 @@ async function navigateTo(server_ip, userId, target_environment_id) {
 
 async function sendCombatAttack(server_ip, user_id, item_id) {
   try {
-    // console.log('SERVER_IP_P', server_ip)
     const response = await fetch(API_URLS.GAME_COMBAT(server_ip), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "user_id": user_id,
-        "item_id": item_id
-      }), // Send the text as JSON
+        user_id: user_id,
+        item_id: item_id,
+      }),
     });
 
     if (!response.ok) {
-      console.error("Error sending request"); // Handle error
-      return false;
+      console.error("Error sending request");
+      return "encounter-error";
     }
 
-    return true; // Return the parsed JSON response
+    const data = await response.json();
+    return data.message ? data.message : "encounter-error";
   } catch (error) {
-    console.error("Error in sendCombatAttack:", error); // Handle error
-    return false;
+    console.error("Error in sendCombatAttack:", error);
+    return "encounter-error";
   }
 }
+
 
 
 

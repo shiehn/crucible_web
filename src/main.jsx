@@ -1,11 +1,12 @@
-import React, {useEffect, useRef} from 'react';
+// main.jsx
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import Interface from './Interface.jsx';
 import createHooks from 'zustand';
 import createStore from 'zustand/vanilla';
 import './index.css';
-import {API_URLS} from './apiUrls';
-import {ToastContainer, toast} from 'react-toastify';
+import { API_URLS } from './apiUrls';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
 import {
@@ -16,6 +17,7 @@ import {
   getGameState,
   sendGameEngineQuery
 } from "./api.js";
+import submitMsg from './submitMsg.js'; // Import the refactored function
 
 export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
@@ -26,7 +28,7 @@ export const EMBEDDED = 'web';
 export const store = createStore((set, get) => ({
   messageId: null,
   uuid: null, // master_token
-  setUUID: (uuid) => set({uuid}),
+  setUUID: (uuid) => set({ uuid }),
   connection_token: null, // connection_token
   bpm: 0,
   sampleRate: 0,
@@ -42,12 +44,12 @@ export const store = createStore((set, get) => ({
   incrementMsgHistoryIndex: () =>
     set((state) => {
       const newIndex = Math.min(state.msgHistoryIndex + 1, state.msgHistory.length - 1);
-      return {msgHistoryIndex: newIndex};
+      return { msgHistoryIndex: newIndex };
     }),
   decrementMsgHistoryIndex: () =>
     set((state) => {
       const newIndex = Math.max(state.msgHistoryIndex - 1, 0);
-      return {msgHistoryIndex: newIndex};
+      return { msgHistoryIndex: newIndex };
     }),
   getCurrentMsgHistoryItem: () => {
     const state = get();
@@ -57,53 +59,53 @@ export const store = createStore((set, get) => ({
   submitForm: false,
   dropTargetFileName: null,
   currentBgImage: null,
-  setCurrentBgImage: (image) => set({currentBgImage: image}),
+  setCurrentBgImage: (image) => set({ currentBgImage: image }),
   currentOutputView: 'show_map_component',
   combatMode: false,
-  setCombatMode: (combatMode) => set({combatMode}),
+  setCombatMode: (combatMode) => set({ combatMode }),
   combatStats: {},
-  setCombatStats: (combatStats) => set({combatStats}),
+  setCombatStats: (combatStats) => set({ combatStats }),
   isLoading: false,
-  setIsLoading: (isLoading) => set({isLoading}),
+  setIsLoading: (isLoading) => set({ isLoading }),
   isConnecting: false,
   showSettings: false,
-  setShowSettings: (showSettings) => set({showSettings}),
+  setShowSettings: (showSettings) => set({ showSettings }),
   navigation: DEFAULT_NAVIGATION,
-  setNavigation: (navigation) => set({navigation}),
+  setNavigation: (navigation) => set({ navigation }),
   server_ip: DEFAULT_SERVER_IP,
-  setServerIp: (server_ip) => set({server_ip}),
+  setServerIp: (server_ip) => set({ server_ip }),
   storage_path: DEFAULT_STORAGE_PATH,
-  setStoragePath: (storage_path) => set({storage_path}),
+  setStoragePath: (storage_path) => set({ storage_path }),
   embedded: EMBEDDED,
   game_state: {},
-  setGameState: (gameState) => set({game_state: gameState}),
+  setGameState: (gameState) => set({ game_state: gameState }),
   game_map: {
     nodes: [],
     edges: [],
   },
-  setGameMap: (map) => set({game_map: map}),
+  setGameMap: (map) => set({ game_map: map }),
   game_map_old: {
     nodes: [],
     edges: [],
   },
   game_inventory: [],
   game_setting_and_lore: '',
-  setGameSettingAndLore: (game_setting_and_lore) => set({game_setting_and_lore}),
+  setGameSettingAndLore: (game_setting_and_lore) => set({ game_setting_and_lore }),
   game_art_style: '',
-  setGameArtStyle: (game_art_style) => set({game_art_style}),
+  setGameArtStyle: (game_art_style) => set({ game_art_style }),
   speechEnabled: false,
-  setSpeechEnabled: (speechEnabled) => set({speechEnabled}),
+  setSpeechEnabled: (speechEnabled) => set({ speechEnabled }),
   open_ai_key: 'placeholder_key',
-  setOpenAIKey: (open_ai_key) => set({open_ai_key}),
+  setOpenAIKey: (open_ai_key) => set({ open_ai_key }),
 }));
 export const useStore = createHooks(store);
 
-const errorStore = createStore(() => ({error: null}));
+const errorStore = createStore(() => ({ error: null }));
 const useErrorStore = createHooks(errorStore);
 
 function App(props) {
   const state = useStore((state) => state);
-  const {error} = useErrorStore();
+  const { error } = useErrorStore();
   const uuid = useStore((state) => state.uuid);
   const setUUID = useStore((state) => state.setUUID);
   const open_ai_key = useStore((state) => state.open_ai_key);
@@ -152,13 +154,11 @@ function App(props) {
       setUUID(savedUUID);
     }
 
+    //setUUID('d64b1389-3930-4953-9ef8-087f7edbbe49');
+
     const serverIpFromLocalStorage = localStorage.getItem('server_ip');
     if (serverIpFromLocalStorage) {
       setServerIp(serverIpFromLocalStorage);
-      // console.log('SIFLS1:', serverIpFromLocalStorage);
-      // setTimeout(() => {
-      //   // console.log('SIFLS2:', useStore.getState().server_ip);
-      // }, 1000); // 1 second timeout
     }
 
     const storagePathFromLocalStorage = localStorage.getItem('storage_path') || DEFAULT_STORAGE_PATH;
@@ -193,7 +193,6 @@ function App(props) {
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      //console.log("FUCKING SERVER_IP", server_ip);
       const gameEvents = await getGameEvents(server_ip, uuid);
       if (gameEvents && gameEvents.event) {
         if (gameEvents.event === 'encounter-start'
@@ -258,49 +257,32 @@ function App(props) {
           if (!querySentRef.current) {
             querySentRef.current = true;
 
-            try {
-              setIsLoading(true);
+            const defaultQueries = [
+              "What do I see when I look around?",
+              "Describe my surroundings.",
+              "What is around me?",
+              "What do I see?",
+              "What is in my vicinity?",
+              "What is in my immediate area?",
+              "Tell me about my current location.",
+              "What is nearby?",
+              "Describe my current environment.",
+            ];
 
-              const defaultQueries = [
-                "What do I see when I look around?",
-                "Describe my surroundings.",
-                "What is around me?",
-                "What do I see?",
-                "What is in my vicinity?",
-                "What is in my immediate area?",
-                "Tell me about my current location.",
-                "What is nearby?",
-                "Describe my current environment.",
-              ];
+            const randomDefaultQuery = defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
 
-              const randomDefaultQuery = defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
-
-              const response = await sendGameEngineQuery(randomDefaultQuery, uuid, server_ip, open_ai_key);
-              setIsLoading(false);
-
-              const logs = response?.response;
-              addMessage(logs);
-              incrementMsgHistoryIndex();
-
-              const encounter = response?.action?.encounter;
-              if (encounter) {
-                console.log('ENCOUNTER SET FROM MAIN:', encounter.aesthetic.image);
-                setCurrentBgImage(encounter.aesthetic.image);
-              } else {
-                const gameState = await getGameState(server_ip, uuid);
-                if (gameState) {
-                  setGameState(gameState);
-
-                  const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-                  if (environment && environment.game_info.environment.aesthetic.image) {
-                    setCurrentBgImage(environment.game_info.environment.aesthetic.image);
-                  }
-                }
-              }
-            } catch (error) {
-              setIsLoading(false);
-              toast.error("Failed to submit message. Please try again.");
-            }
+            submitMsg({
+              text: randomDefaultQuery,
+              setText: () => {}, // No-op function since we don't need to set text in this context
+              uuid,
+              server_ip,
+              open_ai_key,
+              addMessage,
+              incrementMsgHistoryIndex,
+              setCurrentBgImage,
+              setGameState,
+              setIsLoading
+            });
           }
 
           return;
@@ -346,7 +328,7 @@ function App(props) {
         <Interface
           {...state}
           error={error}
-          resetErrorState={() => errorStore.setState({error: null})}
+          resetErrorState={() => errorStore.setState({ error: null })}
         />
       </div>
       <div className={outerColWidth}>
@@ -361,7 +343,7 @@ function App(props) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App/>,
+  <App />,
 );
 
 if (typeof globalThis.__postNativeMessage__ === 'function') {

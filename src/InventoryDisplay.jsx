@@ -1,6 +1,8 @@
+// InventoryDisplay.jsx
 import { useStore } from "./main.jsx";
-import {toast} from "react-toastify";
-import {getGameEnvironment, getGameState, sendCombatAttack, sendGameEngineQuery} from "./api.js";
+import { toast } from "react-toastify";
+import { getGameEnvironment, getGameState, sendCombatAttack } from "./api.js";
+import submitMsg from './submitMsg.js'; // Import the refactored function
 
 function InventoryDisplay() {
   const { game_inventory } = useStore();  // Assuming you have these functions in your store
@@ -28,43 +30,31 @@ function InventoryDisplay() {
       return;
     }
 
-
-    let attackRes = sendCombatAttack(server_ip, uuid, itemId)
-    console.log("Attack Response:", attackRes)
-    if(!attackRes){
-      toast.error("Failed to attack. Please try again.")
+    let attackRes = await sendCombatAttack(server_ip, uuid, itemId);
+    console.log("Attack Response:", attackRes);
+    if(attackRes && attackRes === "encounter-victory") {
+      copiedString = `What do I see here after winning the encounter?`;
+    } else if(attackRes && attackRes === "encounter-loss") {
+      copiedString = `What do I see after losing the encounter?`;
+    } else {
+      toast.error("Failed to attack. Please try again.");
+      return;
     }
 
-    try {
-      setIsLoading(true);
-      let response = await sendGameEngineQuery(copiedString, uuid, server_ip, open_ai_key);
-      setIsLoading(false);
 
-      let logs = response?.response;
-
-      addMessage(logs);
-      incrementMsgHistoryIndex();
-
-      let encounter = response?.action?.encounter;
-      if (encounter) {
-        console.log('ENCOUNTER SET FROM AudioInput:', encounter.aesthetic.image);
-        setCurrentBgImage(encounter.aesthetic.image);
-      } else {
-        const gameState = await getGameState(server_ip, uuid);
-        if (gameState) {
-          setGameState(gameState);
-
-          const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-          console.log("XXX Environment:", environment);
-          if (environment && environment.game_info.environment.aesthetic.image) {
-            setCurrentBgImage(environment.game_info.environment.aesthetic.image);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error submitting message:", error);
-      toast.error("Failed to submit message. Please try again.");
-    }
+    // Use the refactored submitMsg function
+    submitMsg({
+      text: copiedString,
+      setText: () => {}, // No-op function since we don't need to set text in this context
+      uuid,
+      server_ip,
+      open_ai_key,
+      addMessage,
+      incrementMsgHistoryIndex,
+      setCurrentBgImage,
+      setGameState,
+      setIsLoading
+    });
   };
 
   return (

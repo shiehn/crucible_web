@@ -1,6 +1,8 @@
+// CombatStats.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { useStore } from './main.jsx';
 import { getGameEnvironment } from './api.js';
+import submitMsg from './submitMsg.js'; // Import the refactored function
 
 const CombatStats = ({ combatMode, combatStats }) => {
   const baseBarRef = useRef(null);
@@ -21,6 +23,10 @@ const CombatStats = ({ combatMode, combatStats }) => {
   const setCombatMode = useStore((state) => state.setCombatMode);
   const setCombatStats = useStore((state) => state.setCombatStats);
   const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
+  const addMessage = useStore((state) => state.addMessage);
+  const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
+  const setIsLoading = useStore((state) => state.setIsLoading);
+  const setGameState = useStore((state) => state.setGameState);
 
   const combatComplete = (outcome) => {
     if (outcome === 'victory') {
@@ -34,6 +40,25 @@ const CombatStats = ({ combatMode, combatStats }) => {
           setCurrentBgImage(environment.game_info.environment.aesthetic.image);
         }
       }, 4000); // 4000 milliseconds = 4 seconds
+    } else if (outcome === 'loss') {
+      setTimeout(() => {
+        setCombatMode(false);
+
+        // CALL submitMsg with the text "After losing combat, where am I now?"
+        submitMsg({
+          text: "After losing combat, where am I now?",
+          setText: () => {}, // No-op function since we don't need to set text in this context
+          uuid: useStore.getState().uuid,
+          server_ip: useStore.getState().server_ip,
+          open_ai_key: useStore.getState().open_ai_key,
+          addMessage,
+          incrementMsgHistoryIndex,
+          setCurrentBgImage,
+          setGameState,
+          setIsLoading
+        });
+
+      }, 3000);
     }
   };
 
@@ -84,11 +109,6 @@ const CombatStats = ({ combatMode, combatStats }) => {
                 setFinalMessage(isVictory ? 'VICTORY!' : 'LOSS :(');
                 setFinalPulse(true);
                 combatComplete(isVictory ? 'victory' : 'loss');
-                if(!isVictory){
-                  setTimeout(() => {
-                    setCombatMode(false);
-                  }, 3000);
-                }
               }, 200);
             }, 200);
           }

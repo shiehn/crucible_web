@@ -4,7 +4,6 @@ import {
   getConnectionMappings, getGameEnvironment,
   getGameState,
   isTokenConnectedToRemote,
-  sendGameEngineQuery,
   sendRequest
 } from "./api.js";
 import {API_URLS} from "./apiUrls.js";
