@@ -149,12 +149,12 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    const savedUUID = localStorage.getItem('sas_user_id');
-    if (savedUUID) {
-      setUUID(savedUUID);
-    }
+    // const savedUUID = localStorage.getItem('sas_user_id');
+    // if (savedUUID) {
+    //   setUUID(savedUUID);
+    // }
 
-    //setUUID('d64b1389-3930-4953-9ef8-087f7edbbe49');
+    setUUID('d64b1389-3930-4953-9ef8-087f7edbbe49');
 
     const serverIpFromLocalStorage = localStorage.getItem('server_ip');
     if (serverIpFromLocalStorage) {
@@ -300,19 +300,11 @@ function App(props) {
     }
   }, [server_ip, uuid, setGameState, setGameMap, sendGameEngineQuery, open_ai_key, setIsLoading, addMessage, incrementMsgHistoryIndex, setCurrentBgImage, setNavigation]);
 
-  const outerWrapper = embedded === 'web' ? "w-full h-full min-h-screen flex flex-row overflow-hidden " : "w-[460px] h-[465px] flex flex-row overflow-hidden";
-  const outerColWidth = embedded === 'web' ? "w-full min-h-screen" : "w-[0px] h-[465px]";
-  const centerCol = embedded === 'web' ? "w-full max-w-[460px] min-h-screen" : "w-[460px] h-[465px]";
-
   return (
-    <div className={outerWrapper}>
-      <div className={outerColWidth}>
-        <div className="w-full h-[80px] bg-sas-background-dark"></div>
-        <div className="w-full h-[350px] bg-sas-background-dark"></div>
-        <div className="w-full h-[35px] bg-sas-background-dark"></div>
-        <div className="w-full h-full bg-sas-background-dark"></div>
+    <div className="fixed inset-0 w-full h-full flex flex-row overflow-hidden">
+      <div className="w-full min-h-screen bg-sas-background-dark">
       </div>
-      <div className={centerCol}>
+      <div className="w-full max-w-[460px] min-h-screen">
         <ToastContainer
           position="bottom-center"
           autoClose={1000}
@@ -328,14 +320,10 @@ function App(props) {
         <Interface
           {...state}
           error={error}
-          resetErrorState={() => errorStore.setState({ error: null })}
+          resetErrorState={() => errorStore.setState({error: null})}
         />
       </div>
-      <div className={outerColWidth}>
-        <div className="w-full h-[80px] bg-sas-background-dark"></div>
-        <div className="w-full h-[350px] bg-sas-background-dark"></div>
-        <div className="w-full h-[35px] bg-sas-background-dark"></div>
-        <div className="w-full h-full bg-sas-background-dark"></div>
+      <div className="w-full min-h-screen bg-sas-background-dark">
       </div>
     </div>
   );
@@ -343,7 +331,7 @@ function App(props) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App />,
+  <App/>,
 );
 
 if (typeof globalThis.__postNativeMessage__ === 'function') {

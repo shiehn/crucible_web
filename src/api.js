@@ -34,6 +34,7 @@ async function sendResponse(server_ip, id, connection_token, responseData) {
 
   try {
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,6 +63,7 @@ const abortRequest = async (server_ip, connection_token) => {
     // console.log('TOKEN_C', connection_token)
     const url = API_URLS.MESSAGE_ABORT(server_ip, connection_token);
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,6 +91,7 @@ async function addConnectionMapping(server_ip, master_token, connection_token, c
 
   try {
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,6 +125,7 @@ async function getConnectionMappings(server_ip, masterToken) {
 
   try {
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'GET',
       redirect: 'follow'
     });
@@ -148,6 +152,7 @@ async function removeConnectionMapping(server_ip, masterToken, connectionToken) 
 
   try {
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'DELETE',
       redirect: 'follow'
     });
@@ -171,7 +176,7 @@ async function isTokenConnected(server_ip, connection_token) {
     // console.log('SERVER_IP_G', server_ip)
 
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -194,7 +199,7 @@ async function isTokenConnectedToRemote(server_ip, connection_token) {
     // console.log('SERVER_IP_H', server_ip)
 
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -220,7 +225,7 @@ async function isTokenConnectedToPlugin(server_ip, connection_token) {
 
     // console.log('SERVER_IP_I', server_ip)
     const url = API_URLS.CONNECTION_STATUS(server_ip, connection_token);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -246,6 +251,7 @@ async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
     // console.log('TOKEN_J', master_token)
 
     const response = await fetch(API_URLS.GAME_ENGINE_QUERY(server_ip), {
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -273,7 +279,7 @@ async function getGameMap(server_ip, game_map_id) {
   try {
     // console.log('SERVER_IP_K', server_ip)
     const url = API_URLS.GAME_MAP_GET(server_ip, game_map_id);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -291,7 +297,7 @@ async function getGameState(server_ip, user_id) {
   try {
     // console.log('SERVER_IP_L', server_ip)
     const url = API_URLS.GAME_STATE_GET(server_ip, user_id);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       //toast.error('No game state found for user_id: ' + user_id);
@@ -310,6 +316,7 @@ async function deleteGameState(server_ip, game_id) {
     // console.log('SERVER_IP_M', server_ip)
     const url = API_URLS.GAME_STATE_DELETE(server_ip, game_id);
     const response = await fetch(url, {
+      credentials: 'include',
       method: 'DELETE'
     });
 
@@ -330,6 +337,7 @@ async function generateLevelMap(server_ip, user_id, open_ai_key) {
   try {
     const url = API_URLS.GAME_MAP_GENERATE(server_ip, user_id, open_ai_key);
     const response = await fetch(url,{
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -355,6 +363,7 @@ async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
   // console.log('SERVER_IP_O', server_ip)
   try {
     const response = await fetch(API_URLS.GAME_STATE_CREATE(server_ip, open_ai_key), {
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -385,6 +394,7 @@ async function renderGameAssets(server_ip, user_id, aesthetic) {
   try {
     // console.log('SERVER_IP_P', server_ip)
     const response = await fetch(API_URLS.GAME_ASSETS_RENDER(server_ip, user_id), {
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -413,7 +423,7 @@ async function getGameInventory(server_ip, connection_token) {
     // console.log('TOKEN_Q', connection_token)
 
     const url = API_URLS.GAME_INVENTORY_GET(server_ip, connection_token);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -432,7 +442,7 @@ async function getGameEnvironment(server_ip, environment_id) {
   try {
     // console.log('SERVER_IP_R', server_ip)
     const url = API_URLS.GAME_ENVIRONMENT_GET(server_ip, environment_id);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     if (!response.ok) {
       console.log('Network response was not ok');
@@ -450,7 +460,12 @@ async function getGameQueueUpdate(server_ip, userId) {
   try {
     // console.log('SERVER_IP_S', server_ip)
     const url = API_URLS.GAME_QUEUE_UPDATE(server_ip, userId);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
+
+    if(response.status === 401){
+      //window.location.href = `https://signalsandsorceryapi.com/auth/login?next=https://signalsandsorcery.app`;
+      window.location.href = `http://localhost:8081/accounts/login/`;
+    }
 
     if (!response.ok) {
       console.log('GameEvents - Network response was not ok');
@@ -468,7 +483,12 @@ async function getGameEvents(server_ip, userId) {
   try {
     // console.log('SERVER_IP_T', server_ip)
     const url = API_URLS.GAME_EVENTS(server_ip, userId);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
+
+    if(response.status === 401){
+      //window.location.href = `https://signalsandsorceryapi.com/auth/login?next=https://signalsandsorcery.app`;
+      window.location.href = `http://localhost:8081/accounts/login/`;
+    }
 
     if (response.status === 404) {
       return {};
@@ -489,7 +509,7 @@ async function getGameEvents(server_ip, userId) {
 async function navigateTo(server_ip, userId, target_environment_id) {
   try {
     const url = API_URLS.GAME_NAVIGATE(server_ip, userId, target_environment_id);
-    const response = await fetch(url);
+    const response = await fetch(url,{credentials: 'include',});
 
     console.log('NAVIGATE_RESPONSE', response)
 
@@ -504,6 +524,7 @@ async function navigateTo(server_ip, userId, target_environment_id) {
 async function sendCombatAttack(server_ip, user_id, item_id) {
   try {
     const response = await fetch(API_URLS.GAME_COMBAT(server_ip), {
+      credentials: 'include',
       method: "POST",
       headers: {
         "Content-Type": "application/json",

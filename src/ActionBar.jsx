@@ -19,9 +19,9 @@ function ActionBar({}) {
 
   return (
     <div
-      className="flex-col w-full max-w-[460px] py-4 h-1/2 bg-sas-background-light flex justify-between items-center overflow-hidden">
+      className="flex-col w-full max-w-[460px] h-1/2 bg-sas-background-light flex justify-between items-center overflow-hidden">
 
-      <div className="flex w-full h-1/2 mb-2 bg-sas-background-dark rounded">
+      <div className="flex w-full h-1/2 rounded p-2">
         <MapInventoryToggle/>
 
         <AudioControls />

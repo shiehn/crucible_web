@@ -17,7 +17,7 @@ function InventoryDisplay() {
 
   if (!game_inventory || game_inventory.length < 1) {
     return (
-      <div className="w-full h-24 p-2">No inventory found.</div>
+      <div className="w-full h-24">No inventory found.</div>
     );
   }
 
@@ -58,9 +58,9 @@ function InventoryDisplay() {
   };
 
   return (
-    <div className="w-full h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar">
+    <div className="w-full h-[300px] overflow-hidden">
       {game_inventory.map((item, index) => (
-        <div key={index} className="flex items-center p-2 bg-gray-800 my-2">
+        <div key={index} className="flex items-center bg-gray-800">
           {/* Image on the left */}
           <div className="w-1/5">
             <img src={item.item_details.aesthetic.image} alt={item.item_details.aesthetic.description}
@@ -68,14 +68,14 @@ function InventoryDisplay() {
           </div>
 
           {/* Text and buttons on the right */}
-          <div className="w-4/5 p-2 text-white flex flex-col justify-between">
+          <div className="w-4/5 text-white flex flex-col justify-between">
             <div>
               <div>Item Type: {item.item_details.item_type}</div>
               <div>Item ID: {item.item_details.item_id}</div>
               {/*<div>Size: {item.item_details.item_size}</div>*/}
               {/*<div>Description: {item.item_details.aesthetic.description}</div>*/}
             </div>
-            <div className="flex justify-end space-x-2 mt-2">
+            <div className="flex justify-end space-x-2">
               <button onClick={() => handleUse(item.item_details.item_id)}
                       className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Use
               </button>

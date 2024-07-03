@@ -173,7 +173,6 @@ function MapDisplay() {
         options={options}
         events={events}
         getNetwork={networkInstance => {
-          console.log('Graph network instance:', networkInstance);
           setNetwork(networkInstance); // Store the network instance
         }}
       />

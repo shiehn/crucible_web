@@ -157,7 +157,7 @@ function GamePortal({isVisible}) {
 
   return (
     <div
-      className="w-full h-full flex-col justify-center"
+      className="w-full h-full flex-col justify-center overflow-hidden"
       style={{
         backgroundImage: backgroundImage ? `url(${backgroundImage})` : `url("https://storage.googleapis.com/byoc-file-transfer/img_placeholder.png")`,
         backgroundSize: "cover",

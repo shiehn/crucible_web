@@ -6,6 +6,16 @@ export default {
   ],
   theme: {
     extend: {
+      height: {
+        'dvh': '100dvh',
+        'svh': '100svh',
+        'lvh': '100lvh',
+      },
+      minHeight: {
+        'dvh': '100dvh',
+        'svh': '100svh',
+        'lvh': '100lvh',
+      },
       colors: {
         'sas-background-dark': '#22272e', // Custom color name and its hex value
         'sas-background-light': '#37404c',
