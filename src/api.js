@@ -463,8 +463,7 @@ async function getGameQueueUpdate(server_ip, userId) {
     const response = await fetch(url,{credentials: 'include',});
 
     if(response.status === 401){
-      //window.location.href = `https://signalsandsorceryapi.com/auth/login?next=https://signalsandsorcery.app`;
-      window.location.href = `http://localhost:8081/accounts/login/`;
+      window.location.href = `${server_ip}/accounts/login/`;
     }
 
     if (!response.ok) {
@@ -486,8 +485,7 @@ async function getGameEvents(server_ip, userId) {
     const response = await fetch(url,{credentials: 'include',});
 
     if(response.status === 401){
-      //window.location.href = `https://signalsandsorceryapi.com/auth/login?next=https://signalsandsorcery.app`;
-      window.location.href = `http://localhost:8081/accounts/login/`;
+      window.location.href = `${server_ip}/accounts/login/`;
     }
 
     if (response.status === 404) {
