@@ -2,3 +2,5 @@ dist
 package-lock.json
 .DS_Store
 node_modules/
+.idea/
+crucible_web.iml
