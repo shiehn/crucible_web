@@ -9,37 +9,6 @@ function CreateLevel({ isVisible }) {
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
 
-  // const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
-  // const setGameArtStyle = useStore((state) => state.setGameArtStyle);
-  // const setOpenAIKey = useStore((state) => state.setOpenAIKey);
-  // const setServerIp = useStore((state) => state.setServerIp);
-  // const setGameState = useStore((state) => state.setGameState);
-
-  // const [isKeyVisible, setIsKeyVisible] = useState(false);
-
-  // function handleOpenAIKey(value) {
-  //   setOpenAIKey(value);
-  //   localStorage.setItem('open_ai_key', value);
-  // }
-  //
-  // function handleGameSettingAndLore(value) {
-  //   setGameSettingAndLore(value);
-  //   localStorage.setItem('game_setting_and_lore', value);
-  // }
-  //
-  // function handleGameArtStyle(value) {
-  //   setGameArtStyle(value);
-  //   localStorage.setItem('game_art_style', value);
-  // }
-
-  // const handleReset = () => {
-  //   // Clear the local storage
-  //   localStorage.clear();
-  //   setServerIp(DEFAULT_SERVER_IP);
-  //   setOpenAIKey('');
-  //   setGameSettingAndLore('');
-  //   setGameArtStyle('');
-  // };
 
   const createNewGame = async () => {
     const generationResponse = await generateLevelMap(server_ip, uuid, open_ai_key);

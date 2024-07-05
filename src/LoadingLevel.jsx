@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, store, useStore} from "./main.jsx";
-import {createGameState, deleteGameState, getConnectionMappings, getGameState, renderGameAssets} from "./api.js";
 import {Bars} from "react-loader-spinner";
 
 

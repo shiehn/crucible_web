@@ -19,6 +19,7 @@ function Settings({ isVisible }) {
   const setServerIp = useStore((state) => state.setServerIp);
   const setStoragePath = useStore((state) => state.setStoragePath);
   const setGameState = useStore((state) => state.setGameState);
+  const setIsLoading = useStore((state) => state.setIsLoading);
 
   const setShowSettings = useStore((state) => state.setShowSettings);
 
@@ -57,7 +58,9 @@ function Settings({ isVisible }) {
   const createNewGame = async () => {
     try {
       // TRY TO GET AN EXISTING GAME
+      setIsLoading(true);
       const gameState = await getGameState(server_ip, uuid);
+      setIsLoading(false);
       if (gameState) {
         console.log("gameState", gameState);
         // IF IT EXISTS THEN DELETE IT
@@ -65,6 +68,7 @@ function Settings({ isVisible }) {
       }
 
       // CREATE A NEW GAME
+
       const createdGameState = await createGameState(server_ip, uuid, open_ai_key, game_setting_and_lore + ". " + game_art_style);
       console.log("createGameState", createdGameState);
       setGameState(createdGameState);
