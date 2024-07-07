@@ -7,7 +7,6 @@ import submitMsg from "./submitMsg.js"; // Import the refactored function
 function AudioInput() {
   const [text, setText] = useState(""); // State for tracking the text input
 
-  const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
   const addMessage = useStore((state) => state.addMessage);
@@ -21,10 +20,11 @@ function AudioInput() {
   }
 
   const handleSubmitMsg = () => {
+    let emptyUuid = '00000000-0000-0000-0000-000000000000';
     submitMsg({
       text,
       setText,
-      uuid,
+      emptyUuid,
       server_ip,
       open_ai_key,
       addMessage,

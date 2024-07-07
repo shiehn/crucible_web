@@ -8,7 +8,6 @@ import submitMsg from './submitMsg.js'; // Import the refactored function
 
 function MapDisplay() {
   const game_state = useStore((state) => state.game_state);
-  const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
   const setIsLoading = useStore((state) => state.setIsLoading);
@@ -132,23 +131,25 @@ function MapDisplay() {
         const nodeId = nodes[0];
         let cannedQuery = `After successfully changing environments, What do I see here?`;
 
-        if (!uuid || !server_ip) {
-          toast.error("UUID or Server IP is missing.");
+        if (!server_ip) {
+          toast.error("Server IP is missing.");
           return;
         }
 
         // FIRST SET THE NAVIGATION MANUALLY
-        let navResponse = await navigateTo(server_ip, uuid, nodeId);
+        let navResponse = await navigateTo(server_ip, '00000000-0000-0000-0000-000000000000', nodeId);
         console.log('DUDE RES', navResponse);
         if (!navResponse) {
           cannedQuery = `After failing to change environments, What do I see now?`;
         }
 
+        let emptyUuid = '00000000-0000-0000-0000-000000000000';
+
         // THEN SEND THE QUERY TO THE GAME ENGINE
         submitMsg({
           text: cannedQuery,
           setText: () => {}, // No-op function since we don't need to set text in this context
-          uuid,
+          emptyUuid,
           server_ip,
           open_ai_key,
           addMessage,

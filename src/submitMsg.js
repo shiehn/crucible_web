@@ -25,14 +25,14 @@ const submitMsg = async ({
 
   setText(""); // Clear the text input
 
-  if (!uuid || !server_ip) {
-    toast.error("UUID or Server IP is missing.");
+  if (!server_ip) {
+    toast.error("Server IP is missing.");
     return;
   }
 
   try {
     setIsLoading(true);
-    let response = await sendGameEngineQuery(copiedString, uuid, server_ip, open_ai_key);
+    let response = await sendGameEngineQuery(copiedString, '00000000-0000-0000-0000-000000000000', server_ip, open_ai_key);
     setIsLoading(false);
 
     console.log("ResponseData:", response);
@@ -44,7 +44,7 @@ const submitMsg = async ({
 
 
     let encounter = response?.action?.encounter;
-    const gameState = await getGameState(server_ip, uuid);
+    const gameState = await getGameState(server_ip, '00000000-0000-0000-0000-000000000000');
     if (gameState) {
       setGameState(gameState);
 
@@ -60,21 +60,6 @@ const submitMsg = async ({
       }
     }
 
-    // if (encounter) {
-    //   console.log('ENCOUNTER SET SEND MESSAGE:', encounter.aesthetic.image);
-    //   setCurrentBgImage(encounter.aesthetic.image);
-    // } else {
-    //   const gameState = await getGameState(server_ip, uuid);
-    //   if (gameState) {
-    //     setGameState(gameState);
-    //
-    //     const environment = await getGameEnvironment(server_ip, gameState.environment_id);
-    //     console.log("XXX Environment:", environment);
-    //     if (environment && environment.game_info.environment.aesthetic.image) {
-    //       setCurrentBgImage(environment.game_info.environment.aesthetic.image);
-    //     }
-    //   }
-    // }
   } catch (error) {
     console.error("Error submitting message:", error);
     toast.error("Failed to submit message. Please try again.");

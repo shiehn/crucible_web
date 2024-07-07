@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { XCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import Knob from './Knob.jsx';
-import NetworkTest from './NetworkTest.jsx';
 import { useStore } from "./main.jsx";
 import ActionBar from "./ActionBar.jsx";
 import { Bars } from 'react-loader-spinner';

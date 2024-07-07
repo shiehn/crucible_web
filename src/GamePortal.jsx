@@ -12,8 +12,6 @@ function GamePortal({isVisible}) {
   const [typingTimeout, setTypingTimeout] = useState(null); // State for the typing timeout
   const [backgroundImage, setBackgroundImage] = useState(null); // State for the latest background image
 
-
-  const uuid = useStore((state) => state.uuid);
   const combatMode = useStore((state) => state.combatMode);
   const setCombatMode = useStore((state) => state.setCombatMode);
   const combatStats = useStore((state) => state.combatStats);

@@ -5,15 +5,9 @@ import {Bars} from "react-loader-spinner";
 
 function LoadingLevel({isVisible}) {
 
-
-  const uuid = useStore((state) => state.uuid);
-
-  // const setIsLoading = useStore((state) => state.setIsLoading);
-
-
   useEffect(() => {
 
-  }, [isVisible, uuid]);
+  }, [isVisible]);
 
 
   return (

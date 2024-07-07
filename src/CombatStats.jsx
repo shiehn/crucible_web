@@ -48,7 +48,7 @@ const CombatStats = ({ combatMode, combatStats }) => {
         submitMsg({
           text: "After losing combat, where am I now?",
           setText: () => {}, // No-op function since we don't need to set text in this context
-          uuid: useStore.getState().uuid,
+          uuid: '00000000-0000-0000-0000-000000000000',
           server_ip: useStore.getState().server_ip,
           open_ai_key: useStore.getState().open_ai_key,
           addMessage,

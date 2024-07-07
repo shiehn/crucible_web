@@ -1,15 +1,12 @@
 // Settings.jsx
 
-import React, { useState, useEffect } from 'react';
-import { DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, useStore } from "./main.jsx";
-import { createGameState, deleteGameState, getGameState } from "./api.js";
-import { toast } from "react-toastify";
-import UUIDButton from "./UUIDButton.jsx";
+import React, {useState, useEffect} from 'react';
+import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, useStore} from "./main.jsx";
+import {createGameState, deleteGameState, getGameState, removeToken} from "./api.js";
 
-function Settings({ isVisible }) {
+function Settings({isVisible}) {
   const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
   const game_art_style = useStore((state) => state.game_art_style);
-  const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
 
@@ -55,11 +52,16 @@ function Settings({ isVisible }) {
     setGameArtStyle('');
   };
 
+  const handleLogout = () => {
+    removeToken();
+    window.location.href = `${server_ip}/accounts/logout/`;
+  }
+
   const createNewGame = async () => {
     try {
       // TRY TO GET AN EXISTING GAME
       setIsLoading(true);
-      const gameState = await getGameState(server_ip, uuid);
+      const gameState = await getGameState(server_ip, '00000000-0000-0000-0000-000000000000');
       setIsLoading(false);
       if (gameState) {
         console.log("gameState", gameState);
@@ -69,7 +71,7 @@ function Settings({ isVisible }) {
 
       // CREATE A NEW GAME
 
-      const createdGameState = await createGameState(server_ip, uuid, open_ai_key, game_setting_and_lore + ". " + game_art_style);
+      const createdGameState = await createGameState(server_ip, '00000000-0000-0000-0000-000000000000', open_ai_key, game_setting_and_lore + ". " + game_art_style);
       console.log("createGameState", createdGameState);
       setGameState(createdGameState);
 
@@ -90,10 +92,7 @@ function Settings({ isVisible }) {
         </span>
       </div>
 
-      <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="user_id" className="w-1/3 text-left pr-2">USER ID:</label>
-        <UUIDButton name="user_id" />
-      </div>
+      <button onClick={handleLogout}>LOGOUT</button>
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>

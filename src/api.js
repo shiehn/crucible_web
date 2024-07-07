@@ -1,25 +1,32 @@
 import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
 
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
+// utils/token.js
+export const storeToken = (token) => {
+  localStorage.setItem('jwtToken', token);
+};
 
-async function makeRequest(server_ip, url, options) {
+export const getToken = () => {
+  return localStorage.getItem('jwtToken');
+};
+
+export const removeToken = () => {
+  localStorage.removeItem('jwtToken');
+};
+
+
+async function makeRequest(server_ip, url, options = {}) {
+  const token = getToken();
+
+  if (!token) {
+    // Redirect to login if token is not found
+    window.location.href = `${server_ip}/accounts/login/`;
+    return;
+  }
+
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    'X-CSRFToken': getCookie('csrftoken')
+    'Authorization': `Bearer ${token}`
   };
 
   const finalOptions = {
@@ -28,17 +35,27 @@ async function makeRequest(server_ip, url, options) {
       ...defaultHeaders,
       ...options.headers,
     },
-    credentials: 'include'
   };
 
-  const response = await fetch(url, finalOptions);
+  try {
+    const response = await fetch(url, finalOptions);
 
-  if (response.status === 401) {
-    window.location.href = `${server_ip}/accounts/login/`;
+    if (response.status === 401 || response.status === 403) {
+      // Remove token and redirect to login if unauthorized
+      removeToken();
+      window.location.href = `${server_ip}/accounts/login/`;
+      return;
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Request failed', error);
+    throw error;
   }
-
-  return response;
 }
+
+export default makeRequest;
+
 
 // Example of refactoring sendGameEngineQuery function
 async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
@@ -205,7 +222,6 @@ async function getGameInventory(server_ip, connection_token) {
 }
 
 
-
 async function getGameEnvironment(server_ip, environment_id) {
   const url = API_URLS.GAME_ENVIRONMENT_GET(server_ip, environment_id);
   const options = {
@@ -238,10 +254,10 @@ async function getGameQueueUpdate(server_ip, userId) {
     const response = await makeRequest(server_ip, url, options);
 
     // Handle specific status codes as in original function
-    if (response.status === 401) {
-      window.location.href = `${server_ip}/accounts/login/`;
-      return {}; // Prevent further execution after redirection
-    }
+    // if (response.status === 401) {
+    //   window.location.href = `${server_ip}/accounts/login/`;
+    //   return {}; // Prevent further execution after redirection
+    // }
 
     if (!response.ok) {
       console.log('GameEvents - Network response was not ok');
@@ -266,10 +282,10 @@ async function getGameEvents(server_ip, userId) {
     const response = await makeRequest(server_ip, url, options);
 
     // Handle specific status codes as in original function
-    if (response.status === 401) {
-      window.location.href = `${server_ip}/accounts/login/`;
-      return {}; // Prevent further execution after redirection
-    }
+    // if (response.status === 401) {
+    //   window.location.href = `${server_ip}/accounts/login/`;
+    //   return {}; // Prevent further execution after redirection
+    // }
 
     if (response.status === 404) {
       return {};
@@ -328,11 +344,6 @@ async function sendCombatAttack(server_ip, user_id, item_id) {
     return "encounter-error";
   }
 }
-
-
-
-
-
 
 
 //http://localhost:8081/api/game-environment/3cd9c84b-8b03-45be-af6a-a5a597662dd9/

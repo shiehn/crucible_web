@@ -6,7 +6,6 @@ import submitMsg from './submitMsg.js'; // Import the refactored function
 
 function InventoryDisplay() {
   const { game_inventory } = useStore();  // Assuming you have these functions in your store
-  const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
   const setIsLoading = useStore((state) => state.setIsLoading);
@@ -25,12 +24,12 @@ function InventoryDisplay() {
   const handleUse = async (itemId) => {
     let copiedString = `What is the encounters state after attacking it?`;
 
-    if (!uuid || !server_ip) {
-      toast.error("UUID or Server IP is missing.");
+    if (!server_ip) {
+      toast.error("Server IP is missing.");
       return;
     }
 
-    let attackRes = await sendCombatAttack(server_ip, uuid, itemId);
+    let attackRes = await sendCombatAttack(server_ip, '00000000-0000-0000-0000-000000000000', itemId);
     console.log("Attack Response:", attackRes);
     if(attackRes && attackRes === "encounter-victory") {
       copiedString = `What do I see here after winning the encounter?`;
@@ -41,12 +40,12 @@ function InventoryDisplay() {
       return;
     }
 
-
+    let emptyUuid = '00000000-0000-0000-0000-000000000000';
     // Use the refactored submitMsg function
     submitMsg({
       text: copiedString,
       setText: () => {}, // No-op function since we don't need to set text in this context
-      uuid,
+      emptyUuid,
       server_ip,
       open_ai_key,
       addMessage,

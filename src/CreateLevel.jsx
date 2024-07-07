@@ -5,13 +5,12 @@ import {createGameState, deleteGameState, generateLevelMap, getGameState} from "
 function CreateLevel({ isVisible }) {
   const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
   const game_art_style = useStore((state) => state.game_art_style);
-  const uuid = useStore((state) => state.uuid);
   const server_ip = useStore((state) => state.server_ip);
   const open_ai_key = useStore((state) => state.open_ai_key);
 
 
   const createNewGame = async () => {
-    const generationResponse = await generateLevelMap(server_ip, uuid, open_ai_key);
+    const generationResponse = await generateLevelMap(server_ip, '00000000-0000-0000-0000-000000000000', open_ai_key);
     console.log("generationResponse", generationResponse);
   };
 

@@ -12,7 +12,7 @@ import {
 
 function MapInventoryToggle({}) {
 
-  const { currentOutputView,game_state, server_ip , uuid} = useStore();
+  const { currentOutputView,game_state, server_ip} = useStore();
 
   const handleNavigation = async (outputView) => {
     if (outputView === 'show_map_component') {
@@ -30,7 +30,7 @@ function MapInventoryToggle({}) {
         store.setState({currentOutputView: outputView});
       }
     } else if (outputView === 'show_inventory_component') {
-      const inventory = await getGameInventory(server_ip, uuid);
+      const inventory = await getGameInventory(server_ip, '00000000-0000-0000-0000-000000000000');
       console.log("INVENTORY: ", inventory)
       if(inventory) {
         store.setState({currentOutputView: outputView, game_inventory: inventory});

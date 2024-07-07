@@ -9,6 +9,7 @@ import { API_URLS } from './apiUrls';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './custom-styles.css';
+import TokenHandler from './TokenHandler';
 import {
   getGameEnvironment,
   getGameEvents,
@@ -20,6 +21,7 @@ import {
 import submitMsg from './submitMsg.js'; // Import the refactored function
 
 export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
+//export const DEFAULT_SERVER_IP = 'http://localhost:5173/';
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'game_portal';
 export const EMBEDDED = 'web';
@@ -27,8 +29,6 @@ export const EMBEDDED = 'web';
 // Initial state management
 export const store = createStore((set, get) => ({
   messageId: null,
-  uuid: null, // master_token
-  setUUID: (uuid) => set({ uuid }),
   connection_token: null, // connection_token
   bpm: 0,
   sampleRate: 0,
@@ -106,8 +106,6 @@ const useErrorStore = createHooks(errorStore);
 function App(props) {
   const state = useStore((state) => state);
   const { error } = useErrorStore();
-  const uuid = useStore((state) => state.uuid);
-  const setUUID = useStore((state) => state.setUUID);
   const open_ai_key = useStore((state) => state.open_ai_key);
   const setOpenAIKey = useStore((state) => state.setOpenAIKey);
   const combatMode = useStore((state) => state.combatMode);
@@ -149,12 +147,6 @@ function App(props) {
   }, []);
 
   useEffect(() => {
-    // const savedUUID = localStorage.getItem('sas_user_id');
-    // if (savedUUID) {
-    //   setUUID(savedUUID);
-    // }
-
-    setUUID('d64b1389-3930-4953-9ef8-087f7edbbe49');
 
     const serverIpFromLocalStorage = localStorage.getItem('server_ip');
     if (serverIpFromLocalStorage) {
@@ -165,11 +157,11 @@ function App(props) {
     if (storagePathFromLocalStorage) {
       setStoragePath(storagePathFromLocalStorage);
     }
-  }, [setUUID, setServerIp, setStoragePath]);
+  }, [setServerIp, setStoragePath]);
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      const gqu = await getGameQueueUpdate(server_ip, uuid);
+      const gqu = await getGameQueueUpdate(server_ip, '00000000-0000-0000-0000-000000000000');
       if (gqu && gqu.status) {
         if (gqu.status === 'queued') {
           setNavigation('create_level');
@@ -189,11 +181,11 @@ function App(props) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [server_ip, uuid, setNavigation]);
+  }, [server_ip, setNavigation]);
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
-      const gameEvents = await getGameEvents(server_ip, uuid);
+      const gameEvents = await getGameEvents(server_ip, '00000000-0000-0000-0000-000000000000');
       if (gameEvents && gameEvents.event) {
         if (gameEvents.event === 'encounter-start'
           || gameEvents.event === 'encounter-victory'
@@ -212,7 +204,7 @@ function App(props) {
     return () => {
       clearInterval(intervalId);
     };
-  }, [server_ip, uuid, setCombatMode, setCombatStats]);
+  }, [server_ip, setCombatMode, setCombatStats]);
 
   const setGameMap = useStore((state) => state.setGameMap);
 
@@ -248,7 +240,7 @@ function App(props) {
       while (tries < maxTries) {
         tries += 1;
 
-        const gameState = await getGameState(server_ip, uuid);
+        const gameState = await getGameState(server_ip, '00000000-0000-0000-0000-000000000000');
         if (gameState && Object.keys(gameState).length > 0) {
           setGameState(gameState);
 
@@ -271,10 +263,12 @@ function App(props) {
 
             const randomDefaultQuery = defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
 
+            let emptyUuid = '00000000-0000-0000-0000-000000000000';
+
             submitMsg({
               text: randomDefaultQuery,
               setText: () => {}, // No-op function since we don't need to set text in this context
-              uuid,
+              emptyUuid,
               server_ip,
               open_ai_key,
               addMessage,
@@ -298,10 +292,11 @@ function App(props) {
     if (!querySentRef.current) {
       fetchGameState();
     }
-  }, [server_ip, uuid, setGameState, setGameMap, sendGameEngineQuery, open_ai_key, setIsLoading, addMessage, incrementMsgHistoryIndex, setCurrentBgImage, setNavigation]);
+  }, [server_ip, setGameState, setGameMap, sendGameEngineQuery, open_ai_key, setIsLoading, addMessage, incrementMsgHistoryIndex, setCurrentBgImage, setNavigation]);
 
   return (
     <div className="fixed inset-0 w-full h-full flex flex-row overflow-hidden">
+      <TokenHandler />
       <div className="w-full min-h-screen bg-sas-background-dark">
       </div>
       <div className="w-full max-w-[460px] min-h-screen">
