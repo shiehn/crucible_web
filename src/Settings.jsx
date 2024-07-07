@@ -22,10 +22,6 @@ function Settings({isVisible}) {
 
   const [isKeyVisible, setIsKeyVisible] = useState(false);
 
-  function handleServerIpChange(value) {
-    setServerIp(value);
-    localStorage.setItem('server_ip', value);
-  }
 
   function handleOpenAIKey(value) {
     localStorage.setItem('open_ai_key', value);
@@ -95,22 +91,22 @@ function Settings({isVisible}) {
       <button onClick={handleLogout}>LOGOUT</button>
 
       <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="server_id" className="w-1/3 text-left pr-2">BUILD:</label>
-        <input type="text" id="build" name="server_id" value="0.9.8" readOnly
+        <label htmlFor="build_num" className="w-1/3 text-left pr-2">BUILD:</label>
+        <input type="text" id="build" name="build_num" value="0.9.9" readOnly
                className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"/>
       </div>
 
-      <div className="w-full text-sm flex mb-4 items-center">
-        <label htmlFor="server_ip" className="w-1/3 text-left pr-2">SERVER IP:</label>
-        <input
-          type="text"
-          id="server_ip"
-          name="server_ip"
-          value={server_ip} // Use server_ip from the global state
-          className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"
-          onChange={(e) => handleServerIpChange(e.target.value)}
-        />
-      </div>
+      {/*<div className="w-full text-sm flex mb-4 items-center">*/}
+      {/*  <label htmlFor="server_ip" className="w-1/3 text-left pr-2">SERVER IP:</label>*/}
+      {/*  <input*/}
+      {/*    type="text"*/}
+      {/*    id="server_ip"*/}
+      {/*    name="server_ip"*/}
+      {/*    value={server_ip} // Use server_ip from the global state*/}
+      {/*    className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"*/}
+      {/*    onChange={(e) => handleServerIpChange(e.target.value)}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="open_ai_key" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>

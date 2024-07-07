@@ -146,18 +146,18 @@ function App(props) {
     }
   }, []);
 
-  useEffect(() => {
-
-    const serverIpFromLocalStorage = localStorage.getItem('server_ip');
-    if (serverIpFromLocalStorage) {
-      setServerIp(serverIpFromLocalStorage);
-    }
-
-    const storagePathFromLocalStorage = localStorage.getItem('storage_path') || DEFAULT_STORAGE_PATH;
-    if (storagePathFromLocalStorage) {
-      setStoragePath(storagePathFromLocalStorage);
-    }
-  }, [setServerIp, setStoragePath]);
+  // useEffect(() => {
+  //
+  //   const serverIpFromLocalStorage = localStorage.getItem('server_ip');
+  //   if (serverIpFromLocalStorage) {
+  //     setServerIp(serverIpFromLocalStorage);
+  //   }
+  //
+  //   const storagePathFromLocalStorage = localStorage.getItem('storage_path') || DEFAULT_STORAGE_PATH;
+  //   if (storagePathFromLocalStorage) {
+  //     setStoragePath(storagePathFromLocalStorage);
+  //   }
+  // }, [setServerIp, setStoragePath]);
 
   useEffect(() => {
     const intervalId = setInterval(async () => {
@@ -172,7 +172,7 @@ function App(props) {
         } else if (gqu.status === 'error') {
           toast.error("Error: " + gqu.error);
         } else if (gqu.status === 'game_not_found') {
-          toast.warn("game_not_found");
+          //toast.warn("game_not_found");
           setNavigation('settings');
         }
       }
@@ -281,7 +281,7 @@ function App(props) {
 
           return;
         } else {
-          toast.error("Game Does Not Exist. Create a new game.");
+          //toast.error("Game Does Not Exist. Create a new game.");
           setNavigation('settings');
         }
 
