@@ -17,6 +17,8 @@ function MapDisplay() {
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
   const isLoading = useStore((state) => state.isLoading);
   const game_map = useStore((state) => state.game_map);
+  const setNavigation = useStore((state) => state.setNavigation);
+  const setShowSettings = useStore((state) => state.setShowSettings);
 
   const sanitizeGameMap = (map) => {
     if (!map || typeof map !== 'object' || !Array.isArray(map.nodes) || !Array.isArray(map.edges)) {
@@ -156,6 +158,8 @@ function MapDisplay() {
           incrementMsgHistoryIndex,
           setCurrentBgImage,
           setGameState,
+          setNavigation,
+          setShowSettings,
           setIsLoading
         });
 

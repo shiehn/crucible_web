@@ -20,8 +20,7 @@ import {
 } from "./api.js";
 import submitMsg from './submitMsg.js'; // Import the refactored function
 
-export const DEFAULT_SERVER_IP = 'https://signalsandsorceryapi.com/';
-//export const DEFAULT_SERVER_IP = 'http://localhost:5173/';
+export const DEFAULT_SERVER_IP = process.env.REACT_APP_DEFAULT_SERVER_IP;
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'game_portal';
 export const EMBEDDED = 'web';
@@ -73,7 +72,6 @@ export const store = createStore((set, get) => ({
   navigation: DEFAULT_NAVIGATION,
   setNavigation: (navigation) => set({ navigation }),
   server_ip: DEFAULT_SERVER_IP,
-  setServerIp: (server_ip) => set({ server_ip }),
   storage_path: DEFAULT_STORAGE_PATH,
   setStoragePath: (storage_path) => set({ storage_path }),
   embedded: EMBEDDED,
@@ -117,7 +115,6 @@ function App(props) {
   const setGameArtStyle = useStore((state) => state.setGameArtStyle);
   const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
   const server_ip = useStore((state) => state.server_ip);
-  const setServerIp = useStore((state) => state.setServerIp);
   const setIsLoading = useStore((state) => state.setIsLoading);
   const addMessage = useStore((state) => state.addMessage);
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
@@ -126,6 +123,8 @@ function App(props) {
   const navigation = useStore((state) => state.navigation);
   const storage_path = useStore((state) => state.storage_path);
   const setStoragePath = useStore((state) => state.setStoragePath);
+  const setShowSettings = useStore((state) => state.setShowSettings);
+
 
   const querySentRef = useRef(false);
 
@@ -173,7 +172,7 @@ function App(props) {
           toast.error("Error: " + gqu.error);
         } else if (gqu.status === 'game_not_found') {
           //toast.warn("game_not_found");
-          setNavigation('settings');
+          setShowSettings(true);
         }
       }
     }, 5000);
@@ -275,6 +274,8 @@ function App(props) {
               incrementMsgHistoryIndex,
               setCurrentBgImage,
               setGameState,
+              setNavigation,
+              setShowSettings,
               setIsLoading
             });
           }
@@ -282,7 +283,8 @@ function App(props) {
           return;
         } else {
           //toast.error("Game Does Not Exist. Create a new game.");
-          setNavigation('settings');
+          console.log("No game state found in MAIN.js")
+          setShowSettings(true);
         }
 
         await delayCheck(retryDelay);

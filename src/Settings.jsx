@@ -2,7 +2,8 @@
 
 import React, {useState, useEffect} from 'react';
 import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, useStore} from "./main.jsx";
-import {createGameState, deleteGameState, getGameState, removeToken} from "./api.js";
+import {createGameState, deleteGameState, getGameState} from "./api.js";
+import {removeToken} from "./token.js";
 
 function Settings({isVisible}) {
   const game_setting_and_lore = useStore((state) => state.game_setting_and_lore);
@@ -13,11 +14,10 @@ function Settings({isVisible}) {
   const setGameSettingAndLore = useStore((state) => state.setGameSettingAndLore);
   const setGameArtStyle = useStore((state) => state.setGameArtStyle);
   const setOpenAIKey = useStore((state) => state.setOpenAIKey);
-  const setServerIp = useStore((state) => state.setServerIp);
   const setStoragePath = useStore((state) => state.setStoragePath);
   const setGameState = useStore((state) => state.setGameState);
   const setIsLoading = useStore((state) => state.setIsLoading);
-
+  const setNavigation = useStore((state) => state.setNavigation);
   const setShowSettings = useStore((state) => state.setShowSettings);
 
   const [isKeyVisible, setIsKeyVisible] = useState(false);
@@ -41,7 +41,6 @@ function Settings({isVisible}) {
   const handleReset = () => {
     // Clear the local storage
     localStorage.clear();
-    setServerIp(DEFAULT_SERVER_IP);
     setStoragePath(DEFAULT_STORAGE_PATH);
     setOpenAIKey('');
     setGameSettingAndLore('');
@@ -63,6 +62,9 @@ function Settings({isVisible}) {
         console.log("gameState", gameState);
         // IF IT EXISTS THEN DELETE IT
         await deleteGameState(server_ip, gameState?.user_id);
+      } else {
+        console.log("No game state found in SETTINGS")
+        setShowSettings(true);
       }
 
       // CREATE A NEW GAME

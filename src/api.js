@@ -1,19 +1,7 @@
 import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
-
-// utils/token.js
-export const storeToken = (token) => {
-  localStorage.setItem('jwtToken', token);
-};
-
-export const getToken = () => {
-  return localStorage.getItem('jwtToken');
-};
-
-export const removeToken = () => {
-  localStorage.removeItem('jwtToken');
-};
-
+import {getToken, removeToken} from "./token.js";
+import {store, useStore} from "./main.jsx";
 
 async function makeRequest(server_ip, url, options = {}) {
   const token = getToken();
@@ -43,7 +31,11 @@ async function makeRequest(server_ip, url, options = {}) {
     if (response.status === 401 || response.status === 403) {
       // Remove token and redirect to login if unauthorized
       removeToken();
-      window.location.href = `${server_ip}/accounts/login/`;
+
+      const redirectUrl = `${server_ip}/accounts/login/`;
+
+      //alert(`NOT LOGGED IN! Redirect to ${redirectUrl}`)
+      window.location.href = redirectUrl;
       return;
     }
 
@@ -113,10 +105,14 @@ async function getGameState(server_ip, user_id) {
   try {
     const response = await makeRequest(server_ip, url, options);
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       // Assuming toast.error is globally accessible or imported as needed
       //toast.error('No game state found for user_id: ' + user_id);
-      console.log('No game state found for user_id: ' + user_id); // Fallback to console if toast.error isn't available
+      // console.log('No game state found for user_id: ' + user_id); // Fallback to console if toast.error isn't
+
+      //setNavigation('settings');
+
+      // available
       return false; // Return false in case of non-OK responses
     }
 

@@ -27,6 +27,8 @@ const CombatStats = ({ combatMode, combatStats }) => {
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
   const setIsLoading = useStore((state) => state.setIsLoading);
   const setGameState = useStore((state) => state.setGameState);
+  const setNavigation = useStore((state) => state.setNavigation);
+  const setShowSettings = useStore((state) => state.setShowSettings);
 
   const combatComplete = (outcome) => {
     if (outcome === 'victory') {
@@ -55,6 +57,8 @@ const CombatStats = ({ combatMode, combatStats }) => {
           incrementMsgHistoryIndex,
           setCurrentBgImage,
           setGameState,
+          setNavigation,
+          setShowSettings,
           setIsLoading
         });
 

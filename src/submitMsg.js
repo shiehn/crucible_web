@@ -5,6 +5,7 @@ import {
   getGameState,
   getGameEnvironment
 } from "./api.js";
+import {useStore} from "./main.jsx";
 
 const submitMsg = async ({
                            text,
@@ -16,6 +17,8 @@ const submitMsg = async ({
                            incrementMsgHistoryIndex,
                            setCurrentBgImage,
                            setGameState,
+                           setNavigation,
+                           setShowSettings,
                            setIsLoading
                          }) => {
   let copiedString = text + ""; // Creates a new reference with the same string
@@ -58,6 +61,9 @@ const submitMsg = async ({
           setCurrentBgImage(environment.game_info.environment.aesthetic.image);
         }
       }
+    } else {
+      console.log("No game state found in SUMIT_MSG")
+      setShowSettings(true);
     }
 
   } catch (error) {

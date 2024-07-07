@@ -15,6 +15,8 @@
     "preview": "vite preview",
     "deploy": "npm run build-ui && npm run build-dsp && cp CNAME dist/ && gh-pages -d dist"
   },
+  "start": "vite --mode development",
+  "build": "vite build --mode production",
   "homepage": "https://shiehn.github.io/crucible_web/",
   "dependencies": {
     "@elemaudio/core": "^2.0.1",

@@ -8,6 +8,7 @@ const TokenHandler = () => {
     const token = queryParams.get('token');
     if (token) {
       storeToken(token);
+      //alert("Token stored successfully: " + token);
       // Clean the URL after storing the token
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState(null, null, cleanUrl);

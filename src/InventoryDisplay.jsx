@@ -13,6 +13,8 @@ function InventoryDisplay() {
   const setGameState = useStore((state) => state.setGameState);
   const addMessage = useStore((state) => state.addMessage);
   const incrementMsgHistoryIndex = useStore((state) => state.incrementMsgHistoryIndex);
+  const setNavigation = useStore((state) => state.setNavigation);
+  const setShowSettings = useStore((state) => state.setShowSettings);
 
   if (!game_inventory || game_inventory.length < 1) {
     return (
@@ -52,6 +54,8 @@ function InventoryDisplay() {
       incrementMsgHistoryIndex,
       setCurrentBgImage,
       setGameState,
+      setNavigation,
+      setShowSettings,
       setIsLoading
     });
   };

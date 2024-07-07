@@ -14,6 +14,8 @@ function AudioInput() {
   const setCurrentBgImage = useStore((state) => state.setCurrentBgImage);
   const setGameState = useStore((state) => state.setGameState);
   const setIsLoading = useStore((state) => state.setIsLoading);
+  const setNavigation = useStore((state) => state.setNavigation);
+  const setShowSettings = useStore((state) => state.setShowSettings);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -31,6 +33,8 @@ function AudioInput() {
       incrementMsgHistoryIndex,
       setCurrentBgImage,
       setGameState,
+      setNavigation,
+      setShowSettings,
       setIsLoading
     });
   }

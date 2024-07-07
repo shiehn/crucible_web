@@ -4,3 +4,5 @@ package-lock.json
 node_modules/
 .idea/
 crucible_web.iml
+
+.env.production
