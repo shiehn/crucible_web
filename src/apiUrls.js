@@ -27,12 +27,11 @@ export const API_URLS = {
   //GAME PORTAL
   GAME_ENGINE_QUERY: (apiBaseUrl) => `${formatBaseUrl(apiBaseUrl)}/api/game-engine/query/`,
   GAME_MAP_GET: (apiBaseUrl, map_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-map/${map_id}/`,
-  GAME_MAP_GENERATE: (apiBaseUrl, user_id, open_ai_key) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/generate/assets/${user_id}/00000000-0000-0000-0000-000000000000/`,
+  GAME_MAP_GENERATE: (apiBaseUrl, user_id, open_ai_key) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/generate/assets/${user_id}/`,
   GAME_STATE_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${user_id}/`,
   GAME_STATE_DELETE: (apiBaseUrl, game_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/${game_id}/delete/`,
   GAME_STATE_CREATE: (apiBaseUrl, open_ai_key) => `${formatBaseUrl(apiBaseUrl)}/api/game-state/create/${open_ai_key}/`,
   GAME_INVENTORY_GET: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-inventory/${user_id}/`,
-  //GAME_ASSETS_RENDER: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-assets/generate/${user_id}/`,
   GAME_ENVIRONMENT_GET: (apiBaseUrl, environment_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-environment/${environment_id}/`,
   GAME_QUEUE_UPDATE: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-update-queue/${user_id}/`,
   GAME_EVENTS: (apiBaseUrl, user_id) => `${formatBaseUrl(apiBaseUrl)}/api/game-events/${user_id}/`,

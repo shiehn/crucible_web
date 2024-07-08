@@ -1,13 +1,12 @@
 import {API_URLS} from './apiUrls.js';
 import {toast} from "react-toastify";
 import {getToken, removeToken} from "./token.js";
-import {store, useStore} from "./main.jsx";
 
 async function makeRequest(server_ip, url, options = {}) {
   const token = getToken();
 
   if (!token) {
-    // Redirect to login if token is not found
+    // Redirect to the login view if token is not found
     window.location.href = `${server_ip}/accounts/login/`;
     return;
   }
@@ -29,19 +28,24 @@ async function makeRequest(server_ip, url, options = {}) {
     const response = await fetch(url, finalOptions);
 
     if (response.status === 401 || response.status === 403) {
-      // Remove token and redirect to login if unauthorized
+      // Remove token and redirect to the login view if unauthorized
       removeToken();
-
-      const redirectUrl = `${server_ip}/accounts/login/`;
-
-      //alert(`NOT LOGGED IN! Redirect to ${redirectUrl}`)
-      window.location.href = redirectUrl;
+      window.location.href = `${server_ip}/accounts/login/`;
       return;
+    }
+
+    if (response.status === 400) {
+      // Parse the JSON response to check for an `error` attribute
+      const responseData = await response.json();
+      const errorMessage = responseData.error || "Error: Bad request. Please check the request and try again.";
+      toast.error(errorMessage);
+      return; // Optionally, you might want to return the error or handle it differently
     }
 
     return response;
   } catch (error) {
     console.error('Request failed', error);
+    toast.error("Network error or server is not responding.");
     throw error;
   }
 }
@@ -49,7 +53,6 @@ async function makeRequest(server_ip, url, options = {}) {
 export default makeRequest;
 
 
-// Example of refactoring sendGameEngineQuery function
 async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
   const options = {
     method: "POST",
@@ -65,7 +68,7 @@ async function sendGameEngineQuery(text, master_token, server_ip, api_key) {
 
   const response = await makeRequest(server_ip, API_URLS.GAME_ENGINE_QUERY(server_ip), options);
 
-  if (!response.ok) {
+  if (!response || !response.ok) {
     console.error("Error sending request");
     return null;
   }

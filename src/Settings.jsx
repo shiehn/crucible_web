@@ -1,7 +1,7 @@
 // Settings.jsx
 
 import React, {useState, useEffect} from 'react';
-import {DEFAULT_SERVER_IP, DEFAULT_STORAGE_PATH, useStore} from "./main.jsx";
+import {DEFAULT_STORAGE_PATH, useStore} from "./main.jsx";
 import {createGameState, deleteGameState, getGameState} from "./api.js";
 import {removeToken} from "./token.js";
 
@@ -17,7 +17,6 @@ function Settings({isVisible}) {
   const setStoragePath = useStore((state) => state.setStoragePath);
   const setGameState = useStore((state) => state.setGameState);
   const setIsLoading = useStore((state) => state.setIsLoading);
-  const setNavigation = useStore((state) => state.setNavigation);
   const setShowSettings = useStore((state) => state.setShowSettings);
 
   const [isKeyVisible, setIsKeyVisible] = useState(false);
@@ -90,25 +89,12 @@ function Settings({isVisible}) {
         </span>
       </div>
 
-      <button onClick={handleLogout}>LOGOUT</button>
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="build_num" className="w-1/3 text-left pr-2">BUILD:</label>
-        <input type="text" id="build" name="build_num" value="0.9.9" readOnly
+        <input type="text" id="build" name="build_num" value="0.9.11" readOnly
                className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"/>
       </div>
-
-      {/*<div className="w-full text-sm flex mb-4 items-center">*/}
-      {/*  <label htmlFor="server_ip" className="w-1/3 text-left pr-2">SERVER IP:</label>*/}
-      {/*  <input*/}
-      {/*    type="text"*/}
-      {/*    id="server_ip"*/}
-      {/*    name="server_ip"*/}
-      {/*    value={server_ip} // Use server_ip from the global state*/}
-      {/*    className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"*/}
-      {/*    onChange={(e) => handleServerIpChange(e.target.value)}*/}
-      {/*  />*/}
-      {/*</div>*/}
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="open_ai_key" className="w-1/3 text-left pr-2">OPEN AI KEY:</label>
@@ -156,6 +142,11 @@ function Settings({isVisible}) {
       <button className="w-full bg-green-800 hover:bg-green-500 text-white rounded p-2 text-sm mb-4"
               onClick={createNewGame}>
         START NEW GAME
+      </button>
+
+      <button className="w-full bg-red-800 hover:bg-red-500 text-white rounded p-2 text-sm mb-4"
+              onClick={handleLogout}>
+        LOGOUT
       </button>
     </div>
   );

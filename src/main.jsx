@@ -20,7 +20,7 @@ import {
 } from "./api.js";
 import submitMsg from './submitMsg.js'; // Import the refactored function
 
-export const DEFAULT_SERVER_IP = process.env.REACT_APP_DEFAULT_SERVER_IP;
+export const DEFAULT_SERVER_IP = import.meta.env.VITE_DEFAULT_SERVER_IP;
 export const DEFAULT_STORAGE_PATH = 'https://storage.googleapis.com/byoc-file-transfer/';
 export const DEFAULT_NAVIGATION = 'game_portal';
 export const EMBEDDED = 'web';

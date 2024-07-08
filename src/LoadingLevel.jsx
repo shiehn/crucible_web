@@ -17,7 +17,7 @@ function LoadingLevel({isVisible}) {
       </div>
 
       <div className="p-2">
-        <h1>Generating a new level. This can take time ...</h1>
+        <h1>Generating a new level. This will take a min, hold on ...</h1>
       </div>
 
       <div

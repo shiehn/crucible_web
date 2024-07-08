@@ -63,26 +63,28 @@ function InventoryDisplay() {
   return (
     <div className="w-full h-[300px] overflow-hidden">
       {game_inventory.map((item, index) => (
-        <div key={index} className="flex items-center bg-gray-800">
+        <div key={index} className="flex items-center">
           {/* Image on the left */}
-          <div className="w-1/5">
+          <div className="w-1/5 p-2">
             <img src={item.item_details.aesthetic.image} alt={item.item_details.aesthetic.description}
-                 className="w-full h-auto"/>
+                 className="w-full h-auto rounded-md"/>
           </div>
 
           {/* Text and buttons on the right */}
-          <div className="w-4/5 text-white flex flex-col justify-between">
+          <div className="w-3/5 text-white flex flex-col justify-between">
             <div>
-              <div>Item Type: {item.item_details.item_type}</div>
-              <div>Item ID: {item.item_details.item_id}</div>
+              <div>Item Type: <span className="text-sas-text-grey">{item.item_details.item_type}</span></div>
+              <div>Item ID: <span className="text-sas-text-grey">{item.item_details.item_id}</span></div>
               {/*<div>Size: {item.item_details.item_size}</div>*/}
               {/*<div>Description: {item.item_details.aesthetic.description}</div>*/}
             </div>
-            <div className="flex justify-end space-x-2">
-              <button onClick={() => handleUse(item.item_details.item_id)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Use
-              </button>
-            </div>
+
+          </div>
+
+          <div className="w-1/5">
+            <button onClick={() => handleUse(item.item_details.item_id)}
+                    className="px-4 py-2 bg-green-800 text-white rounded hover:bg-green-500">Use
+            </button>
           </div>
         </div>
       ))}
