@@ -1,9 +1,9 @@
 // MapDisplay.jsx
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Graph from 'react-graph-vis';
-import { useStore } from './main.jsx';
-import { getGameEnvironment, getGameState, navigateTo } from "./api.js";
-import { toast } from "react-toastify";
+import {useStore} from './main.jsx';
+import {getGameEnvironment, getGameState, navigateTo} from "./api.js";
+import {toast} from "react-toastify";
 import submitMsg from './submitMsg.js'; // Import the refactored function
 
 function MapDisplay() {
@@ -22,7 +22,7 @@ function MapDisplay() {
 
   const sanitizeGameMap = (map) => {
     if (!map || typeof map !== 'object' || !Array.isArray(map.nodes) || !Array.isArray(map.edges)) {
-      return { nodes: [], edges: [] };
+      return {nodes: [], edges: []};
     }
     return map;
   };
@@ -31,8 +31,32 @@ function MapDisplay() {
   const [highlightedNodeId, setHighlightedNodeId] = useState(null);
   const [network, setNetwork] = useState(null); // State to store the network instance
 
+
+  const canned_queries = [
+    "After switching locations, what do I observe here?",
+    "Having changed areas, what is visible to me now?",
+    "What appears before me after changing settings?",
+    "What can I see here following the space alteration?",
+    "Now that I've moved to a different scene, what's in front of me?",
+    "After the locale switch, what do I notice?",
+    "What do I find here after changing surroundings?",
+    "Following the change of scenery, what is present?",
+    "What presents itself to me after switching habitats?",
+    "What's visible after I've changed venues?",
+    "What comes into view after changing territories?",
+    "After the transition to a new zone, what can I see?",
+    "What is there to see after I have moved to a different region?",
+    "Now that the sector has changed, what do I see?",
+    "What do my surroundings look like after the site change?",
+    "What details can I observe in the new setting?",
+    "After altering my space, what becomes visible?",
+    "What's before me after the area has been changed?",
+    "Having switched locales, what is there to see?",
+    "What does this place show me after the change of position?"
+  ];
+
   useEffect(() => {
-    setGraph({ nodes: [], edges: [] });
+    setGraph({nodes: [], edges: []});
     const sanitizedMap = sanitizeGameMap(game_map);
     setGraph(sanitizedMap);
   }, [game_map]);
@@ -65,7 +89,7 @@ function MapDisplay() {
         }
       });
 
-      setGraph(prevGraph => ({ ...prevGraph, nodes: newNodes }));
+      setGraph(prevGraph => ({...prevGraph, nodes: newNodes}));
     }, 500) : null;
 
     return () => {
@@ -98,9 +122,9 @@ function MapDisplay() {
     edges: {
       color: '#fff',
       arrows: {
-        to: { enabled: false },
-        middle: { enabled: false },
-        from: { enabled: false }
+        to: {enabled: false},
+        middle: {enabled: false},
+        from: {enabled: false}
       },
     },
     height: '100%',
@@ -127,11 +151,14 @@ function MapDisplay() {
         return;
       }
 
-      let { nodes } = event;
+      let {nodes} = event;
       console.log('Selected event:', nodes);
       if (nodes.length > 0) {
         const nodeId = nodes[0];
-        let cannedQuery = `After successfully changing environments, What do I see here?`;
+
+
+        let cannedQuery = canned_queries[Math.floor(Math.random() * canned_queries.length)];
+
 
         if (!server_ip) {
           toast.error("Server IP is missing.");
@@ -150,7 +177,8 @@ function MapDisplay() {
         // THEN SEND THE QUERY TO THE GAME ENGINE
         submitMsg({
           text: cannedQuery,
-          setText: () => {}, // No-op function since we don't need to set text in this context
+          setText: () => {
+          }, // No-op function since we don't need to set text in this context
           emptyUuid,
           server_ip,
           open_ai_key,

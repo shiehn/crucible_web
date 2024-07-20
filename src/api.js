@@ -171,11 +171,13 @@ async function generateLevelMap(server_ip, user_id, open_ai_key) {
 }
 
 
-async function createGameState(server_ip, user_id, open_ai_key, aesthetic) {
+async function createGameState(server_ip, user_id, open_ai_key, aesthetic, art_style) {
   const postData = {
     "user_id": user_id,
     "level": 1,
     "aesthetic": aesthetic,
+    "art_style": art_style,
+    "setting": "empty",
     "map_id": "123e4567-e89b-12d3-a456-426614174001",
     "environment_id": "00000000-0000-0000-0000-000000000000",
     "environment_img": "https://storage.googleapis.com/byoc-file-transfer/img_placeholder.png"

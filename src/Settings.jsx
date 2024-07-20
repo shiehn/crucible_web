@@ -68,7 +68,7 @@ function Settings({isVisible}) {
 
       // CREATE A NEW GAME
 
-      const createdGameState = await createGameState(server_ip, '00000000-0000-0000-0000-000000000000', open_ai_key, game_setting_and_lore + ". " + game_art_style);
+      const createdGameState = await createGameState(server_ip, '00000000-0000-0000-0000-000000000000', open_ai_key, game_setting_and_lore, game_art_style);
       console.log("createGameState", createdGameState);
       setGameState(createdGameState);
 

@@ -16,7 +16,7 @@ class TextToSpeech {
       this.utterance = new SpeechSynthesisUtterance(text);
       this.utterance.voice = this.voice;
       this.utterance.pitch = 1;
-      this.utterance.rate = 1;
+      this.utterance.rate = 1.2;
       this.utterance.volume = 1;
 
       this.utterance.onstart = () => {
