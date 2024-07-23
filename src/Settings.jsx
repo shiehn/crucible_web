@@ -92,7 +92,7 @@ function Settings({isVisible}) {
 
       <div className="w-full text-sm flex mb-4 items-center">
         <label htmlFor="build_num" className="w-1/3 text-left pr-2">BUILD:</label>
-        <input type="text" id="build" name="build_num" value="0.9.11" readOnly
+        <input type="text" id="build" name="build_num" value="0.10.1" readOnly
                className="w-2/3 border-2 border-gray-300 rounded text-left pl-2 text-xs h-8 bg-sas-background-light text-sas-text-grey"/>
       </div>
 
