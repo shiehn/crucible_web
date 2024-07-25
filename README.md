@@ -11,6 +11,8 @@ Find the supporting infrastructure code here:
 
 - [https://github.com/shiehn/signals-and-sorcery-server](https://github.com/shiehn/signals-and-sorcery-server)
 
+- [https://github.com/shiehn/signalsandsorcery-game-ui](https://github.com/shiehn/signalsandsorcery-game-ui)
+
 ### This is a REACT UI
 
 To install and run the REACT UI client:
